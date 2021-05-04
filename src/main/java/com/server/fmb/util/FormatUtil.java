@@ -156,35 +156,6 @@ public class FormatUtil {
 	}
 		
 	/**
-	 * convert from map to object
-	 * entity 클래스의 변수명으로 할당시키는것이 아니라 mapper<mapData 키명, class 변수명> 를 이용하여 
-	 * 객채화 시킨다.
-	 * 
-	 * @param mapData
-	 * @param entityClass
-	 * @return
-	 */
-	public static Object mapToObject(Map<String, Object> mapData, Map<String, String> mapper, Class<?> entityClass) {
-		if (ValueUtil.isEmpty(mapData) || ValueUtil.isEmpty(mapper)) {
-			return null;
-		}
-		Object instance = ClassUtil.newInstance(entityClass);
-		Iterator<String> keyIter = mapData.keySet().iterator();
-		while (keyIter.hasNext()) {
-			String key = keyIter.next();
-			Object value = mapData.get(key);
-			String mappingField = mapper.get(key);
-			if (ValueUtil.isEmpty(mappingField)) {
-				continue;
-			}
-			if (ClassUtil.hasField(entityClass, mappingField)) {
-				ClassUtil.setFieldValue(instance, mappingField, value);
-			}
-		}
-		return instance;
-	}
-	
-	/**
 	 * str substring
 	 * 
 	 * @param str
