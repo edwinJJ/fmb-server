@@ -298,38 +298,6 @@ public class ValueUtil extends ValueUtils {
 		}
 	}
 
-	/**
-	 * source의 각 null이 아닌 필드값을 target에 복사한다.
-	 * 
-	 * @param source
-	 * @param target
-	 * @param excludeFields
-	 * @return
-	 */
-	@SuppressWarnings("all")
-	public static <S, T> T cloneObject(S source, T target, String... excludeFields) {
-		Class<?> sourceClass = source.getClass();
-		Class<?> targetClass = target.getClass();
-		Field[] sourceFields = sourceClass.getDeclaredFields();
-
-		for (Field sourceField : sourceFields) {
-			// source class의 private이고 static이 아니고 excludeFields에 포함되지 않은 필드에 대해서만 target으로 필드값 복사
-			if (sourceField.getModifiers() == Modifier.PRIVATE && sourceField.getModifiers() != Modifier.STATIC && !isInclude(sourceField.getName(), excludeFields)) {
-				Object value = ClassUtil.getFieldValue(source, sourceField);
-
-				if (value != null) {
-					// TODO 수정 sourceField가 Reference Field인지 체크
-					if (value instanceof Long && value.equals(0L) && sourceField.getName().endsWith("Id")) {
-						value = null;
-					}
-
-					ClassUtil.setFieldValue(target, sourceField.getName(), value);
-				}
-			}
-		}
-
-		return target;
-	}
 
 	/**
 	 * value의 첫 글자를 대문자로 변경.
