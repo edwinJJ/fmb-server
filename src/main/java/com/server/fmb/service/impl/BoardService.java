@@ -8,14 +8,15 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.server.fmb.db.IBoardQueryManager;
-import com.server.fmb.db.IDomainQueryManager;
-import com.server.fmb.db.IFavoritesQueryManager;
+import com.server.fmb.db.IFavoriteQueryManager;
 import com.server.fmb.entity.Boards;
 import com.server.fmb.entity.Favorites;
 import com.server.fmb.service.IBoardService;
 import com.server.fmb.service.IDomainService;
+import com.server.fmb.service.IUserService;
 import com.server.fmb.util.CommonUtil;
 import com.server.fmb.util.ValueUtil;
 
@@ -26,14 +27,21 @@ public class BoardService implements IBoardService {
 	IBoardQueryManager boardQueryManager;
 	
 	@Autowired
-	IFavoritesQueryManager favoritesManager;
+	IFavoriteQueryManager favoritesManager;
 	
 	@Autowired
 	IDomainService domainService;
 	
+	@Autowired
+	IUserService userService;
+	
 	@Override
 	public List<Boards> getBoards(int start, int end) throws Exception {
-		return boardQueryManager.getBoards(start, end);
+		List<Boards> boardList = boardQueryManager.getBoards(start, end);
+		for (Boards board : boardList) {
+			board.setModel(null);
+		}
+		return boardList;
 	}
 	
 	@Override
@@ -55,6 +63,9 @@ public class BoardService implements IBoardService {
 //		return boards;
 		
 		List<Boards> boardsListMap = boardQueryManager.getBoardsByRoutingIds(routingIds);
+		for (Boards board: boardsListMap) {
+			board.setModel(null);
+		}
 		return boardsListMap;
 	}
 	
@@ -70,8 +81,17 @@ public class BoardService implements IBoardService {
 	}
 	
 	@Override
+	public List<Favorites> getOnlyFavorites() throws Exception {
+		return favoritesManager.findAll();
+	}
+	
+	@Override
 	public List<Boards> getBoardsByGroupId(String groupId) throws Exception {
-		return boardQueryManager.getBoardsByGroupId(UUID.fromString(groupId));
+		List<Boards> boardList = boardQueryManager.getBoardsByGroupId(UUID.fromString(groupId));
+		for (Boards board : boardList) {
+			board.setModel(null);
+		}
+		return boardList;
 	}
 
 	@Override
@@ -99,6 +119,7 @@ public class BoardService implements IBoardService {
 			board.setCreatedAt(new Date());
 			board.setUpdatedAt(new Date());
 			board.setDomainId(domainService.getDomain().getId());
+			board.setCreatorId(userService.getAdminUser().getId());
 			return boardQueryManager.save(board);
 		}
 	}
@@ -113,4 +134,22 @@ public class BoardService implements IBoardService {
 		return (boardQueryManager.findById(UUID.fromString(id))).get();
 	}
 
+	@Override
+	public Favorites addFavorite(Map<String, String> boardMap) throws Exception {
+		Favorites favorite = new Favorites();
+		favorite.setId(CommonUtil.getUUID());
+		favorite.setRouting(boardMap.get("boardId"));
+		favorite.setCreatedAt(new Date());
+		favorite.setUpdatedAt(new Date());
+		favorite.setDomainId(domainService.getDomain().getId());
+		favorite.setUserId(userService.getAdminUser().getId());
+		return favoritesManager.save(favorite);
+	}
+
+	@Override
+	@Transactional
+	public void removeFavorite(String boardId) throws Exception {
+		favoritesManager.deleteByRoutingId(boardId);
+	}
+	
 }
