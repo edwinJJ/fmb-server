@@ -99,16 +99,22 @@ public class BoardService implements IBoardService {
 		Boards board = new Boards();
 		if (!ValueUtil.isEmpty(boardMap.get("id"))) {
 			board = fetchBoardById(boardMap.get("id"));
-//			board.setId(UUID.fromString(boardMap.get("id")));
 			board.setName(boardMap.get("name"));
-			board.setDescription(boardMap.get("description"));
-//			board.setModel(boardMap.get("model"));
-			board.setGroupId(UUID.fromString(boardMap.get("groupId")));
-//			board.setThumbnail(boardMap.get("thumbnail"));
+			if (!ValueUtil.isEmpty(boardMap.get("description"))) board.setDescription(boardMap.get("description"));
+			if (!ValueUtil.isEmpty(boardMap.get("model"))) board.setModel(boardMap.get("model"));
+			if (!ValueUtil.isEmpty(boardMap.get("groupId"))) board.setGroupId(UUID.fromString(boardMap.get("groupId")));
 			board.setUpdatedAt(new Date());
-			board.setUpdaterId(UUID.fromString(boardMap.get("updaterId")));
-			board.setDomainId(UUID.fromString(boardMap.get("domainId")));
-//			return boardQueryManager.updateBoard(board);
+			if (!ValueUtil.isEmpty(boardMap.get("updaterId"))) {
+				board.setUpdaterId(UUID.fromString(boardMap.get("updaterId")));
+			} else {
+				board.setUpdaterId(userService.getAdminUser().getId());
+			}
+			if (!ValueUtil.isEmpty(boardMap.get("domainId"))) {
+				board.setDomainId(UUID.fromString(boardMap.get("domainId")));
+			} else {
+				board.setDomainId(domainService.getDomain().getId());
+			}
+			
 			return boardQueryManager.save(board);
 		} else {
 			board.setId(CommonUtil.getUUID());
