@@ -13,5 +13,6 @@ public interface IAttachmentService {
 	public Attachments setAttachments(Map<String, String> boardMap) throws Exception;
 	public void deleteAttachments(String boardId) throws Exception;
 	public Attachments fetchAttachmentsById(String id) throws Exception;
+	public void deleteAttachmentByRef(String ref) throws Exception;
 	
 }

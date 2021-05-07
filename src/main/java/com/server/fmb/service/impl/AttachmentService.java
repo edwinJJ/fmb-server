@@ -24,6 +24,9 @@ public class AttachmentService implements IAttachmentService {
 	
 	@Override
 	public List<Attachments> getAttachments(int start, int end) throws Exception{
+		if(start == 0  && end ==0) {
+			return attachmentQueryManager.findAll();
+		}
 		return attachmentQueryManager.getAttachments(start, end);
 	}
 	@Override
@@ -38,14 +41,14 @@ public class AttachmentService implements IAttachmentService {
 		
 		if(ValueUtil.isNotEmpty(attachmentMap.get("id"))){
 			attachment = fetchAttachmentsById(attachmentMap.get("id"));
-			attachment.setCategory(attachmentMap.get("category"));
-			attachment.setName(attachmentMap.get("name"));
-			attachment.setDescription(attachmentMap.get("description"));
-			attachment.setMimetype(attachmentMap.get("mimetype"));
-			attachment.setEncoding(attachmentMap.get("encoding"));
-			attachment.setRefBy(attachmentMap.get("refBy"));
-			attachment.setPath(attachmentMap.get("path"));
-			attachment.setSize(attachmentMap.get("size"));
+			attachment.setCategory((String)attachmentMap.get("category"));
+			attachment.setName((String)attachmentMap.get("name"));
+			attachment.setDescription((String)attachmentMap.get("description"));
+			attachment.setMimetype((String)attachmentMap.get("mimetype"));
+			attachment.setEncoding((String)attachmentMap.get("encoding"));
+			attachment.setRefBy((String)attachmentMap.get("refBy"));
+			attachment.setPath((String)attachmentMap.get("path"));
+			attachment.setSize((String)attachmentMap.get("size"));
 			attachment.setUpdatedAt(new Date());
 			attachment.setDomainId(UUID.fromString(attachmentMap.get("dominId")));
 			attachment.setUpdaterId(UUID.fromString(attachmentMap.get("updatedId")));
@@ -55,15 +58,14 @@ public class AttachmentService implements IAttachmentService {
 		}
 		else {
 			attachment.setId(CommonUtil.getUUID());
-			attachment = fetchAttachmentsById(attachmentMap.get("id"));
-			attachment.setCategory(attachmentMap.get("category"));
-			attachment.setName(attachmentMap.get("name"));
-			attachment.setDescription(attachmentMap.get("description"));
-			attachment.setMimetype(attachmentMap.get("mimetype"));
-			attachment.setEncoding(attachmentMap.get("encoding"));
-			attachment.setRefBy(attachmentMap.get("refBy"));
-			attachment.setPath(attachmentMap.get("path"));
-			attachment.setSize(attachmentMap.get("size"));
+			attachment.setCategory((String)attachmentMap.get("category"));
+			attachment.setName((String)attachmentMap.get("name"));
+			attachment.setDescription((String)attachmentMap.get("description"));
+			attachment.setMimetype((String)attachmentMap.get("mimetype"));
+			attachment.setEncoding((String)attachmentMap.get("encoding"));
+			attachment.setRefBy((String)attachmentMap.get("refBy"));
+			attachment.setPath((String)attachmentMap.get("path"));
+			attachment.setSize((String)attachmentMap.get("size"));
 			attachment.setUpdatedAt(new Date());
 			attachment.setCreatedAt(new Date());
 			attachment.setDomainId(UUID.fromString(attachmentMap.get("dominId")));
@@ -79,7 +81,10 @@ public class AttachmentService implements IAttachmentService {
 	public void deleteAttachments(String boardId) throws Exception{
 		attachmentQueryManager.deleteById(UUID.fromString(boardId));
 	}
-	
+	@Override
+	public void deleteAttachmentByRef(String ref) throws Exception{
+		attachmentQueryManager.deleteAttachmentByRef(ref);
+	}
 	@Override
 	public Attachments fetchAttachmentsById(String id) throws Exception{
 		return (attachmentQueryManager.findById(UUID.fromString(id))).get();

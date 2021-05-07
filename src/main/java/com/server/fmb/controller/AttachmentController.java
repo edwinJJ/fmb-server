@@ -75,12 +75,24 @@ public class AttachmentController {
 	}
 	
 	
-	// delete board 
+	// delete attachment 
 	@RequestMapping(value="/deleteAttachment/{id}", method = RequestMethod.DELETE)
 	public @ResponseBody boolean deleteAttachments(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		boolean success = false;
 		try {
 			attachmentService.deleteAttachments(id);
+			success = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+	// delete attachment 
+	@RequestMapping(value="/deleteAttachmentByRef/{ref}", method = RequestMethod.DELETE)
+	public @ResponseBody boolean deleteAttachmentByRef(@PathVariable("ref") String ref, HttpServletRequest request, HttpServletResponse response) {
+		boolean success = false;
+		try {
+			attachmentService.deleteAttachmentByRef(ref);;
 			success = true;
 		} catch (Exception e) {
 			e.printStackTrace();
