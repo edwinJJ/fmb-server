@@ -19,18 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.server.fmb.constant.Constant;
 import com.server.fmb.entity.Boards;
-import com.server.fmb.entity.Groups;
+import com.server.fmb.entity.Favorites;
 import com.server.fmb.service.IBoardService;
-import com.server.fmb.service.IGroupService;
 
 @RestController
 public class BoardController {
 	
 	@Autowired
 	IBoardService boardService;
-	
-	@Autowired
-	IGroupService groupService;
 	
 	// get board list (ALL / GROUP)
 	@RequestMapping(value="/fetchBoardList", method = RequestMethod.POST)
@@ -54,14 +50,14 @@ public class BoardController {
 			e.printStackTrace();
 		}
 		Map<String, Object> boardsResult = new HashMap<String, Object>();
-		boardsResult.put("items", boards);
-		boardsResult.put("total", boards.size());
+		boardsResult.put(Constant.ITEMS, boards);
+		boardsResult.put(Constant.TOTAL, boards.size());
 		return boardsResult;
 	}
 	
 	// get board list (FAVOR)
 	@RequestMapping(value="/fetchFavoriteBoardList", method = RequestMethod.POST)
-	public @ResponseBody List<Boards> fetchFavoriteBoardList(HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody List<Boards> fetchFavoriteBoardList(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
 		List<Boards> boards = new ArrayList<>();
 		try {
 			boards = boardService.getFavorites();
@@ -108,30 +104,6 @@ public class BoardController {
 		return board;
 	}
 	
-	// get group list 
-	@RequestMapping(value = "/fetchGroupList", method = RequestMethod.GET)
-	public @ResponseBody List<Groups> fetchGroupList(HttpServletRequest request) {
-		List<Groups> Groups = new ArrayList<Groups>();
-		try {
-			Groups = groupService.fetchGroupList();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return Groups;
-	}
-	
-	// get play-group list 
-	@RequestMapping(value = "/fetchPlayGroupList", method = RequestMethod.GET)
-	public @ResponseBody List<Groups> fetchPlayGroupList(HttpServletRequest request) {
-		List<Groups> Groups = new ArrayList<Groups>();
-		try {
-			Groups = groupService.fetchPlayGroupList();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return Groups;
-	}
-	
 	// update board 
 	@RequestMapping(value="/updateBoard", method = RequestMethod.PUT)
 	public @ResponseBody boolean updateBoard(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
@@ -143,6 +115,43 @@ public class BoardController {
 			e.printStackTrace();
 		}
 		return success;
+	}
+	
+	// add Favorite 
+	@RequestMapping(value="/addFavorite", method = RequestMethod.POST)
+	public @ResponseBody Favorites addFavorite(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		Favorites favorite = new Favorites();
+		try {
+			favorite = boardService.addFavorite(requestBody);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return favorite;
+	}
+	
+	// remote Favorite
+	@RequestMapping(value="/removeFavorite/{id}", method = RequestMethod.DELETE)
+	public @ResponseBody boolean removeFavorite(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+		boolean success = false;
+		try {
+			boardService.removeFavorite(id);
+			success = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
+	
+	// get favorites
+	@RequestMapping(value = "/refreshFavorites", method = RequestMethod.GET)
+	public @ResponseBody List<Favorites> refreshFavorites(HttpServletRequest request) {
+		List<Favorites> favoriteList = new ArrayList<Favorites>();
+		try {
+			favoriteList = boardService.getOnlyFavorites();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return favoriteList;
 	}
 	
 }

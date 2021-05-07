@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Users {
+public class Connections {
 	
 	@Id
 	@GeneratedValue(generator = "UUID")
@@ -22,37 +22,25 @@ public class Users {
 	private String description;
 	
 	@Column
-	private String email;
+	private String type;
 	
 	@Column
-	private String password;
+	private String endpoint;
 	
 	@Column
-	private String userType;
+	private Boolean active;
 	
 	@Column
-	private String reference;
-	
-	@Column
-	private String salt;
-	
-	@Column
-	private String locale;
-	
-	@Column
-	private String status;
-	
-	@Column
-	private int failCount;
-	
-	@Column
-	private Date passwordUpdatedAt;
+	private String params;
 	
 	@Column
 	private Date createdAt;
 	
 	@Column
 	private Date updatedAt;
+	
+	@Column
+	private UUID domainId;
 	
 	@Column
 	private UUID creatorId;
@@ -84,76 +72,36 @@ public class Users {
 		this.description = description;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getType() {
+		return type;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getEndpoint() {
+		return endpoint;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
 	}
 
-	public String getUserType() {
-		return userType;
+	public Boolean getActive() {
+		return active;
 	}
 
-	public void setUserType(String userType) {
-		this.userType = userType;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
-	public String getReference() {
-		return reference;
+	public String getParams() {
+		return params;
 	}
 
-	public void setReference(String reference) {
-		this.reference = reference;
-	}
-
-	public String getSalt() {
-		return salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
-
-	public String getLocale() {
-		return locale;
-	}
-
-	public void setLocale(String locale) {
-		this.locale = locale;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public int getFailCount() {
-		return failCount;
-	}
-
-	public void setFailCount(int failCount) {
-		this.failCount = failCount;
-	}
-
-	public Date getPasswordUpdatedAt() {
-		return passwordUpdatedAt;
-	}
-
-	public void setPasswordUpdatedAt(Date passwordUpdatedAt) {
-		this.passwordUpdatedAt = passwordUpdatedAt;
+	public void setParams(String params) {
+		this.params = params;
 	}
 
 	public Date getCreatedAt() {
@@ -170,6 +118,14 @@ public class Users {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public UUID getDomainId() {
+		return domainId;
+	}
+
+	public void setDomainId(UUID domainId) {
+		this.domainId = domainId;
 	}
 
 	public UUID getCreatorId() {

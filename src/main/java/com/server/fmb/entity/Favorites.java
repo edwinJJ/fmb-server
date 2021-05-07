@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class Favorites {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(generator = "UUID")
 	private UUID id;
 	
 	@Column
