@@ -9,8 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Boards {
-
+public class Connections {
+	
 	@Id
 	@GeneratedValue(generator = "UUID")
 	private UUID id;
@@ -20,24 +20,27 @@ public class Boards {
 	
 	@Column
 	private String description;
-
-	@Column
-	private String model;
 	
 	@Column
-	private String thumbnail;
+	private String type;
 	
 	@Column
-	private Date createdAt; 
+	private String endpoint;
+	
+	@Column
+	private Boolean active;
+	
+	@Column
+	private String params;
+	
+	@Column
+	private Date createdAt;
 	
 	@Column
 	private Date updatedAt;
 	
 	@Column
 	private UUID domainId;
-	
-	@Column
-	private UUID groupId;
 	
 	@Column
 	private UUID creatorId;
@@ -69,20 +72,36 @@ public class Boards {
 		this.description = description;
 	}
 
-	public String getModel() {
-		return model;
+	public String getType() {
+		return type;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public String getThumbnail() {
-		return thumbnail;
+	public String getEndpoint() {
+		return endpoint;
 	}
 
-	public void setThumbnail(String thumbnail) {
-		this.thumbnail = thumbnail;
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getParams() {
+		return params;
+	}
+
+	public void setParams(String params) {
+		this.params = params;
 	}
 
 	public Date getCreatedAt() {
@@ -107,14 +126,6 @@ public class Boards {
 
 	public void setDomainId(UUID domainId) {
 		this.domainId = domainId;
-	}
-
-	public UUID getGroupId() {
-		return groupId;
-	}
-
-	public void setGroupId(UUID groupId) {
-		this.groupId = groupId;
 	}
 
 	public UUID getCreatorId() {

@@ -11,4 +11,5 @@ public class Constant {
 	public static final String ITEMS = "items";
 	public static final String TOTAL = "total";
 	public static final String CATEGORY = "category";
+	public static final String SORTERS = "sorters";
 }
