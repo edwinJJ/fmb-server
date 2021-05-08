@@ -13,7 +13,7 @@ import com.server.fmb.entity.Groups;
 import com.server.fmb.service.IDomainService;
 import com.server.fmb.service.IGroupService;
 import com.server.fmb.service.IUserService;
-import com.server.fmb.util.CommonUtil;
+import com.server.fmb.util.IdUtil;
 import com.server.fmb.util.ValueUtil;
 
 @Service
@@ -44,7 +44,7 @@ public class GroupService implements IGroupService {
 			return groupQueryManager.save(group);
 		} else {
 			Groups group = new Groups();
-			group.setId(CommonUtil.getUUID());
+			group.setId(IdUtil.getUUID());
 			group.setName(groupMap.get("name"));
 			group.setDescription(groupMap.get("description"));
 			group.setCreatedAt(new Date());
