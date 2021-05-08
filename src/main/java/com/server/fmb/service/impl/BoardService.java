@@ -17,7 +17,7 @@ import com.server.fmb.entity.Favorites;
 import com.server.fmb.service.IBoardService;
 import com.server.fmb.service.IDomainService;
 import com.server.fmb.service.IUserService;
-import com.server.fmb.util.CommonUtil;
+import com.server.fmb.util.IdUtil;
 import com.server.fmb.util.ValueUtil;
 
 @Service
@@ -117,7 +117,7 @@ public class BoardService implements IBoardService {
 			
 			return boardQueryManager.save(board);
 		} else {
-			board.setId(CommonUtil.getUUID());
+			board.setId(IdUtil.getUUID());
 			board.setName(boardMap.get("name"));
 			board.setModel(boardMap.get("model"));
 			board.setGroupId(UUID.fromString(boardMap.get("groupId")));
@@ -143,7 +143,7 @@ public class BoardService implements IBoardService {
 	@Override
 	public Favorites addFavorite(Map<String, String> boardMap) throws Exception {
 		Favorites favorite = new Favorites();
-		favorite.setId(CommonUtil.getUUID());
+		favorite.setId(IdUtil.getUUID());
 		favorite.setRouting(boardMap.get("boardId"));
 		favorite.setCreatedAt(new Date());
 		favorite.setUpdatedAt(new Date());

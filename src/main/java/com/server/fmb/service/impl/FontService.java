@@ -13,7 +13,7 @@ import com.server.fmb.db.IFontQueryManager;
 import com.server.fmb.entity.Fonts;
 import com.server.fmb.service.IDomainService;
 import com.server.fmb.service.IFontService;
-import com.server.fmb.util.CommonUtil;
+import com.server.fmb.util.IdUtil;
 import com.server.fmb.util.ValueUtil;
 
 
@@ -58,7 +58,7 @@ public class FontService implements IFontService{
 		}
 		else {
 			
-			font.setId(CommonUtil.getUUID());
+			font.setId(IdUtil.getUUID());
 			font.setName((String)fontMap.get("name"));
 			font.setProvider("provider");
 			font.setUri((String)fontMap.get("uri"));
