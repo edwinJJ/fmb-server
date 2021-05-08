@@ -80,6 +80,9 @@ public class AttachmentService implements IAttachmentService {
 	
 	@Override
 	public List<Attachments> getAttachments(int start, int end) throws Exception{
+		if(start == 0  && end ==0) {
+			return attachmentQueryManager.findAll();
+		}
 		return attachmentQueryManager.getAttachments(start, end);
 	}
 	@Override
@@ -133,7 +136,10 @@ public class AttachmentService implements IAttachmentService {
 		attachmentQueryManager.deleteById(UUID.fromString(attachmentId));
 		return attachment;
 	}
-	
+	@Override
+	public void deleteAttachmentByRef(String ref) throws Exception{
+		attachmentQueryManager.deleteAttachmentByRef(ref);
+	}
 	@Override
 	public Attachments fetchAttachmentsById(String id) throws Exception{
 		return (attachmentQueryManager.findById(UUID.fromString(id))).get();

@@ -80,7 +80,7 @@ public class AttachmentController {
 	}
 	
 	
-	// delete board 
+	// delete attachment 
 	@RequestMapping(value="/deleteAttachment/{id}", method = RequestMethod.DELETE)
 	public @ResponseBody Object deleteAttachments(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		Attachments attachment = new Attachments();
@@ -121,5 +121,18 @@ public class AttachmentController {
     public @ResponseBody void downloadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
     	System.out.print(false);
     }
+
+    // delete attachment 
+	@RequestMapping(value="/deleteAttachmentByRef/{ref}", method = RequestMethod.DELETE)
+	public @ResponseBody boolean deleteAttachmentByRef(@PathVariable("ref") String ref, HttpServletRequest request, HttpServletResponse response) {
+		boolean success = false;
+		try {
+			attachmentService.deleteAttachmentByRef(ref);;
+			success = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
 	
 }

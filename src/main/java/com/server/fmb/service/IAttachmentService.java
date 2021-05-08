@@ -19,5 +19,6 @@ public interface IAttachmentService {
 
 	public void uploadTempFile(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public boolean deleteFile(String path) throws Exception;
-//	public void deleteFile(HttpServletRequest request, Map<String, Object> requestBody) throws Exception;
+	
+	public void deleteAttachmentByRef(String ref) throws Exception;
 }
