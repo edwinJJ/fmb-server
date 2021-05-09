@@ -1,3 +1,17 @@
+/*
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *
+ *  Use of this software is controlled by the terms and conditions found in the
+ *  license agreement under which this software has been supplied.
+ *------------------------------------------------------------------------------
+ *
+ *  Source Name:    IFontService.java
+ *  Description:  	Font 관련 서비스 Interface
+ *  Authors:        J.H. Lee
+ *  Update History:
+ *                  2021.05.07 : Created by J.H. Lee
+ *
+ */
 package com.server.fmb.service;
 
 import java.util.List;

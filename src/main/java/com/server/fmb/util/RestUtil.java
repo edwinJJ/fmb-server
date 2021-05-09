@@ -7,18 +7,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.core.env.Environment;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -69,9 +62,6 @@ public class RestUtil {
 	 * @return
 	 */
 	public static String getToken() {
-		if(token == null) {
-//			token = BeanUtil.get(Environment.class).getProperty(ENV_DW_TOKEN_PROPERTY);
-		}
 		return token;
 	}
 	

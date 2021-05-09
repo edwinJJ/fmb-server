@@ -1,3 +1,17 @@
+/*
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *
+ *  Use of this software is controlled by the terms and conditions found in the
+ *  license agreement under which this software has been supplied.
+ *------------------------------------------------------------------------------
+ *
+ *  Source Name:    AttachmentController.java
+ *  Description:  	Attachment Controller 파일
+ *  Authors:        J.I. Cho
+ *  Update History:
+ *                  2021.05.07 : Created by J.I. Cho
+ *
+ */
 package com.server.fmb.controller;
 
 import java.util.ArrayList;
@@ -116,11 +130,23 @@ public class AttachmentController {
     	return new ResultSet().getResultSet(result, true, "deleteFile");
     }
     
-    @RequestMapping(value = "/rest/downloadFile", method = RequestMethod.GET)
+    @RequestMapping(value = "/downloadFile/{path}/{fileName}")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void downloadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	System.out.print(false);
+    public void downloadFile(@PathVariable("path") String path, @PathVariable("fileName") String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
+//    	Object fileInfo = fileManager.createFileFromDataBase(uniqueId, fileType);
+//    	fileManager.downloadFile(request, response, fileInfo, fileType);
+    	attachmentService.downloadFile(request, response, path, fileName);
     }
+    
+//    @RequestMapping(value = "/rest/downloadFile", method = RequestMethod.GET)
+//    @ResponseStatus(HttpStatus.OK)
+//    public @ResponseBody void downloadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//    	try {
+//    		attachmentService.d
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    }
 
     // delete attachment 
 	@RequestMapping(value="/deleteAttachmentByRef/{ref}", method = RequestMethod.DELETE)

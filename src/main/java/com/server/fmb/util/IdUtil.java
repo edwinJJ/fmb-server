@@ -1,3 +1,17 @@
+/*
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *
+ *  Use of this software is controlled by the terms and conditions found in the
+ *  license agreement under which this software has been supplied.
+ *------------------------------------------------------------------------------
+ *
+ *  Source Name:    IdUtil.java
+ *  Description:  	ID값과 관련된 다양한 기능들을 제공하는 클래스 
+ *  Authors:        J.I. Cho
+ *  Update History:
+ *                  2021.05.07 : Created by J.I. Cho
+ *
+ */
 package com.server.fmb.util;
 
 import java.net.InetAddress;

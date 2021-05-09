@@ -1,15 +1,15 @@
 /*
- *  Copyright (c) 2020 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
  *
  *  Use of this software is controlled by the terms and conditions found in the
  *  license agreement under which this software has been supplied.
  *------------------------------------------------------------------------------
  *
  *  Source Name:    FileModel.java
- *  Description:  	파일관리를 위한 데이터베이스 테이블 정의 클래스
- *  Authors:        Y.S. Jung
+ *  Description:  	파일관리를 위한 정의 클래스
+ *  Authors:        J.I. Cho
  *  Update History:
- *                  2020.03.14 : Created by Y.S. Jung
+ *                  2021.05.07 : Created by J.I. Cho
  *
  */
 package com.server.fmb.entity;
@@ -23,25 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.server.fmb.util.IdUtil;
 import com.server.fmb.util.ValueUtil;
 
-//import com.miflow.annotation.Column;
-//import com.miflow.annotation.Index;
-//import com.miflow.annotation.Table;
-//import com.miflow.constant.Constant;
-//import com.miflow.file.impl.FileManagerImpl;
-//import com.miflow.model.BaseObject;
-//import com.miflow.util.BeanUtil;
-//import com.miflow.util.FileUtil;
-//import com.miflow.util.ValueUtil;
-//import com.miflow.workflow.util.IdUtil;
-
-//@Table (name="mf_file", indexes= {
-//		@Index(name = "ix_mf_file_0", columnList = "id")
-//		,@Index(name = "ix_mf_file_1", columnList = "group_id")
-//		,@Index(name = "ix_mf_file_2", columnList = "creation_user")
-//		,@Index(name = "ix_mf_file_4", columnList = "type")
-//		,@Index(name = "ix_mf_file_5", columnList = "file_name")
-//})
-//public class FileModel  extends BaseObject implements Serializable {
 public class FileModel {
 
     public static final String prefix = "file";
@@ -50,34 +31,24 @@ public class FileModel {
     public static int MAX_PROFLIE_SIZE = 120;
     public static int THUMBNAIL_SIZE = 300;
 
-//	@Column (name="id", type=Constant.PG_COL_CHARACTER_VARYING, length=50, nullable=false, primaryKey=true)
     private String id;
 
-//	@Column (name="type", type=Constant.PG_COL_CHARACTER_VARYING, length=10)
     private String type;
 
-//	@Column (name="file_name", type=Constant.PG_COL_CHARACTER_VARYING, length=255)
     private String fileName;
 
-//	@Column (name="file_path", type=Constant.PG_COL_CHARACTER_VARYING, length=500)
     private String filePath;
 
-//	@Column (name="file_size", type=Constant.PG_COL_INTEGER)
     private long fileSize;
 
-//	@Column (name="image_width", type=Constant.PG_COL_INTEGER)
     private int imageWidth;
 
-//	@Column (name="image_height", type=Constant.PG_COL_INTEGER)
     private int imageHeight;
 
-//	@Column (name="deleted", type=Constant.PG_COL_CHARACTER_VARYING, length=1)	
     private String deleted;
 
-//	@Column (name="group_id", type=Constant.PG_COL_CHARACTER_VARYING, length=50)
     private String groupId;
 	
-//	@Column (name="target_id", type=Constant.PG_COL_CHARACTER_VARYING, length=50)
     private String targetId;
         
     private String fileServerPath;
@@ -114,19 +85,6 @@ public class FileModel {
     public String getFileServerPath() {
 		return fileServerPath;
 	}
-
-    
-//	public String getImageUrl() {
-//    	return BeanUtil.get(IFileAbstract.class).getServerUrl() + this.filePath;
-//	}
-//
-//	public String getFileUrl() {
-//    	return BeanUtil.get(IFileAbstract.class).getServerUrl() + this.filePath;
-//	}
-//
-//	public String getThumbnailUrl() {
-//    	return BeanUtil.get(IFileAbstract.class).getServerUrl() + this.filePath.replace("."+ this.type, FileModel.postfix_thumbnail + "." + this.type);
-//	}
 	
 	public int getThumbnailHeight() {
 		if (this.imageHeight == 0 || this.imageWidth == 0) {

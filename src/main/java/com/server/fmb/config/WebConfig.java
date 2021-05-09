@@ -1,3 +1,17 @@
+/*
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *
+ *  Use of this software is controlled by the terms and conditions found in the
+ *  license agreement under which this software has been supplied.
+ *------------------------------------------------------------------------------
+ *
+ *  Source Name:    WebConfig.java
+ *  Description:  	Web MVC Service 설정 파일
+ *  Authors:        J.I. Cho
+ *  Update History:
+ *                  2021.05.07 : Created by J.I. Cho
+ *
+ */
 package com.server.fmb.config;
 
 import org.springframework.beans.factory.annotation.Autowired;

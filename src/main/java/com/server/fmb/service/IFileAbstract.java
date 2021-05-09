@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2020 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
  *
  *  Use of this software is controlled by the terms and conditions found in the
  *  license agreement under which this software has been supplied.
@@ -7,9 +7,9 @@
  *
  *  Source Name:    IFileAbstract.java
  *  Description:  	파일관리를 위한 추상 Interface 정의 모듈
- *  Authors:        Y.S. Jung
+ *  Authors:        J.I Cho
  *  Update History:
- *                  2020.03.14 : Created by Y.S. Jung
+ *                  2021.05.07 : Created by J.I. Cho
  *
  */
 package com.server.fmb.service;
