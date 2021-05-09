@@ -19,5 +19,9 @@ public class ConnectionService implements IConnectionService {
 	public List<Connections> getConnections() throws Exception {
 		return connectionQueryManager.findAll();
 	}
+	@Override
+	public void deleteConnectionByName(String name) throws Exception{
+		connectionQueryManager.deleteConnectionByName(name);
+	}
 	
 }

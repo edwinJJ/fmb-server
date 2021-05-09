@@ -15,6 +15,8 @@ public class Constant {
 	public static final String STATUS = "status";
 	public static final String ENCODING = "encoding";
 	public static final String ROOT_DIVISION = "root.divison";
+	public static final String SCENARIO = "scenario";
+	
 	
 	/**
 	 * Entity 변수 ID 

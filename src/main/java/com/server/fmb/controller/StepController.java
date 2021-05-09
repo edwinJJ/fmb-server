@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,21 +16,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.server.fmb.constant.Constant;
-import com.server.fmb.entity.Connections;
-import com.server.fmb.entity.Connections;
-import com.server.fmb.service.IConnectionService;
+import com.server.fmb.entity.Steps;
+import com.server.fmb.service.IStepService;
 import com.server.fmb.service.impl.ResultSet;
 
+
 @RestController
-public class ConnectionController {
+public class StepController {
+
 	
 	@Autowired
-	IConnectionService connectionService;
+	IStepService stepService;
 	
-	// get connection list
-	@RequestMapping(value="/getConnections", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> getConnections(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
-		List<Connections> ConnectionList = new ArrayList<>();
+	// get Step list
+	@RequestMapping(value="/fetchStepByScenarioId", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> fetchStepByScenarioId(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		List<Steps> stepList = new ArrayList<>();
 		try {
 //			ArrayList sorters = (ArrayList)requestBody.get(Constant.SORTERS);
 //			if (sorters.size() > 0) {
@@ -44,16 +44,24 @@ public class ConnectionController {
 //				int limit = (Integer)requestBody.get(Constant.LIMIT);
 //				
 //			}
-			ConnectionList = connectionService.getConnections();
+			ArrayList filters = (ArrayList)requestBody.get(Constant.FILTERS);
+			
+			if (filters.size() > 0) {
+				Map<String, String> filtersMap = (Map<String, String>)filters.get(0);
+				if (filtersMap.get(Constant.NAME).equals(Constant.SCENARIO)) {
+					stepList = stepService.getStepsByScenarioId(filtersMap.get(Constant.VALUE));
+				}
+			}
+			else {
+				
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Map<String, Object> connectionResult = new HashMap<String, Object>();
-		connectionResult.put(Constant.ITEMS, ConnectionList);
-		connectionResult.put(Constant.TOTAL, ConnectionList.size());
-		return connectionResult;
+		Map<String, Object> StepResult = new HashMap<String, Object>();
+		StepResult.put(Constant.ITEMS, stepList);
+		StepResult.put(Constant.TOTAL, stepList.size());
+		return new ResultSet().getResultSet(StepResult, true, "steps");
 	}
-	
-
-	
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.server.fmb.constant.Constant;
 import com.server.fmb.entity.Scenarios;
 import com.server.fmb.service.IScenarioService;
+import com.server.fmb.service.impl.ResultSet;
 
 
 @RestController
@@ -28,8 +29,8 @@ public class ScenarioController {
 	IScenarioService scenarioService;
 	
 	// get Scenario list
-	@RequestMapping(value="/getScenarios", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> getScenarios(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value="/fetchScenarios", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> fetchScenarios(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
 		List<Scenarios> scenarioList = new ArrayList<>();
 		try {
 //			ArrayList sorters = (ArrayList)requestBody.get(Constant.SORTERS);
@@ -50,6 +51,22 @@ public class ScenarioController {
 		Map<String, Object> ScenarioResult = new HashMap<String, Object>();
 		ScenarioResult.put(Constant.ITEMS, scenarioList);
 		ScenarioResult.put(Constant.TOTAL, scenarioList.size());
-		return ScenarioResult;
+		return new ResultSet().getResultSet(ScenarioResult, true, "scenario");
+	}
+	
+	// delete Scenario 
+	@RequestMapping(value="/deleteScenarioById", method = RequestMethod.POST)
+	public @ResponseBody Object deleteScenarioById(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		List<String> ids = (List<String>)requestBody.get("ids");
+		try {
+			for(String id:ids) {
+				scenarioService.deleteScenarioById(id);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultSet().getResultSet(null, false, "Scenario");
+		}
+		return new ResultSet().getResultSet(null, true, "Scenario");
 	}
 }

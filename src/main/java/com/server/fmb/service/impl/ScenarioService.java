@@ -1,6 +1,7 @@
 package com.server.fmb.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,9 @@ public class ScenarioService implements IScenarioService {
 	public List<Scenarios> getScenarios() throws Exception {
 		return scenarioQueryManager.findAll();
 	}
-		
+
+	@Override
+	public void deleteScenarioById(String id) throws Exception{
+		scenarioQueryManager.deleteById(UUID.fromString(id));
+	}
 }
