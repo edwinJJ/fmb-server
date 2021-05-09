@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.server.fmb.constant.Constant;
 import com.server.fmb.entity.Connections;
+import com.server.fmb.entity.Connections;
 import com.server.fmb.service.IConnectionService;
+import com.server.fmb.service.impl.ResultSet;
 
 @RestController
 public class ConnectionController {
@@ -64,5 +67,7 @@ public class ConnectionController {
 		connectionResult.put(Constant.TOTAL, ConnectionList.size());
 		return connectionResult;
 	}
+	
+
 	
 }
