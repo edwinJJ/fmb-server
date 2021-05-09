@@ -1,3 +1,17 @@
+/*
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *
+ *  Use of this software is controlled by the terms and conditions found in the
+ *  license agreement under which this software has been supplied.
+ *------------------------------------------------------------------------------
+ *
+ *  Source Name:    FontController.java
+ *  Description:  	Font Controller 파일
+ *  Authors:        J.H. Lee
+ *  Update History:
+ *                  2021.05.07 : Created by J.H. Lee
+ *
+ */
 package com.server.fmb.controller;
 
 import java.util.ArrayList;

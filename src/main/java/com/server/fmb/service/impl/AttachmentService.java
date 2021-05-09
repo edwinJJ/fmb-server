@@ -1,12 +1,30 @@
+/*
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *
+ *  Use of this software is controlled by the terms and conditions found in the
+ *  license agreement under which this software has been supplied.
+ *------------------------------------------------------------------------------
+ *
+ *  Source Name:    AttachmentService.java
+ *  Description:  	Attachment 관련 서비스 Interface Impl
+ *  Authors:        J.I. Cho
+ *  Update History:
+ *                  2021.05.07 : Created by J.I. Cho
+ *
+ */
 package com.server.fmb.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,16 +45,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.server.fmb.constant.Constant;
-//import com.miflow.file.IFileAbstract;
-//import com.miflow.constant.Constant;
-//import com.miflow.file.FileModel;
-//import com.miflow.util.AuthUtil;
-//import com.miflow.util.FileUtil;
-//import com.miflow.util.FormatUtil;
-//import com.miflow.util.RestUtil;
-//import com.miflow.websocket.manager.UIWebsocketManager;
-//import com.miflow.workflow.entity.Workflow;
-//import com.miflow.workflow.util.IdUtil;
 import com.server.fmb.db.IAttachmentQueryManager;
 import com.server.fmb.entity.Attachments;
 import com.server.fmb.entity.FileModel;
@@ -58,8 +67,6 @@ public class AttachmentService implements IAttachmentService {
     public static final String FILE_DIVISION_IMAGES = "Images";
     public static final String FILE_DIVISION_FILES = "Files";
     public static final String FILE_DIVISION_PROFILES = "Profiles";
-    public static final String FILE_DIVISION_LOGINIMAGE = "LoginImage";
-    public static final String WORKFLOW_XPDL = "workflowXpdl";
 
 	
 	@Autowired
@@ -152,7 +159,7 @@ public class AttachmentService implements IAttachmentService {
 	 * @throws Exception
 	 */
 	public boolean useMonthlyFolder(String fileDivision) throws Exception {
-		if (fileDivision.equals(FILE_DIVISION_TEMPS) || fileDivision.equals(FILE_DIVISION_PROFILES) || fileDivision.equals(FILE_DIVISION_LOGINIMAGE)) {
+		if (fileDivision.equals(FILE_DIVISION_TEMPS)) {
 			return false;
 		}
 		return true;
@@ -334,7 +341,6 @@ public class AttachmentService implements IAttachmentService {
 
         String fileRootDivision = fileConfiguration.getRootDivision();
 
-//        String fileId = IdUtil.createId(Constant.FILE_ID_PREFIX_TEMP);
         String fileId = IdUtil.getUUIDString();
         String fileDivision = FILE_DIVISION_TEMPS;
         File repository = this.getFileRepository(fileRootDivision, fileDivision, useMonthlyFolder(fileDivision));
@@ -405,216 +411,50 @@ public class AttachmentService implements IAttachmentService {
             FileUtil.delete(file);
             result = true;
         }
-//        if (fileId.startsWith(Constant.FILE_ID_PREFIX_TEMP + "_")) {
-//            String extension = fileName.lastIndexOf(".") > -1 ? fileName.substring(fileName.lastIndexOf(".") + 1) : null;
-//            filePath = fileRepository + fileRootDivision + "/Temps/" + fileId;
-//            File file = new File(filePath);
-//            if (FileUtil.exists(file)) {
-//                FileUtil.delete(file);
-//                result = true;
-//            }
-//        } else {
-//            try {
-//                FileModel file = getFileModel(fileId);
-//                file.setDeleted("Y");
-//                updateFileModel(file);
-//                result = true;
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
         return result;
     }
    
-//    @Override
-//    public void deleteFile(HttpServletRequest request, Map<String, Object> requestBody) throws Exception {
-//    	
-//        String fileId = (String)requestBody.get("fileId");
-//        String fileName = (String)requestBody.get("fileName");
-//        attachmentQueryManager.deleteByFileId(fileId);
-//    }
-    /*
     @Override
-    public void downloadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        
-        ByteArrayInputStream in = null;
-        ServletOutputStream op = null;
-        FileChannel inChannel = null;
-        FileChannel outChannel = null;
-        
-        try {
-        	String fileRootDivision = fileConfiguration.getRootDivision();
-
-        	String fileId = request.getParameter("fileId");
-            String fileName = request.getParameter("fileName");
-            String groupId = request.getParameter("groupId");
-            
-            if (!ValueUtil.isEmpty(fileId) && !ValueUtil.isEmpty(fileName)){
-                String sourceFile = "";
-                String file_name = "";
-    
-                String extension = fileName.lastIndexOf(".") > -1 ? fileName.substring(fileName.lastIndexOf(".") + 1) : null;
-                FileModel doc = null;
-                if (fileId.startsWith(Constant.FILE_ID_PREFIX_TEMP + "_")) {
-                    file_name = fileName;
-                    sourceFile = this.getFileDirectory() + fileRootDivision + File.separator + FILE_DIVISION_TEMPS + File.separator + fileId + "." + extension;
-                } else {
-                    doc = getFileModel(fileId);
-                    //파일명, UniqValue
-                    file_name = doc.getFileName(); 
-                    sourceFile = fileConfiguration.getRepositoryPath() + doc.getFilePath();
-                }
-    
-                File file = new File(sourceFile);
-                int sourceFileSize = (int)file.length();
-                op = response.getOutputStream();
-                response.setContentType("application/octet-stream");
-                response.setContentLength(sourceFileSize);
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + FileUtil.encodeFileName(request, file_name) + "\"");
-                long fileSize = FileUtil.copy(file, op);
-    
-                //파일 다운로드 이력을 남긴다
-                //saveFileDownloadHistory(user.getId(), doc, packageId, taskInstId, recordId);
-                
-            } else if (!ValueUtil.isEmpty(groupId)) {
-                List<FileModel> fileList = queryManager.selectList(FileModel.class, ValueUtil.newMap("groupId", groupId));                
-                if (fileList == null || fileList.size() == 0) {
-                    return;
-                }
-                
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ZipOutputStream zos = null;
-                try {
-                    zos = new ZipOutputStream(baos); // ZipOutputStream
-                    zos.setLevel(8); // 압축 레벨 - 최대 압축률은 9, 디폴트 8
-                    for (int i = 0; i < fileList.size(); i++) {
-                        
-                        try {
-                            FileModel doc = fileList.get(i);
-                            fileName = doc.getFileName(); 
-                            String sourceFile = fileConfiguration.getRepositoryPath() + doc.getFilePath();
-
-                            
-                            File file = new File(sourceFile);
-                            ZipEntry zentry = new ZipEntry(fileName);
-                            zentry.setTime(doc.getCreationDate().getTime());
-                            zos.putNextEntry(zentry);            
-                            FileUtil.copy(file, zos);
-                            zos.closeEntry();
-
-                            //파일 다운로드 이력을 남긴다
-                            //saveFileDownloadHistory(user.getId(), doc, packageId, taskInstId, recordId);                    
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    zos.finish(); // ZipOutputStream finish
-                } finally {
-                    String zipFileName = fileList.get(0).getFileName() + "_files.zip";;
-                    op = response.getOutputStream();                        
-                    response.setContentType("application/octet-stream");
-                    response.setContentLength((int)baos.size());
-                    response.setHeader("Content-Disposition", "attachment; filename=\"" + FileUtil.encodeFileName(request, zipFileName) + "\"");
-
-                    byte[] bbuf = new byte[4096];
-                    in = new ByteArrayInputStream(baos.toByteArray());
-                    int length = 0;
-                    while ((in != null) && ((length = in.read(bbuf)) != -1)) {
-                        op.write(bbuf,0,length);
-                    }
-                    if (zos != null) {
-                        zos.close();
-                    }
-                    if (baos != null) {
-                        baos.close();
-                    }
-                }                   
-            }
-        } catch (Throwable tt) {
-            throw tt;
-        } finally {
-        		try {
-                if (in != null & op != null) {
-                    in.close();
-                    op.flush();
-                    op.close();
-                }           
-            } catch (Throwable th) {
-                th.printStackTrace();
-            }
-            if (inChannel != null) {
-                inChannel.close();
-            }
-            if (outChannel != null) {
-                outChannel.close();
-            }
-            op.flush();
-        }
-    }
-    
-    @Override
-    public Object createFileFromDataBase(String uniqueId, String fileType) throws Exception {
-    	if (fileType.equals(WORKFLOW_XPDL)) {
-	    	Workflow workflow = modelerManager.getWorkflowById(uniqueId);
-			String xpdlString = workflow.getXpdlString();
-			String repositoryPath = fileConfiguration.getRepositoryPath();
-	        try {
-	            BufferedWriter fw = new BufferedWriter(new FileWriter(repositoryPath + "/" + workflow.getName() + ".xpdl", false));
-	            fw.write(xpdlString);
-	            fw.flush();
-	            fw.close();
-	        } catch(Exception e) {
-	            e.printStackTrace();
-	        }
-	        return workflow;
-    	}
-    	return null;
-    }
-    
-    @Override
-    public void downloadFile(HttpServletRequest request, HttpServletResponse response, Object fileInfo, String fileType) throws Exception {
+    public void downloadFile(HttpServletRequest request, HttpServletResponse response, String path, String fileName) throws Exception {
     	String repositoryPath = fileConfiguration.getRepositoryPath();
 
     	try {
-	    	if (fileType.equals(WORKFLOW_XPDL)) {
-	    		Workflow workflow = (Workflow) fileInfo;
-		    	String path = repositoryPath + File.separator + workflow.getName() + ".xpdl";
-				File file = new File(path);
-				
-				String userAgent = request.getHeader("User-Agent");
-				boolean ie = userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("rv:11") > -1;
-				String fileName = null;
-		
-				if (ie) {
-					fileName = URLEncoder.encode(file.getName(), "utf-8");
-				} else {
-					fileName = new String(file.getName().getBytes("utf-8"),"iso-8859-1");
-				}
-	
-				response.setContentType("application/octet-stream");
-				response.setHeader("Content-Disposition","attachment;filename=\"" +fileName+"\";");
-	
-				FileInputStream fis = new FileInputStream(file);
-				BufferedInputStream bis = new BufferedInputStream(fis);
-				ServletOutputStream so = response.getOutputStream();
-				BufferedOutputStream bos = new BufferedOutputStream(so);
-	
-				byte[] data = new byte[2048];
-				int input = 0;
-				while ((input=bis.read(data))!=-1) {
-					bos.write(data,0,input);
-					bos.flush();
-				}
-	
-				if (bos!=null) bos.close();
-				if (bis!=null) bis.close();
-				if (so!=null) so.close();
-				if (fis!=null) fis.close();
-	    	}
+	    	path = repositoryPath + File.separator + fileConfiguration.getRootDivision() + "/Temps/" + path;
+			File file = new File(path);
+			
+			String userAgent = request.getHeader("User-Agent");
+			boolean ie = userAgent.indexOf("MSIE") > -1 || userAgent.indexOf("rv:11") > -1;
+//			String fileName = null;
+			
+			if (ie) {
+				fileName = URLEncoder.encode(fileName, "utf-8");
+			} else {
+				fileName = new String(fileName.getBytes("utf-8"),"iso-8859-1");
+			}
+
+			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Disposition","attachment;filename=\"" +fileName+"\";");
+
+			FileInputStream fis = new FileInputStream(file);
+			BufferedInputStream bis = new BufferedInputStream(fis);
+			ServletOutputStream so = response.getOutputStream();
+			BufferedOutputStream bos = new BufferedOutputStream(so);
+
+			byte[] data = new byte[2048];
+			int input = 0;
+			while ((input=bis.read(data))!=-1) {
+				bos.write(data,0,input);
+				bos.flush();
+			}
+
+			if (bos!=null) bos.close();
+			if (bis!=null) bis.close();
+			if (so!=null) so.close();
+			if (fis!=null) fis.close();
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
     }
-    */
+    
 	
 }

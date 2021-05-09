@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2020 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
  *
  *  Use of this software is controlled by the terms and conditions found in the
  *  license agreement under which this software has been supplied.
@@ -7,9 +7,9 @@
  *
  *  Source Name:    UIWebSocketManager.java
  *  Description:  	UI Client들에게 WebSocket 서비스를 제공하는 클래스 
- *  Authors:        Y.S. Jung
+ *  Authors:        J.I. Cho
  *  Update History:
- *                  2020.03.14 : Created by Y.S. Jung
+ *                  2020.05.07 : Created by J.I. Cho
  *
  */
 package com.server.fmb.websocket;
@@ -31,13 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.server.fmb.util.ValueUtil;
-
-//import com.miflow.organization.IOrganizationManager;
-//import com.miflow.util.BeanUtil;
-//import com.miflow.util.FormatUtil;
-//import com.miflow.util.ValueUtil;
-//import com.miflow.websocket.event.WebsocketEventFactory;
-//import com.miflow.websocket.event.WebsocketInEvent;
 
 /**
  * 웹 소켓 매니저 

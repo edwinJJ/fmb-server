@@ -1,3 +1,17 @@
+/*
+ *  Copyright (c) 2021 Smartworks.net, Inc. & AIROV Tech. All Rights Reserved
+ *
+ *  Use of this software is controlled by the terms and conditions found in the
+ *  license agreement under which this software has been supplied.
+ *------------------------------------------------------------------------------
+ *
+ *  Source Name:    Fonts.java
+ *  Description:  	Fonts 관련 테이블 정의 
+ *  Authors:        J.H. Lee
+ *  Update History:
+ *                  2021.05.07 : Created by J.H. Lee
+ *
+ */
 package com.server.fmb.entity;
 
 import java.util.Date;
