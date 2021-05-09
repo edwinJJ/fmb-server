@@ -128,6 +128,7 @@ public class BoardService implements IBoardService {
 			} else {
 				board.setDomainId(domainService.getDomain().getId());
 			}
+			if (ValueUtil.isNotEmpty(boardMap.get("thumbnail"))) board.setThumbnail(boardMap.get("thumbnail"));
 			
 			return boardQueryManager.save(board);
 		} else {
