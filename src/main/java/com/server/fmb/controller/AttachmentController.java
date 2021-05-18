@@ -70,14 +70,14 @@ public class AttachmentController {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(attachments, false, "attachments", e.toString());
 		}
 		
 		Map<String, Object> attachmentResult = new HashMap<String, Object>();
 		
 		attachmentResult.put("items", attachments);
 		attachmentResult.put("total", attachments.size());
-		
-		return attachmentResult;
+		return new ResultSet().getResultSet(attachmentResult, true, "attachments", null);
 	}
 	
 	// create Attachments 
@@ -88,9 +88,9 @@ public class AttachmentController {
 			attachment = attachmentService.setAttachments(requestBody);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultSet().getResultSet(attachment, false, "attachment");
+			return new ResultSet().getResultSet(attachment, false, "attachment", e.toString());
 		}
-		return new ResultSet().getResultSet(attachment, true, "attachment");
+		return new ResultSet().getResultSet(attachment, true, "attachment", null);
 	}
 	
 	
@@ -102,9 +102,9 @@ public class AttachmentController {
 			attachment = attachmentService.deleteAttachments(id);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultSet().getResultSet(attachment, false, "attachment");
+			return new ResultSet().getResultSet(attachment, false, "attachment", e.toString());
 		}
-		return new ResultSet().getResultSet(attachment, true, "attachment");
+		return new ResultSet().getResultSet(attachment, true, "attachment", null);
 	}
 	
 	@RequestMapping(value = "/uploadTempFile", method = RequestMethod.POST)
@@ -125,9 +125,9 @@ public class AttachmentController {
     		result = attachmentService.deleteFile(path);
     	} catch (Exception e) {
     		e.printStackTrace();
-    		return new ResultSet().getResultSet(result, false, "deleteFile");
+    		return new ResultSet().getResultSet(result, false, "deleteFile", e.toString());
     	}
-    	return new ResultSet().getResultSet(result, true, "deleteFile");
+    	return new ResultSet().getResultSet(result, true, "deleteFile", null);
     }
     
     @RequestMapping(value = "/downloadFile/{path}/{fileName}")
@@ -150,15 +150,16 @@ public class AttachmentController {
 
     // delete attachment 
 	@RequestMapping(value="/deleteAttachmentByRef/{ref}", method = RequestMethod.DELETE)
-	public @ResponseBody boolean deleteAttachmentByRef(@PathVariable("ref") String ref, HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody Object deleteAttachmentByRef(@PathVariable("ref") String ref, HttpServletRequest request, HttpServletResponse response) {
 		boolean success = false;
 		try {
-			attachmentService.deleteAttachmentByRef(ref);;
+			attachmentService.deleteAttachmentByRef(ref);
 			success = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(success, false, "deleteAttachmentByRef", e.toString());
 		}
-		return success;
+		return new ResultSet().getResultSet(success, true, "deleteAttachmentByRef", null);
 	}
 	
 }

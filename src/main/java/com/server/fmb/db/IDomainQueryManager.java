@@ -20,6 +20,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.server.fmb.entity.Domains;
 
-public interface IDomainQueryManager extends JpaRepository<Domains, UUID>  {
+public interface IDomainQueryManager extends JpaRepository<Domains, String>  {
+//public interface IDomainQueryManager extends JpaRepository<Domains, UUID>  {
 
 }

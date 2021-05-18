@@ -20,14 +20,17 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Connections {
 	
 	@Id
-	@GeneratedValue(generator = "UUID")
-	private UUID id;
+	private String id;
+//	@Id
+//	@GeneratedValue(generator = "UUID")
+//	private UUID id;
 	
 	@Column
 	private String name;
@@ -54,21 +57,31 @@ public class Connections {
 	private Date updatedAt;
 	
 	@Column
-	private UUID domainId;
+	private String domainId;
+//	private UUID domainId;
 	
 	@Column
-	private UUID creatorId;
+	private String creatorId;
+//	private UUID creatorId;
 	
 	@Column
-	private UUID updaterId;
+	private String updaterId;
+//	private UUID updaterId;
 
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
+//	public UUID getId() {
+//		return id;
+//	}
+//
+//	public void setId(UUID id) {
+//		this.id = id;
+//	}
 
 	public String getName() {
 		return name;
@@ -134,28 +147,49 @@ public class Connections {
 		this.updatedAt = updatedAt;
 	}
 
-	public UUID getDomainId() {
+	public String getDomainId() {
 		return domainId;
 	}
 
-	public void setDomainId(UUID domainId) {
+	public void setDomainId(String domainId) {
 		this.domainId = domainId;
 	}
+//	public UUID getDomainId() {
+//		return domainId;
+//	}
+//
+//	public void setDomainId(UUID domainId) {
+//		this.domainId = domainId;
+//	}
 
-	public UUID getCreatorId() {
+	public String getCreatorId() {
 		return creatorId;
 	}
 
-	public void setCreatorId(UUID creatorId) {
+	public void setCreatorId(String creatorId) {
 		this.creatorId = creatorId;
 	}
+//	public UUID getCreatorId() {
+//		return creatorId;
+//	}
+//
+//	public void setCreatorId(UUID creatorId) {
+//		this.creatorId = creatorId;
+//	}
 
-	public UUID getUpdaterId() {
+	public String getUpdaterId() {
 		return updaterId;
 	}
 
-	public void setUpdaterId(UUID updaterId) {
+	public void setUpdaterId(String updaterId) {
 		this.updaterId = updaterId;
 	}
+//	public UUID getUpdaterId() {
+//		return updaterId;
+//	}
+//
+//	public void setUpdaterId(UUID updaterId) {
+//		this.updaterId = updaterId;
+//	}
 	
 }

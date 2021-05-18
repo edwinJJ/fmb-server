@@ -24,7 +24,8 @@ import org.springframework.data.repository.query.Param;
 import com.server.fmb.entity.Attachments;
 import com.server.fmb.entity.Fonts;
 
-public interface IFontQueryManager extends JpaRepository<Fonts, UUID>{
+public interface IFontQueryManager extends JpaRepository<Fonts, String>{
+//public interface IFontQueryManager extends JpaRepository<Fonts, UUID>{
 
 	
 	@Query(value = "SELECT u.* FROM fonts u ORDER BY u.name DESC OFFSET ?1 LIMIT ?2", nativeQuery = true)

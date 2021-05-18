@@ -32,8 +32,10 @@ public class Attachments {
 
 	
 	@Id
-	@GeneratedValue(generator = "UUID")
-	private UUID id;
+	private String id;
+//	@Id
+//	@GeneratedValue(generator = "UUID")
+//	private UUID id;
 	
 	@Column
 	private String name;
@@ -57,7 +59,8 @@ public class Attachments {
 	private String path;
 	
 	@Column
-	private String size;
+	private String bulk;
+//	private String size;
 	
 	@Column
 	private Date createdAt; 
@@ -66,21 +69,22 @@ public class Attachments {
 	private Date updatedAt;
 	
 	@Column
-	private UUID creatorId;
+	private String creatorId;
+//	private UUID creatorId;
 	
 	@Column
-	private UUID updaterId;
+	private String updaterId;
+//	private UUID updaterId;
 
 	@Column
-	private UUID domainId;
-	
+	private String domainId;
+//	private UUID domainId;
 
-
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -100,46 +104,6 @@ public class Attachments {
 		this.description = description;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public UUID getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(UUID creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public UUID getUpdaterId() {
-		return updaterId;
-	}
-
-	public void setUpdaterId(UUID updaterId) {
-		this.updaterId = updaterId;
-	}
-
-	public UUID getDomainId() {
-		return domainId;
-	}
-
-	public void setDomainId(UUID domainId) {
-		this.domainId = domainId;
-	}
-
 	public String getMimetype() {
 		return mimetype;
 	}
@@ -148,20 +112,20 @@ public class Attachments {
 		this.mimetype = mimetype;
 	}
 
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
 	public String getEncoding() {
 		return encoding;
 	}
 
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getRefBy() {
@@ -180,14 +144,53 @@ public class Attachments {
 		this.path = path;
 	}
 
-	public String getSize() {
-		return size;
+	public String getBulk() {
+		return bulk;
 	}
 
-	public void setSize(String size) {
-		this.size = size;
+	public void setBulk(String bulk) {
+		this.bulk = bulk;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public String getCreatorId() {
+		return creatorId;
+	}
+
+	public void setCreatorId(String creatorId) {
+		this.creatorId = creatorId;
+	}
+
+	public String getUpdaterId() {
+		return updaterId;
+	}
+
+	public void setUpdaterId(String updaterId) {
+		this.updaterId = updaterId;
+	}
+
+	public String getDomainId() {
+		return domainId;
+	}
+
+	public void setDomainId(String domainId) {
+		this.domainId = domainId;
 	}
 	
-	
-	
+
 }

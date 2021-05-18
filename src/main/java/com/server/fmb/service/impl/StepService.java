@@ -18,7 +18,8 @@ public class StepService implements IStepService{
 	
 	@Override
 	public List<Steps> getStepsByScenarioId(String id) throws Exception{
-		return stepQueryManager.getStepsByScenarioId(UUID.fromString(id));
+		return stepQueryManager.getStepsByScenarioId(id);
+//		return stepQueryManager.getStepsByScenarioId(UUID.fromString(id));
 	}
 	
 

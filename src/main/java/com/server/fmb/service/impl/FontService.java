@@ -71,8 +71,8 @@ public class FontService implements IFontService{
 			return fontResult;
 		}
 		else {
-			
-			font.setId(IdUtil.getUUID());
+			font.setId(IdUtil.getUUIDString());
+//			font.setId(IdUtil.getUUID());
 			font.setName((String)fontMap.get("name"));
 			font.setProvider("provider");
 			font.setUri((String)fontMap.get("uri"));
@@ -92,10 +92,12 @@ public class FontService implements IFontService{
 		
 	}
 	public void deleteFonts(String fontId) throws Exception{
-		fontQueryManager.deleteById(UUID.fromString(fontId));
+		fontQueryManager.deleteById(fontId);
+//		fontQueryManager.deleteById(UUID.fromString(fontId));
 	}
 	public Fonts fetchFontsById(String id) throws Exception{
-		return (fontQueryManager.findById(UUID.fromString(id))).get();
+		return (fontQueryManager.findById(id)).get();
+//		return (fontQueryManager.findById(UUID.fromString(id))).get();
 	}
 	
 	

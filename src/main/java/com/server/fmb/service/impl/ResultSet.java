@@ -21,10 +21,11 @@ import com.server.fmb.constant.Constant;
 
 public class ResultSet {
 	
-	public Map<String, Object> getResultSet(Object result, boolean status, String dataName) {
+	public Map<String, Object> getResultSet(Object result, boolean status, String dataName, String errorMessage) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put(dataName, result);
 		resultMap.put(Constant.STATUS, status);
+		resultMap.put(Constant.ERRORMESSAGE, errorMessage);
 		return resultMap;
 	}
 }

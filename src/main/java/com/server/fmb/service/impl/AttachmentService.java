@@ -104,21 +104,11 @@ public class AttachmentService implements IAttachmentService {
 		
 		if(ValueUtil.isNotEmpty(attachmentMap.get("id"))){
 			attachment = fetchAttachmentsById(attachmentMap.get("id"));
-//			attachment.setCategory(attachmentMap.get("category"));
-//			attachment.setName(attachmentMap.get("name"));
-//			attachment.setDescription(attachmentMap.get("description"));
-//			attachment.setMimetype(attachmentMap.get("type"));
-//			attachment.setEncoding(envUtil.getProperty(Constant.ENCODING));
-//			attachment.setRefBy(attachmentMap.get("refBy"));
-//			attachment.setPath(attachmentMap.get("path"));
-//			attachment.setSize(attachmentMap.get("size"));
-//			attachment.setUpdatedAt(new Date());
-//			attachment.setDomainId(UUID.fromString(attachmentMap.get("dominId")));
-//			attachment.setUpdaterId(UUID.fromString(attachmentMap.get("updatedId")));
 			return attachmentQueryManager.save(attachment);
 		}
 		else {
-			attachment.setId(IdUtil.getUUID());
+			attachment.setId(IdUtil.getUUIDString());
+//			attachment.setId(IdUtil.getUUID());
 			attachment.setCategory(attachmentMap.get("category"));
 			attachment.setName(attachmentMap.get("name"));
 			attachment.setDescription(attachmentMap.get("description"));
@@ -126,7 +116,8 @@ public class AttachmentService implements IAttachmentService {
 			attachment.setEncoding(envUtil.getProperty(Constant.ENCODING));
 			attachment.setRefBy(attachmentMap.get("refBy"));
 			attachment.setPath(attachmentMap.get("fileId"));
-			attachment.setSize(attachmentMap.get("size"));
+			attachment.setBulk(attachmentMap.get("size"));
+//			attachment.setSize(attachmentMap.get("size"));
 			attachment.setUpdatedAt(new Date());
 			attachment.setCreatedAt(new Date());
 			attachment.setDomainId(domainService.getDomain().getId());
@@ -140,7 +131,8 @@ public class AttachmentService implements IAttachmentService {
 	@Override
 	public Attachments deleteAttachments(String attachmentId) throws Exception{
 		Attachments attachment = fetchAttachmentsById(attachmentId);
-		attachmentQueryManager.deleteById(UUID.fromString(attachmentId));
+		attachmentQueryManager.deleteById(attachmentId);
+//		attachmentQueryManager.deleteById(UUID.fromString(attachmentId));
 		return attachment;
 	}
 	@Override
@@ -149,7 +141,8 @@ public class AttachmentService implements IAttachmentService {
 	}
 	@Override
 	public Attachments fetchAttachmentsById(String id) throws Exception{
-		return (attachmentQueryManager.findById(UUID.fromString(id))).get();
+		return (attachmentQueryManager.findById(id)).get();
+//		return (attachmentQueryManager.findById(UUID.fromString(id))).get();
 	}
 	
 	/**

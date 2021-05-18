@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.server.fmb.entity.Groups;
 import com.server.fmb.service.IGroupService;
+import com.server.fmb.service.impl.ResultSet;
 
 @RestController
 public class GroupController {
@@ -40,27 +41,29 @@ public class GroupController {
 	
 	// create group 
 	@RequestMapping(value="/createGroup", method = RequestMethod.POST)
-	public @ResponseBody Groups createGroup(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody Object createGroup(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
 		Groups group = new Groups();
 		try {
 			group = groupService.setGroup(requestBody);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(group, false, "group", e.toString());
 		}
-		return group;
+		return new ResultSet().getResultSet(group, true, "group", null);
 	}
 	
 	// update group
 	@RequestMapping(value="/updateGroup", method = RequestMethod.PUT)
-	public @ResponseBody boolean updateGroup(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody Object updateGroup(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
 		boolean success = false;
 		try {
 			groupService.setGroup(requestBody);
 			success = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(success, false, "success", e.toString());
 		}
-		return success;
+		return new ResultSet().getResultSet(success, true, "success", null);
 	}
 	
 	

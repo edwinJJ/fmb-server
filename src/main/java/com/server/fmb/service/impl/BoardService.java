@@ -60,7 +60,8 @@ public class BoardService implements IBoardService {
 	}
 	
 	@Override
-	public List<Boards> getBoardsByRoutingIds(List<UUID> routingIds) throws Exception {
+	public List<Boards> getBoardsByRoutingIds(List<String> routingIds) throws Exception {
+//	public List<Boards> getBoardsByRoutingIds(List<UUID> routingIds) throws Exception {
 //		일부 데이터만 가져오는 로직 (UUID 이슈로 보류)
 //		List<Map<String, Object>> boardsListMap = boardQueryManager.getBoardsByRoutingIds(routingIds);
 //		
@@ -88,10 +89,14 @@ public class BoardService implements IBoardService {
 	public List<Boards> getFavorites() throws Exception {
 		List<Favorites> favoritesList = favoritesManager.findAll();
 		
-		List<UUID> routingIds = new ArrayList<UUID>();
+		List<String> routingIds = new ArrayList<String>();
 		for (Favorites favorites: favoritesList) {
-			routingIds.add(UUID.fromString(favorites.getRouting()));
+			routingIds.add(favorites.getRouting());
 		}
+//		List<UUID> routingIds = new ArrayList<UUID>();
+//		for (Favorites favorites: favoritesList) {
+//			routingIds.add(UUID.fromString(favorites.getRouting()));
+//		}
 		return getBoardsByRoutingIds(routingIds);
 	}
 	
@@ -102,7 +107,8 @@ public class BoardService implements IBoardService {
 	
 	@Override
 	public List<Boards> getBoardsByGroupId(String groupId) throws Exception {
-		List<Boards> boardList = boardQueryManager.getBoardsByGroupId(UUID.fromString(groupId));
+		List<Boards> boardList = boardQueryManager.getBoardsByGroupId(groupId);
+//		List<Boards> boardList = boardQueryManager.getBoardsByGroupId(UUID.fromString(groupId));
 		for (Boards board : boardList) {
 			board.setModel(null);
 		}
@@ -117,15 +123,18 @@ public class BoardService implements IBoardService {
 			board.setName(boardMap.get("name"));
 			if (!ValueUtil.isEmpty(boardMap.get("description"))) board.setDescription(boardMap.get("description"));
 			if (!ValueUtil.isEmpty(boardMap.get("model"))) board.setModel(boardMap.get("model"));
-			if (!ValueUtil.isEmpty(boardMap.get("groupId"))) board.setGroupId(UUID.fromString(boardMap.get("groupId")));
+			if (!ValueUtil.isEmpty(boardMap.get("groupId"))) board.setGroupId(boardMap.get("groupId"));
+//			if (!ValueUtil.isEmpty(boardMap.get("groupId"))) board.setGroupId(UUID.fromString(boardMap.get("groupId")));
 			board.setUpdatedAt(new Date());
 			if (!ValueUtil.isEmpty(boardMap.get("updaterId"))) {
-				board.setUpdaterId(UUID.fromString(boardMap.get("updaterId")));
+				board.setUpdaterId(boardMap.get("updaterId"));
+//				board.setUpdaterId(UUID.fromString(boardMap.get("updaterId")));
 			} else {
 				board.setUpdaterId(userService.getAdminUser().getId());
 			}
 			if (!ValueUtil.isEmpty(boardMap.get("domainId"))) {
-				board.setDomainId(UUID.fromString(boardMap.get("domainId")));
+				board.setDomainId(boardMap.get("domainId"));
+//				board.setDomainId(UUID.fromString(boardMap.get("domainId")));
 			} else {
 				board.setDomainId(domainService.getDomain().getId());
 			}
@@ -133,10 +142,12 @@ public class BoardService implements IBoardService {
 			
 			return boardQueryManager.save(board);
 		} else {
-			board.setId(IdUtil.getUUID());
+			board.setId(IdUtil.getUUIDString());
+//			board.setId(IdUtil.getUUID());
 			board.setName(boardMap.get("name"));
 			board.setModel(boardMap.get("model"));
-			board.setGroupId(UUID.fromString(boardMap.get("groupId")));
+			board.setGroupId(boardMap.get("groupId"));
+//			board.setGroupId(UUID.fromString(boardMap.get("groupId")));
 			board.setThumbnail(Constant.NEW_THUMBNAIL);
 			board.setCreatedAt(new Date());
 			board.setUpdatedAt(new Date());
@@ -148,18 +159,21 @@ public class BoardService implements IBoardService {
 
 	@Override
 	public void deleteBoard(String boardId) throws Exception {
-		boardQueryManager.deleteById(UUID.fromString(boardId));
+		boardQueryManager.deleteById(boardId);
+//		boardQueryManager.deleteById(UUID.fromString(boardId));
 	}
 
 	@Override
 	public Boards fetchBoardById(String id) throws Exception {
-		return (boardQueryManager.findById(UUID.fromString(id))).get();
+		return (boardQueryManager.findById(id)).get();
+//		return (boardQueryManager.findById(UUID.fromString(id))).get();
 	}
 
 	@Override
 	public Favorites addFavorite(Map<String, String> boardMap) throws Exception {
 		Favorites favorite = new Favorites();
-		favorite.setId(IdUtil.getUUID());
+		favorite.setId(IdUtil.getUUIDString());
+//		favorite.setId(IdUtil.getUUID());
 		favorite.setRouting(boardMap.get("boardId"));
 		favorite.setCreatedAt(new Date());
 		favorite.setUpdatedAt(new Date());

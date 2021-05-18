@@ -20,6 +20,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.server.fmb.entity.Users;
 
-public interface IUserQueryManager extends JpaRepository<Users, UUID> {
+public interface IUserQueryManager extends JpaRepository<Users, String> {
+//public interface IUserQueryManager extends JpaRepository<Users, UUID> {
 	
 }

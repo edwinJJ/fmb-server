@@ -44,7 +44,8 @@ public class GroupService implements IGroupService {
 	
 	@Override
 	public Groups getGroupById(String groupId) throws Exception {
-		return groupQueryManager.findById(UUID.fromString(groupId)).get();
+		return groupQueryManager.findById(groupId).get();
+//		return groupQueryManager.findById(UUID.fromString(groupId)).get();
 	}
 	
 	@Override
@@ -54,11 +55,13 @@ public class GroupService implements IGroupService {
 			group.setName(groupMap.get("name"));
 			group.setDescription(groupMap.get("description"));
 			group.setUpdatedAt(new Date());
-			group.setUpdaterId(UUID.fromString(groupMap.get("updaterId")));
+			group.setUpdaterId(groupMap.get("updaterId"));
+//			group.setUpdaterId(UUID.fromString(groupMap.get("updaterId")));
 			return groupQueryManager.save(group);
 		} else {
 			Groups group = new Groups();
-			group.setId(IdUtil.getUUID());
+			group.setId(IdUtil.getUUIDString());
+//			group.setId(IdUtil.getUUID());
 			group.setName(groupMap.get("name"));
 			group.setDescription(groupMap.get("description"));
 			group.setCreatedAt(new Date());
@@ -72,7 +75,8 @@ public class GroupService implements IGroupService {
 
 	@Override
 	public void deleteGroup(String id) throws Exception {
-		groupQueryManager.deleteById(UUID.fromString(id));
+		groupQueryManager.deleteById(id);
+//		groupQueryManager.deleteById(UUID.fromString(id));
 	}
 	
 	@Override

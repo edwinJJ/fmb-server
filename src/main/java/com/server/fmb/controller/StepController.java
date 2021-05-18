@@ -62,6 +62,6 @@ public class StepController {
 		Map<String, Object> StepResult = new HashMap<String, Object>();
 		StepResult.put(Constant.ITEMS, stepList);
 		StepResult.put(Constant.TOTAL, stepList.size());
-		return new ResultSet().getResultSet(StepResult, true, "steps");
+		return new ResultSet().getResultSet(StepResult, true, "steps", null);
 	}
 }

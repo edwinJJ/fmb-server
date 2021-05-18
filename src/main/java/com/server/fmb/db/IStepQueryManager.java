@@ -10,9 +10,11 @@ import org.springframework.data.repository.query.Param;
 import com.server.fmb.entity.Attachments;
 import com.server.fmb.entity.Steps;
 
-public interface IStepQueryManager extends JpaRepository<Steps, UUID>{
+public interface IStepQueryManager extends JpaRepository<Steps, String>{
+//public interface IStepQueryManager extends JpaRepository<Steps, UUID>{
 
 	
 	@Query(value = "SELECT u.* FROM steps u WHERE u.scenario_id = ?1  ORDER BY u.sequence DESC", nativeQuery = true)
-	public List<Steps> getStepsByScenarioId(@Param("scenarioId") UUID scenarioId);
+	public List<Steps> getStepsByScenarioId(@Param("scenarioId") String scenarioId);
+//	public List<Steps> getStepsByScenarioId(@Param("scenarioId") UUID scenarioId);
 }

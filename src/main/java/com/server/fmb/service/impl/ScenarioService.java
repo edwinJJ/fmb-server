@@ -26,6 +26,7 @@ public class ScenarioService implements IScenarioService {
 
 	@Override
 	public void deleteScenarioById(String id) throws Exception{
-		scenarioQueryManager.deleteById(UUID.fromString(id));
+		scenarioQueryManager.deleteById(id);
+//		scenarioQueryManager.deleteById(UUID.fromString(id));
 	}
 }

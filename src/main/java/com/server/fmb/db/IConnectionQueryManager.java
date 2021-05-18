@@ -25,7 +25,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.server.fmb.entity.Connections;
 
-public interface IConnectionQueryManager extends JpaRepository<Connections, UUID> {
+public interface IConnectionQueryManager extends JpaRepository<Connections, String> {
+//public interface IConnectionQueryManager extends JpaRepository<Connections, UUID> {
 
 	
 	@Transactional

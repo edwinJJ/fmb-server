@@ -11,7 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.server.fmb.entity.Scenarios;
 
-public interface IScenarioQueryManager  extends JpaRepository<Scenarios , UUID> {
+public interface IScenarioQueryManager  extends JpaRepository<Scenarios , String> {
+//public interface IScenarioQueryManager  extends JpaRepository<Scenarios , UUID> {
 
 	
 	@Transactional

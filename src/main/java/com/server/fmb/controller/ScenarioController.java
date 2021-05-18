@@ -51,7 +51,7 @@ public class ScenarioController {
 		Map<String, Object> ScenarioResult = new HashMap<String, Object>();
 		ScenarioResult.put(Constant.ITEMS, scenarioList);
 		ScenarioResult.put(Constant.TOTAL, scenarioList.size());
-		return new ResultSet().getResultSet(ScenarioResult, true, "scenario");
+		return new ResultSet().getResultSet(ScenarioResult, true, "scenario", null);
 	}
 	
 	// delete Scenario 
@@ -65,8 +65,8 @@ public class ScenarioController {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultSet().getResultSet(null, false, "Scenario");
+			return new ResultSet().getResultSet(null, false, "Scenario", e.toString());
 		}
-		return new ResultSet().getResultSet(null, true, "Scenario");
+		return new ResultSet().getResultSet(null, true, "Scenario", null);
 	}
 }

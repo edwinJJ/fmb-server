@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.server.fmb.constant.Constant;
 import com.server.fmb.entity.Fonts;
 import com.server.fmb.service.IFontService;
+import com.server.fmb.service.impl.ResultSet;
 import com.server.fmb.util.ValueUtil;
 
 @RestController
@@ -45,7 +46,7 @@ public class FontController {
 	
 	
 	@RequestMapping(value="/fetchFontList", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> fetchFontList(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response){
+	public @ResponseBody Object fetchFontList(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response){
 		List<Fonts> fonts = new ArrayList<>();
 		try {
 			
@@ -53,16 +54,12 @@ public class FontController {
 			Map<String, Integer> pagination = (Map<String, Integer>) requestBody.get(Constant.PAGINATION);
 			int start = 0;
 			int end = 0;
-			
-			
-			
 			if(ValueUtil.isNotEmpty(pagination)) {
 				start = (Integer) pagination.get(Constant.PAGE);
 				end = (Integer)pagination.get(Constant.LIMIT);
 				if (start == 1) start = 0;
 				
 			}
-			
 			fonts = fontService.getFonts(start, end);
 			
 //			if (filters.size() > 0) {
@@ -78,39 +75,41 @@ public class FontController {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(fonts, false, "fonts", e.toString());
 		}
 		
 		Map<String, Object> fontResult = new HashMap<String, Object>();
 		
 		fontResult.put("items", fonts);
 		fontResult.put("total", fonts.size());
-		
-		return fontResult;
+		return new ResultSet().getResultSet(fontResult, true, "fonts", null);
 	}
 	
 	// create fonts 
 	@RequestMapping(value="/setFont", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> setFont(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody Object setFont(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> fontResult = new HashMap<String, Object>();
 		try {
 			fontResult = fontService.setFonts(requestBody);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(fontResult, false, "fonts", e.toString());
 		}
-		return fontResult;
+		return new ResultSet().getResultSet(fontResult, true, "fonts", null);
 	}
 	
 	
 	// delete font 
 	@RequestMapping(value="/deleteFont/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody boolean deleteFont₩(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody Object deleteFont₩(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		boolean success = false;
 		try {
 			fontService.deleteFonts(id);
 			success = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(success, false, "success", e.toString());
 		}
-		return success;
+		return new ResultSet().getResultSet(success, true, "success", null);
 	}
 }
