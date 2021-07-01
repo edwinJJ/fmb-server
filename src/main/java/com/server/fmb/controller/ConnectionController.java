@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.server.fmb.constant.Constant;
-import com.server.fmb.entity.Connections;
 import com.server.fmb.entity.Connections;
 import com.server.fmb.service.IConnectionService;
 import com.server.fmb.service.impl.ResultSet;
@@ -61,13 +59,41 @@ public class ConnectionController {
 			ConnectionList = connectionService.getConnections();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(ConnectionList, false, "connectionList", e.toString());
 		}
 		Map<String, Object> connectionResult = new HashMap<String, Object>();
 		connectionResult.put(Constant.ITEMS, ConnectionList);
 		connectionResult.put(Constant.TOTAL, ConnectionList.size());
-		return connectionResult;
+		return new ResultSet().getResultSet(connectionResult, true, "connectionList", null);
 	}
 	
+	// update connection list
+	@RequestMapping(value="/updateConnections", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> updateConnections(@RequestBody List<Connections> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		boolean success = false;
+		try {
+			connectionService.updateConnections(requestBody);
+			success = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultSet().getResultSet(success, false, "updateConnections", e.toString());
+		}
+		return new ResultSet().getResultSet(success, true, "updateConnections", null);
+	}
 
+	// delete connection list
+	@RequestMapping(value="/deleteConnetcionByName", method = RequestMethod.POST)
+	public @ResponseBody Object deleteScenarioById(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		boolean success = false;
+		List<String> names = (List<String>)requestBody.get("names");
+		try {
+			connectionService.deleteConnectionByName(names);
+			success = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultSet().getResultSet(success, false, "deleteConnections", e.toString());
+		}
+		return new ResultSet().getResultSet(success, true, "deleteConnections", null);
+	}
 	
 }

@@ -33,13 +33,13 @@ public class Steps {
 	private String task;
 	
 	@Column
-	private Boolean skip;
+	private Integer skip;
 	
 	@Column
-	private Boolean log;
+	private Integer log;
 	
 	@Column
-	private int connection;
+	private String connection;
 	
 	@Column
 	private String params;
@@ -61,6 +61,9 @@ public class Steps {
 	@Column
 	private String domainId;
 //	private UUID domainId;
+	
+	@Column
+	private String updaterId;
 
 	public String getId() {
 		return id;
@@ -102,27 +105,27 @@ public class Steps {
 		this.task = task;
 	}
 
-	public Boolean getSkip() {
+	public Integer getSkip() {
 		return skip;
 	}
 
-	public void setSkip(Boolean skip) {
+	public void setSkip(Integer skip) {
 		this.skip = skip;
 	}
 
-	public Boolean getLog() {
+	public Integer getLog() {
 		return log;
 	}
 
-	public void setLog(Boolean log) {
+	public void setLog(Integer log) {
 		this.log = log;
 	}
 
-	public int getConnection() {
+	public String getConnection() {
 		return connection;
 	}
 
-	public void setConnection(int connection) {
+	public void setConnection(String connection) {
 		this.connection = connection;
 	}
 
@@ -172,6 +175,14 @@ public class Steps {
 
 	public void setDomainId(String domainId) {
 		this.domainId = domainId;
+	}
+
+	public String getUpdaterId() {
+		return updaterId;
+	}
+
+	public void setUpdaterId(String updaterId) {
+		this.updaterId = updaterId;
 	}
 	
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.server.fmb.constant.Constant;
+import com.server.fmb.entity.Scenarios;
 import com.server.fmb.entity.Steps;
 import com.server.fmb.service.IStepService;
 import com.server.fmb.service.impl.ResultSet;
@@ -52,16 +53,40 @@ public class StepController {
 					stepList = stepService.getStepsByScenarioId(filtersMap.get(Constant.VALUE));
 				}
 			}
-			else {
-				
-			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(stepList, false, "steps", e.toString());
 		}
 		Map<String, Object> StepResult = new HashMap<String, Object>();
 		StepResult.put(Constant.ITEMS, stepList);
 		StepResult.put(Constant.TOTAL, stepList.size());
 		return new ResultSet().getResultSet(StepResult, true, "steps", null);
+	}
+	
+	// update steps list
+	@RequestMapping(value="/updateSteps", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> updateConnections(@RequestBody List<Steps> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		boolean success = false;
+		try {
+			stepService.updateSteps(requestBody);
+			success = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultSet().getResultSet(success, false, "updateSteps", e.toString());
+		}
+		return new ResultSet().getResultSet(success, true, "updateSteps", null);
+	}
+	
+	// delete steps 
+	@RequestMapping(value="/deleteStepById", method = RequestMethod.POST)
+	public @ResponseBody Object deleteScenarioById(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		List<String> ids = (List<String>)requestBody.get("ids");
+		try {
+			stepService.deleteStepById(ids);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultSet().getResultSet(null, false, "deleteSteps", e.toString());
+		}
+		return new ResultSet().getResultSet(null, true, "deleteSteps", null);
 	}
 }

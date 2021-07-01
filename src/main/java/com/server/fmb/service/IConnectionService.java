@@ -20,5 +20,6 @@ import com.server.fmb.entity.Connections;
 
 public interface IConnectionService {
 	public List<Connections> getConnections() throws Exception;
-	public void deleteConnectionByName(String name) throws Exception;
+	public void updateConnections(List<Connections> connectionList) throws Exception;
+	public void deleteConnectionByName(List<String> names) throws Exception;
 }

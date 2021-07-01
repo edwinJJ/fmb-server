@@ -1,5 +1,6 @@
 package com.server.fmb.db;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ public interface IScenarioQueryManager  extends JpaRepository<Scenarios , String
 	
 	@Transactional
 	@Modifying
-	@Query(value = "DELETE FROM scenarios u WHERE u.id = ?1 ", nativeQuery = true)
-	public void deleteScenarioById(@Param("id") String id);
+	@Query(value = "DELETE FROM scenarios u WHERE u.id in (?1) ", nativeQuery = true)
+	public void deleteScenarioById(@Param("ids") List<String> ids);
+	
 }
