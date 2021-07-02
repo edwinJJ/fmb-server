@@ -3,8 +3,6 @@ package com.server.fmb.engine;
 import java.util.List;
 
 import com.server.fmb.entity.Connections;
-import com.server.fmb.entity.Domains;
-import com.server.fmb.entity.Steps;
 
 
 public class Types {
@@ -40,17 +38,4 @@ public class Types {
 		UNLOADED
 	}
 
-	public class Context {
-		public Domains domain;
-		public Object loger;
-		public Object publish;
-		public Object load;
-		public SCENARIO_STATE state;
-		public Object data;
-		public Object variables;
-		public Object client;
-		public Object root;
-		public List closures;
-		public Object checkState;
-	}
 }

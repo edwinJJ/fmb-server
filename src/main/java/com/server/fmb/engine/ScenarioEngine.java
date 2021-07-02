@@ -8,12 +8,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
-import com.server.fmb.engine.PendingQueue.PendingObject;
-import com.server.fmb.engine.Types.Context;
-import com.server.fmb.entity.Connections;
-import com.server.fmb.entity.Domains;
+import com.server.fmb.engine.Context;
 import com.server.fmb.entity.Scenarios;
-import com.server.fmb.service.IConnectionService;
 import com.server.fmb.service.IScenarioService;
 
 public class ScenarioEngine {
@@ -25,26 +21,24 @@ public class ScenarioEngine {
 	private static Map<String, Map<String, ScenarioInstance>> scenarioInstances = new HashMap<String, Map<String, ScenarioInstance>>();
 	private static Map<String, PendingQueue> pendingQueues = new HashMap<String, PendingQueue>();
 
-	public static PendingQueue getPendingQueue(Domains domain) {
-	    if (ScenarioEngine.pendingQueues.get(domain.getId()) != null) {
-	    	Class[] parameterTypes = new Class[1];
-	    	parameterTypes[0] = List.class;
-	    	ScenarioEngine.pendingQueues.put(domain.getId(), new PendingQueue(domain.getId()));
+	public static PendingQueue getPendingQueue(String domainId) {
+	    if (ScenarioEngine.pendingQueues.get(domainId) != null) {
+	    	ScenarioEngine.pendingQueues.put(domainId, new PendingQueue(domainId));
 	    }
 
-	    return ScenarioEngine.pendingQueues.get(domain.getId());
+	    return ScenarioEngine.pendingQueues.get(domainId);
 	}
 
-	public static ScenarioInstance getScenarioInstance(Domains domain, String instanceName) {
-		if (ScenarioEngine.scenarioInstances.get(domain.getId()) != null) {
-			return ScenarioEngine.scenarioInstances.get(domain.getId()).get(instanceName);
+	public static ScenarioInstance getScenarioInstance(String domainId, String instanceName) {
+		if (ScenarioEngine.scenarioInstances.get(domainId) != null) {
+			return ScenarioEngine.scenarioInstances.get(domainId).get(instanceName);
 		}
 		return null;
 	}
 
-	public static List<ScenarioInstance> getScenarioInstances(Domains domain, String scenarioName) {
+	public static List<ScenarioInstance> getScenarioInstances(String domainId, String scenarioName) {
 		List<ScenarioInstance> instances = new ArrayList<ScenarioInstance>();
-		Map<String, ScenarioInstance> domainInstanceMap = ScenarioEngine.scenarioInstances.get(domain.getId());
+		Map<String, ScenarioInstance> domainInstanceMap = ScenarioEngine.scenarioInstances.get(domainId);
 		if (domainInstanceMap != null) {
 			for (String key : domainInstanceMap.keySet()) {
 				ScenarioInstance instance = domainInstanceMap.get(key);
@@ -57,8 +51,8 @@ public class ScenarioEngine {
 	}
 
 	@Async
-	public static ScenarioInstance load(String instanceName, Scenarios scenario, Context context) {
-		Map<String, ScenarioInstance> scenarioInstances = ScenarioEngine.scenarioInstances.get(context.domain.getId());
+	public static ScenarioInstance load(String instanceName, Scenarios scenarioConfig, Context context) {
+		Map<String, ScenarioInstance> scenarioInstances = ScenarioEngine.scenarioInstances.get(context.domainId);
 		if (scenarioInstances == null) {
 			scenarioInstances = new HashMap<String, ScenarioInstance>();
 		}
@@ -68,18 +62,24 @@ public class ScenarioEngine {
 			return scenarioInstance;
 		}
 		
-		ScenarioInstance instance = null;//new ScenarioInstance();
+		try {
+	        Class[] parameterTypes = new Class[2];
+	        parameterTypes[0] = String.class;
+	        parameterTypes[1] = String.class;
+			context.disposer = ScenarioEngine.class.getMethod("unload", parameterTypes);
+		} catch (Exception e) {}
+		ScenarioInstance instance = new ScenarioInstance(instanceName, scenarioConfig, context);
 		instance.start();
 		
 		scenarioInstances.put(instanceName, instance);
-		ScenarioEngine.scenarioInstances.put(context.domain.getId(), scenarioInstances);
+		ScenarioEngine.scenarioInstances.put(context.domainId, scenarioInstances);
 		
 		return instance;
 	}
 	
 	@Async
-	public static void unload(Domains domain, String instanceName) {
-		Map<String, ScenarioInstance> scenarioInstances = ScenarioEngine.scenarioInstances.get(domain.getId());
+	public static void unload(String domainId, String instanceName) {
+		Map<String, ScenarioInstance> scenarioInstances = ScenarioEngine.scenarioInstances.get(domainId);
 		if (scenarioInstances == null) {
 			return;
 		}
@@ -90,7 +90,7 @@ public class ScenarioEngine {
 		}
 		
 		scenarioInstances.remove(instanceName);
-		ScenarioEngine.scenarioInstances.put(domain.getId(), scenarioInstances);
+		ScenarioEngine.scenarioInstances.put(domainId, scenarioInstances);
 		instance.unload();
 	}
 	

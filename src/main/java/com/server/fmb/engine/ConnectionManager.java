@@ -14,7 +14,6 @@ import com.server.fmb.engine.Types.CONNECTION_STATE;
 import com.server.fmb.engine.Types.Connector;
 import com.server.fmb.engine.connector.OracleConnector;
 import com.server.fmb.entity.Connections;
-import com.server.fmb.entity.Domains;
 import com.server.fmb.service.IConnectionService;
 
 @Service
@@ -84,15 +83,15 @@ public class ConnectionManager implements CommandLineRunner {
 		return null;
 	}
 	
-	public IConnectionInstance getConnectionInstancByName(Domains domain, String name) {
-		Map<String, IConnectionInstance> domainConnections = connections.get(domain.getId());
+	public IConnectionInstance getConnectionInstancByName(String domainId, String name) {
+		Map<String, IConnectionInstance> domainConnections = connections.get(domainId);
 		if (domainConnections != null) {
 			return domainConnections.get(name);
 		} 
 		return null;
 	}
-	public Map<String, IConnectionInstance> getConnectionInstancs(Domains domain) {
-		return connections.get(domain.getId());
+	public Map<String, IConnectionInstance> getConnectionInstancs(String domainId) {
+		return connections.get(domainId);
 	}
 	
 	public void addConnectionInstance(Connections connection, IConnectionInstance instance) {

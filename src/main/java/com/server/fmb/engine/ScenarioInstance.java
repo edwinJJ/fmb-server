@@ -2,13 +2,11 @@ package com.server.fmb.engine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
-import org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer;
 import org.springframework.scheduling.annotation.Async;
 
-import com.server.fmb.engine.Types.Context;
 import com.server.fmb.engine.Types.SCENARIO_STATE;
-import com.server.fmb.entity.Domains;
 import com.server.fmb.entity.Scenarios;
 import com.server.fmb.entity.Steps;
 
@@ -18,7 +16,7 @@ public class ScenarioInstance {
 	
 	private List<ScenarioInstance> subScenarioInstances = new ArrayList<ScenarioInstance>();
 	
-	private Domains domain;
+	private String domainId;
 	private String scenarioName;
 	private String instanceName;
 	private Context context;
@@ -41,12 +39,38 @@ public class ScenarioInstance {
 		
 		// TODO
 		this.steps = null; //scenario.getSteps(); order by sequence;
-		this.domain = null; //scenario.getDomain();
+		this.domainId = scenario.getDomainId();
 		this.disposer = null; // context.disposer;
-		this.context = null; // TODO
+		this.context = new Context();
+		this.context.domainId = domainId;
+		
+		try {
+	        Class[] parameterTypes = new Class[2];
+	        parameterTypes[0] = String.class;
+	        parameterTypes[1] = Object.class;
+			this.context.publish = context != null ? context.publish : ScenarioInstance.class.getMethod("publishData", parameterTypes);
+			parameterTypes = new Class[3];
+	        parameterTypes[0] = Integer.class;
+	        parameterTypes[1] = String.class;
+	        parameterTypes[2] = Context.class;
+			this.context.load = context != null ? context.load : ScenarioInstance.class.getMethod("loadScenario", parameterTypes);
+			this.context.data = context != null ? context.data : null;
+			this.context.variables = context != null ? context.variables : null;
+			this.context.client = context != null ? context.client : null;
+			this.context.state = SCENARIO_STATE.STOPPED;
+			this.context.root = context != null ? context.root : this;
+			this.context.closures = new ArrayList();
+	        parameterTypes = new Class[1];
+	        parameterTypes[0] = SCENARIO_STATE.class;
+			this.context.checkState = ScenarioInstance.class.getMethod("checkState", parameterTypes);
+
+		} catch (Exception e) {}
 		this.setState(SCENARIO_STATE.READY);
 	}
 	
+	public boolean checkState(SCENARIO_STATE state) {
+		return this.getState() == state;
+	}
 
 	public List<ScenarioInstance> addSubScenarioInstance(ScenarioInstance instance) {
 		this.subScenarioInstances.add(instance);
@@ -164,12 +188,12 @@ public class ScenarioInstance {
 	}
 	
 	
-	public Domains getDomain() {
-		return domain;
+	public String getDomainId() {
+		return domainId;
 	}
 
-	public void setDomain(Domains domain) {
-		this.domain = domain;
+	public void setDomainId(String domainId) {
+		this.domainId = domainId;
 	}
 
 
