@@ -46,6 +46,16 @@ public class ConnectionService implements IConnectionService {
 	}
 	
 	@Override
+	public List<Connections> getConnectionsByActive(Integer active) throws Exception {
+		return connectionQueryManager.getConnectionsByActive(active);
+	}
+	
+	@Override
+	public Connections getConnectionByName(String name) throws Exception {
+		return connectionQueryManager.getConnectionByName(name);
+	}
+	
+	@Override
 	public void updateConnections(List<Connections> connectionList) throws Exception {
 		for (Connections connectionUpdate : connectionList) {
 			if (ValueUtil.isNotEmpty(connectionUpdate.getId())) {
@@ -80,6 +90,8 @@ public class ConnectionService implements IConnectionService {
 				connectionUpdate.setDomainId(domainService.getDomain().getId());
 				connectionUpdate.setCreatorId(userService.getAdminUser().getId());
 				connectionUpdate.setUpdaterId(userService.getAdminUser().getId());
+//				if (ValueUtil.isEmpty(connectionUpdate.getActive())) connectionUpdate.setActive(0); 
+				if (ValueUtil.isEmpty(connectionUpdate.getActive())) connectionUpdate.setActive(false); 
 				connectionUpdate.setCreatedAt(new Date());
 				connectionUpdate.setUpdatedAt(new Date());
 			}

@@ -30,7 +30,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.server.fmb.constant.Constant;
+import com.server.fmb.engine.ConnectionManager;
+import com.server.fmb.engine.IConnectionInstance;
+import com.server.fmb.engine.connector.OracleConnector;
 import com.server.fmb.entity.Connections;
+import com.server.fmb.entity.Domains;
 import com.server.fmb.service.IConnectionService;
 import com.server.fmb.service.impl.ResultSet;
 
@@ -40,10 +44,16 @@ public class ConnectionController {
 	@Autowired
 	IConnectionService connectionService;
 	
+	@Autowired
+	ConnectionManager connectionManager;
+	
+	@Autowired
+	OracleConnector oracleConnectorService;
+	
 	// get connection list
 	@RequestMapping(value="/getConnections", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> getConnections(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
-		List<Connections> ConnectionList = new ArrayList<>();
+		List<Connections> connectionList = new ArrayList<>();
 		try {
 //			ArrayList sorters = (ArrayList)requestBody.get(Constant.SORTERS);
 //			if (sorters.size() > 0) {
@@ -56,14 +66,14 @@ public class ConnectionController {
 //				int limit = (Integer)requestBody.get(Constant.LIMIT);
 //				
 //			}
-			ConnectionList = connectionService.getConnections();
+			connectionList = connectionService.getConnections();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultSet().getResultSet(ConnectionList, false, "connectionList", e.toString());
+			return new ResultSet().getResultSet(connectionList, false, "connectionList", e.toString());
 		}
 		Map<String, Object> connectionResult = new HashMap<String, Object>();
-		connectionResult.put(Constant.ITEMS, ConnectionList);
-		connectionResult.put(Constant.TOTAL, ConnectionList.size());
+		connectionResult.put(Constant.ITEMS, connectionList);
+		connectionResult.put(Constant.TOTAL, connectionList.size());
 		return new ResultSet().getResultSet(connectionResult, true, "connectionList", null);
 	}
 	
@@ -96,4 +106,39 @@ public class ConnectionController {
 		return new ResultSet().getResultSet(success, true, "deleteConnections", null);
 	}
 	
+	// database connect
+	@RequestMapping(value="/connect", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> connect(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		String name = requestBody.get("name");
+		String state = Constant.DISCONNECTED;
+		try {
+			Connections connection = connectionService.getConnectionByName(name);
+			oracleConnectorService.connect(connection);
+			state = Constant.CONNECTED;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultSet().getResultSet(state, false, "connect", e.toString());
+		}
+		Map<String, Object> connectionResult = new HashMap<String, Object>();
+		connectionResult.put("state", state);
+		return new ResultSet().getResultSet(connectionResult, true, "connect", null);
+	}
+	
+	// database disconnect
+	@RequestMapping(value="/disconnect", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> disconnect(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		String name = requestBody.get("name");
+		String state = Constant.DISCONNECTED;
+		try {
+			Connections connection = connectionService.getConnectionByName(name);
+			oracleConnectorService.disconnect(connection);
+			state = Constant.DISCONNECTED;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultSet().getResultSet(state, false, "disconnect", e.toString());
+		}
+		Map<String, Object> connectionResult = new HashMap<String, Object>();
+		connectionResult.put("state", state);
+		return new ResultSet().getResultSet(connectionResult, true, "disconnect", null);
+	}
 }

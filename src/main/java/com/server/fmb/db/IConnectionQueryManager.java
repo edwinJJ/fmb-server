@@ -33,6 +33,12 @@ public interface IConnectionQueryManager extends JpaRepository<Connections, Stri
 	@Query(value = "SELECT u.* FROM connections u ORDER BY u.name DESC", nativeQuery = true)
 	public List<Connections> getConnections();
 	
+	@Query(value = "SELECT u.* FROM connections u WHERE u.active=?1", nativeQuery = true)
+	public List<Connections> getConnectionsByActive(@Param("active") Integer active);
+	
+	@Query(value = "SELECT u.* FROM connections u WHERE u.name=?1", nativeQuery = true)
+	public Connections getConnectionByName(@Param("name") String name);
+	
 	@Transactional
 	@Modifying
 	@Query(value = "DELETE FROM connections u WHERE u.name in (?1) ", nativeQuery = true)

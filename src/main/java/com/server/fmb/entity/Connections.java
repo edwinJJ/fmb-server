@@ -122,7 +122,15 @@ public class Connections {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
+	
+//	public Integer getActive() {
+//		return active;
+//	}
+//
+//	public void setActive(Integer active) {
+//		this.active = active;
+//	}
+	
 	public String getParams() {
 		return params;
 	}
