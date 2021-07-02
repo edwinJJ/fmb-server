@@ -67,7 +67,7 @@ public class Connections {
 	@Column
 	private String updaterId;
 //	private UUID updaterId;
-
+	
 	public String getId() {
 		return id;
 	}
@@ -199,5 +199,5 @@ public class Connections {
 //	public void setUpdaterId(UUID updaterId) {
 //		this.updaterId = updaterId;
 //	}
-	
+
 }

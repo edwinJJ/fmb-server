@@ -9,11 +9,11 @@ import java.util.Map;
 public class PendingQueue {
 	
 	public class PendingObject {
-		Object stuff;
-		long due;
-		int priority;
-		String tag;
-		int delay;
+		public Object stuff;
+		public long due;
+		public int priority;
+		public String tag;
+		public int delay;
 	}
 	
 	private void changedCallback(String domainId, List<PendingObject> queue) {
@@ -44,12 +44,12 @@ public class PendingQueue {
 		return statusMap;
 	}
 	
-	void reset() {
+	public void reset() {
 		this._queue.clear();
 		this.changedCallback(this._changedCallbackDomainId, this._queue);
 	} 
 	
-	void put(PendingObject pended) {
+	public void put(PendingObject pended) {
 		long due = new Date().getTime() + pended.delay*1000;
 		int insertBefore = -1;
 		for (int i = 0; i < this._queue.size(); i++) {
@@ -68,7 +68,7 @@ public class PendingQueue {
 		this.changedCallback(this._changedCallbackDomainId, this._queue);
 	}
 	
-	PendingObject pick(String tag) {
+	public PendingObject pick(String tag) {
 		long due = new Date().getTime();
 		
 		PendingObject toppick = null;
@@ -102,7 +102,7 @@ public class PendingQueue {
 		return toppick;
 	}
 	
-	void cancel(Object stuff) {
+	public void cancel(Object stuff) {
 		for (int i = 0; i < this._queue.size(); i++) {
 			if (this._queue.get(i).stuff == stuff) {
 				this._queue.remove(i);

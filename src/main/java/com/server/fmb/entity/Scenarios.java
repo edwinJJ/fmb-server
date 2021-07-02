@@ -27,7 +27,7 @@ public class Scenarios {
 	private String description;
 	
 	@Column
-	private Integer active;
+	private Boolean active;
 	
 	@Column
 	private String schedule;
@@ -84,24 +84,24 @@ public class Scenarios {
 		this.description = description;
 	}
 
-//	public Boolean getActive() {
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+//	public Integer getActive() {
 //		return active;
 //	}
 //
-//	public void setActive(Boolean active) {
+//	public void setActive(Integer active) {
 //		this.active = active;
 //	}
 	
 	public String getSchedule() {
 		return schedule;
-	}
-
-	public Integer getActive() {
-		return active;
-	}
-
-	public void setActive(Integer active) {
-		this.active = active;
 	}
 
 	public void setSchedule(String schedule) {

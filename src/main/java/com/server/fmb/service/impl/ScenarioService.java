@@ -35,6 +35,15 @@ public class ScenarioService implements IScenarioService {
 		return scenarioQueryManager.findAll();
 	}
 	
+	public List<Scenarios> getScenariosByActive(Integer active) throws Exception {
+		return scenarioQueryManager.getScenariosByActive(active);
+	}
+	
+	@Override
+	public Scenarios getScenarioByName(String scenarioName) throws Exception {
+		return scenarioQueryManager.getScenariosByName(scenarioName);
+	}
+	
 	@Override
 	public void updateScenarios(List<Scenarios> scenarioList) throws Exception {
 		for (Scenarios scenarioUpdate : scenarioList) {
@@ -67,7 +76,8 @@ public class ScenarioService implements IScenarioService {
 				scenarioUpdate.setDomainId(domainService.getDomain().getId());
 				scenarioUpdate.setCreatorId(userService.getAdminUser().getId());
 				scenarioUpdate.setUpdaterId(userService.getAdminUser().getId());
-				if (ValueUtil.isEmpty(scenarioUpdate.getActive())) scenarioUpdate.setActive(0);
+//				if (ValueUtil.isEmpty(scenarioUpdate.getActive())) scenarioUpdate.setActive(0);
+				if (ValueUtil.isEmpty(scenarioUpdate.getActive())) scenarioUpdate.setActive(false);
 				scenarioUpdate.setCreatedAt(new Date());
 				scenarioUpdate.setUpdatedAt(new Date());
 			}

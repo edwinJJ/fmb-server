@@ -25,10 +25,6 @@ public class OracleConnector implements Connector {
 	static final String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
 	static final String ORACLE_URL = "jdbc:oracle:thin:@";
 	
-//	Connection dbConnection;
-//    PreparedStatement pstmt;
-//    ResultSet rs;
-	
 	private class ConnectionInstance implements IConnectionInstance {
 
 		Connection dbConnection;
@@ -39,6 +35,12 @@ public class OracleConnector implements Connector {
 		
 		@Override
 		public Object query(String queryString, String params) throws Exception {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public Object queryAwait(String queryString, String params) throws Exception {
 			// TODO Auto-generated method stub
 			return null;
 		}

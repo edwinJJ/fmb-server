@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.fmb.constant.Constant;
+import com.server.fmb.engine.ScenarioEngine;
+import com.server.fmb.engine.ScenarioInstance;
 import com.server.fmb.entity.Connections;
 import com.server.fmb.entity.Scenarios;
 import com.server.fmb.service.IScenarioService;
 import com.server.fmb.service.impl.ResultSet;
+import com.server.fmb.util.ValueUtil;
 
 
 @RestController
@@ -29,10 +33,14 @@ public class ScenarioController {
 	@Autowired
 	IScenarioService scenarioService;
 	
+	@Autowired
+	ScenarioEngine scenarioEngine;
+	
 	// get Scenario list
 	@RequestMapping(value="/fetchScenarios", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> fetchScenarios(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
 		List<Scenarios> scenarioList = new ArrayList<>();
+		List<Map<String, Object>> scenarioListMap = new ArrayList<Map<String, Object>>();
 		try {
 //			ArrayList sorters = (ArrayList)requestBody.get(Constant.SORTERS);
 //			if (sorters.size() > 0) {
@@ -46,13 +54,24 @@ public class ScenarioController {
 //				
 //			}
 			scenarioList = scenarioService.getScenarios();
+			
+			for (Scenarios scenario: scenarioList) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				Map scenarioMap = objectMapper.convertValue(scenario, Map.class);
+				if (ValueUtil.isNotEmpty(scenarioEngine.getScenarioInstance((String) scenarioMap.get("domainId"), (String) scenarioMap.get("name")))) {
+					scenarioMap.put(Constant.STATE, Constant.READY);
+				} else {
+					scenarioMap.put(Constant.STATE, Constant.UNLOADED);
+				}
+				scenarioListMap.add(scenarioMap);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResultSet().getResultSet(scenarioList, false, "scenario", e.toString());
 		}
 		Map<String, Object> ScenarioResult = new HashMap<String, Object>();
-		ScenarioResult.put(Constant.ITEMS, scenarioList);
-		ScenarioResult.put(Constant.TOTAL, scenarioList.size());
+		ScenarioResult.put(Constant.ITEMS, scenarioListMap);
+		ScenarioResult.put(Constant.TOTAL, scenarioListMap.size());
 		return new ResultSet().getResultSet(ScenarioResult, true, "scenario", null);
 	}
 	
@@ -81,5 +100,38 @@ public class ScenarioController {
 			return new ResultSet().getResultSet(null, false, "Scenario", e.toString());
 		}
 		return new ResultSet().getResultSet(null, true, "Scenario", null);
+	}
+	
+	// start scenario list
+	@RequestMapping(value="/startScenario", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> startScenario(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		String scenarioName = requestBody.get("scenarioName");
+//		String instanceName = requestBody.get("instanceName");
+		try {
+			Scenarios scenario = scenarioService.getScenarioByName(scenarioName);
+			scenarioEngine.load(scenarioName, scenario, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultSet().getResultSet(null, false, "startScenario", e.toString());
+		}
+		Map<String, Object> ScenarioResult = new HashMap<String, Object>();
+		ScenarioResult.put(Constant.STATE, "READY");
+		return new ResultSet().getResultSet(ScenarioResult, true, "startScenario", null);
+	}
+	
+	// stop scenario list
+	@RequestMapping(value="/stopScenario", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> stopScenario(@RequestBody Map<String, String> requestBody, HttpServletRequest request, HttpServletResponse response) {
+		String instanceName = requestBody.get("instanceName");
+		try {
+			Scenarios scenario = scenarioService.getScenarioByName(instanceName);
+			scenarioEngine.unload(scenario.getDomainId(), instanceName);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResultSet().getResultSet(null, false, "stopScenario", e.toString());
+		}
+		Map<String, Object> ScenarioResult = new HashMap<String, Object>();
+		ScenarioResult.put(Constant.STATE, "UNLOADED");
+		return new ResultSet().getResultSet(ScenarioResult, true, "stopScenario", null);
 	}
 }

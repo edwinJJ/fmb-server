@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.fmb.constant.Constant;
 import com.server.fmb.engine.ConnectionManager;
 import com.server.fmb.engine.IConnectionInstance;
@@ -37,6 +38,7 @@ import com.server.fmb.entity.Connections;
 import com.server.fmb.entity.Domains;
 import com.server.fmb.service.IConnectionService;
 import com.server.fmb.service.impl.ResultSet;
+import com.server.fmb.util.ValueUtil;
 
 @RestController
 public class ConnectionController {
@@ -54,6 +56,7 @@ public class ConnectionController {
 	@RequestMapping(value="/getConnections", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> getConnections(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {
 		List<Connections> connectionList = new ArrayList<>();
+		List<Map<String, Object>> connectionListMap = new ArrayList<Map<String, Object>>();
 		try {
 //			ArrayList sorters = (ArrayList)requestBody.get(Constant.SORTERS);
 //			if (sorters.size() > 0) {
@@ -67,13 +70,24 @@ public class ConnectionController {
 //				
 //			}
 			connectionList = connectionService.getConnections();
+			
+			for (Connections connection: connectionList) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				Map connectionMap = objectMapper.convertValue(connection, Map.class);
+				if (ValueUtil.isNotEmpty(connectionManager.getConnectionInstance(connection))) {
+					connectionMap.put(Constant.STATE, Constant.CONNECTED);
+				} else {
+					connectionMap.put(Constant.STATE, Constant.DISCONNECTED);
+				}
+				connectionListMap.add(connectionMap);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultSet().getResultSet(connectionList, false, "connectionList", e.toString());
+			return new ResultSet().getResultSet(connectionListMap, false, "connectionList", e.toString());
 		}
 		Map<String, Object> connectionResult = new HashMap<String, Object>();
-		connectionResult.put(Constant.ITEMS, connectionList);
-		connectionResult.put(Constant.TOTAL, connectionList.size());
+		connectionResult.put(Constant.ITEMS, connectionListMap);
+		connectionResult.put(Constant.TOTAL, connectionListMap.size());
 		return new ResultSet().getResultSet(connectionResult, true, "connectionList", null);
 	}
 	
@@ -120,7 +134,7 @@ public class ConnectionController {
 			return new ResultSet().getResultSet(state, false, "connect", e.toString());
 		}
 		Map<String, Object> connectionResult = new HashMap<String, Object>();
-		connectionResult.put("state", state);
+		connectionResult.put(Constant.STATE, state);
 		return new ResultSet().getResultSet(connectionResult, true, "connect", null);
 	}
 	
@@ -138,7 +152,7 @@ public class ConnectionController {
 			return new ResultSet().getResultSet(state, false, "disconnect", e.toString());
 		}
 		Map<String, Object> connectionResult = new HashMap<String, Object>();
-		connectionResult.put("state", state);
+		connectionResult.put(Constant.STATE, state);
 		return new ResultSet().getResultSet(connectionResult, true, "disconnect", null);
 	}
 }

@@ -5,11 +5,13 @@ import com.server.fmb.entity.Steps;
 
 public interface ITaskHandler {
 	
-	public class handlerResult {
-		String next;
-		SCENARIO_STATE state;
-		Object data;
-	}	
-	public handlerResult run(Steps step, Context context); 
+	public class HandlerResult {
+		public String next;
+		public SCENARIO_STATE state;
+		public Object data;
+	}
+	public HandlerResult run(Steps step, Context context) throws Exception;
+	public HandlerResult runAwait(Steps step, Context context) throws Exception;
+	
 	
 }

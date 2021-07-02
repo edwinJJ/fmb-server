@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import com.server.fmb.engine.connector.OracleConnector;
 import com.server.fmb.entity.Connections;
 import com.server.fmb.service.IConnectionService;
 
+@Order(1)
 @Service
 public class ConnectionManager implements CommandLineRunner {
 	
@@ -42,7 +44,7 @@ public class ConnectionManager implements CommandLineRunner {
 	
 	@Async
 	public void ready() throws Exception {
-		List<Connections> activeConnections = connectionService.getConnectionsByActive(Constant.CONNECTION_ACTIVE_TRUE); // where active = true, join domain, creator, updator
+		List<Connections> activeConnections = connectionService.getConnectionsByActive(Constant.ACTIVE_TRUE); // where active = true, join domain, creator, updator
 		if (activeConnections == null) {
 			return;
 		}
