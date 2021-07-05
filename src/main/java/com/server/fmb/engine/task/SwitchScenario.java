@@ -14,7 +14,7 @@ import com.server.fmb.engine.ITaskHandler.HandlerResult;
 import com.server.fmb.entity.Scenarios;
 import com.server.fmb.entity.Steps;
 
-public class SubScenario implements ITaskHandler {
+public class SwitchScenario implements ITaskHandler {
 
 	@Async
 	@Override
@@ -28,11 +28,19 @@ public class SubScenario implements ITaskHandler {
 		HandlerResult hResult = new HandlerResult();
 		
 		JSONObject paramsJson = (JSONObject)(new JSONParser()).parse(step.getParams());
-		String params_scenario = (String)paramsJson.get("scenario");
+		String params_accessor = (String)paramsJson.get("accessor");
+		JSONObject params_cases = (JSONObject)paramsJson.get("cases");
 		String params_variables = (String)paramsJson.get("variables");
 
-		// TODO id가 scenario와 같은 Scenario로 가져오는 기능 추가 필
-		Scenarios subscenario = null; //scenarioService.getScenarioById(scenario); id = scenario, join steps, domain
+		String value = (String)EngineUtil.access(params_accessor, context.data);
+		
+		String scenarioName = (String)params_cases.get(value);
+		if (scenarioName == null) {
+			scenarioName = (String)params_cases.get("default");
+		}
+		
+		// TODO id가 scenarioName와 같은 Scenario로 가져오는 기능 추가 필
+		Scenarios subscenario = null; //scenarioService.getScenarioById(scenario); id = scenarioName, join steps, domain
 		
 		Context contextCloned = context.clone();
 		contextCloned.data = null;
@@ -44,7 +52,7 @@ public class SubScenario implements ITaskHandler {
 				
 		hResult.data = subContext.data;
 
-		return null;
+		return hResult;
 	}
 
 }

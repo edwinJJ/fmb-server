@@ -50,7 +50,11 @@ public class StepService implements IStepService{
 					stepUpdate.setTask(step.getTask());
 				}
 				if (ValueUtil.isEmpty(stepUpdate.getSkip())) {
-					stepUpdate.setSkip(step.getSkip());
+					if (ValueUtil.isNotEmpty(stepUpdate.getSkip())) {
+						stepUpdate.setSkip(step.getSkip());
+					} else {
+						stepUpdate.setSkip(0);
+					}
 				}
 				if (ValueUtil.isEmpty(stepUpdate.getLog())) {
 					stepUpdate.setLog(step.getLog());
@@ -78,6 +82,7 @@ public class StepService implements IStepService{
 				stepUpdate.setDomainId(domainService.getDomain().getId());
 				stepUpdate.setCreatorId(userService.getAdminUser().getId());
 				stepUpdate.setUpdaterId(userService.getAdminUser().getId());
+				if (ValueUtil.isEmpty(stepUpdate.getSkip())) stepUpdate.setSkip(0);
 				stepUpdate.setCreatedAt(new Date());
 				stepUpdate.setUpdatedAt(new Date());
 			}

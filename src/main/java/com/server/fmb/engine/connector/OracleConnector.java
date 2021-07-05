@@ -67,10 +67,14 @@ public class OracleConnector implements Connector {
 	    String user = (String) jsonObj.get("user");
 	    String password = (String) jsonObj.get("password");
 	    
-    	Class.forName(ORACLE_DRIVER);
-    	Connection dbConnection = DriverManager.getConnection(ORACLE_URL + url, user, password);
-    	ConnectionInstance connectionInstance = new ConnectionInstance(dbConnection);
-		connectionManager.addConnectionInstance(connection, connectionInstance);
+	    try {
+	    	Class.forName(ORACLE_DRIVER);
+	    	Connection dbConnection = DriverManager.getConnection(ORACLE_URL + url, user, password);
+	    	ConnectionInstance connectionInstance = new ConnectionInstance(dbConnection);
+			connectionManager.addConnectionInstance(connection, connectionInstance);
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
 	}
 
 	@Override

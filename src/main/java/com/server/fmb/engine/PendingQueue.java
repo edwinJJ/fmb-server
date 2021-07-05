@@ -8,22 +8,13 @@ import java.util.Map;
 
 public class PendingQueue {
 	
-	public class PendingObject {
-		public Object stuff;
-		public long due;
-		public int priority;
-		public String tag;
-		public int delay;
-	}
-	
-	private void changedCallback(String domainId, List<PendingObject> queue) {
-		// TODO
-//	        pubsub.publish('scenario-queue-state', {
-//		          scenarioQueueState: {
-//		            domain,
-//		            queue
-//		          }
-//		        })		  
+	private void changedCallback(String domainId, List<PendingObject> queue) {		
+		Map scenarioQueueState = new HashMap<String, Object>();
+		scenarioQueueState.put("domainId", domainId);
+		scenarioQueueState.put("queue", queue);
+		Map message = new HashMap<String, Object>();
+		message.put("scenarioQueueState", scenarioQueueState);
+		EngineUtil.publish("scenario-queue-state", message);
 	}
 	  
 

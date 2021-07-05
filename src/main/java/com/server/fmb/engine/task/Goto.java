@@ -1,5 +1,7 @@
 package com.server.fmb.engine.task;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.scheduling.annotation.Async;
 
 import com.server.fmb.engine.Context;
@@ -18,9 +20,11 @@ public class Goto implements ITaskHandler {
 	@Override
 	public HandlerResult runAwait(Steps step, Context context) throws Exception {
 		// TODO Auto-generated method stub
-		HandlerResult result = new HandlerResult();
-		result.next = null;/// step.params.goto;
-		return null;
+		HandlerResult hResult = new HandlerResult();
+		JSONObject paramsJson = (JSONObject)(new JSONParser()).parse(step.getParams());
+		String params_goto = (String)paramsJson.get("goto");
+		hResult.next = params_goto;
+		return hResult;
 	}
 
 }

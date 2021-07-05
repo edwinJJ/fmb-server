@@ -30,6 +30,8 @@ import javax.websocket.server.ServerEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.server.fmb.engine.ScenarioInstance;
 import com.server.fmb.util.ValueUtil;
 
 /**
@@ -64,27 +66,15 @@ public class UIWebsocketManager {
      */
     private static Map<String, Session> clientsSessionMap = new HashMap<String, Session>();
     
-//    private static IOrganizationManager orgManager;
-//    /**
-//     * 클라이언트가 접속을 하게되면 호출되는 메소드
-//     * 
-//     * @param session
-//     */
-//    @OnOpen
-//    public void onOpen(@PathParam("clientKey") String clientKey, Session session) {
-//        clientsSessionMap.put(clientKey, session);
-//        this.logger.info("New session opened: " + clientKey);
-//        try {
-//        	String ipAddress = null;
-//        	String macAddress = null;
-//            if (orgManager == null) {
-//            	orgManager = BeanUtil.get(IOrganizationManager.class);
-//            }
-//            orgManager.logLoginHistory(clientKey, true, ipAddress, macAddress);        	
-//        } catch(Exception e) {
-//        	e.printStackTrace();
-//        }
-//    }
+    /**
+     * 클라이언트가 접속을 하게되면 호출되는 메소드
+     * 
+     * @param session
+     */
+    @OnOpen
+    public void onOpen(@PathParam("clientKey") String clientKey, Session session) {
+        clientsSessionMap.put(clientKey, session);
+    }
 //    
 //    /**
 //     * 클라이언트가 메세지를 보내면 호출되는 메소드
@@ -168,44 +158,71 @@ public class UIWebsocketManager {
         }
     }
     
-//    /**
-//     * 모든 클라이언트에게 메세지 전송
-//     * 
-//     * @param message
-//     */
-//    public void sendAll(Object data) {
-//    	if(data != null) {
-//    		String message = FormatUtil.toJsonString(data);
-//    		this.sendAll(message);
-//    	}
-//    }
-//
-//    /**
-//     * 모든 클라이언트에게 메세지 전송
-//     * 
-//     * @param message
-//     */
-//    public void sendAll(String message) {
-//    	if(clientsSessionMap.isEmpty()) {
-//    		return;
-//    	}
-//        Iterator<String> keyIter = clientsSessionMap.keySet().iterator();
-//        int count = 0;
-//        while (keyIter.hasNext()) {
-//        	String key = keyIter.next();
-//        	Session session = clientsSessionMap.get(key);
-//            if (!session.isOpen()) {
-//                this.logger.error("Closed session : [" + session.getId() + "]");
-//            } else {
-//                try {
-//					session.getBasicRemote().sendText(message);
-//				} catch (IOException e) {
-//					this.logger.error("Failed to send message", e);
-//				}
-//            }
-//        }
-//        this.logger.info("Sending " + message + " to [" + clientsSessionMap.size() + "] clients");
-//    }
+    /**
+     * 모든 클라이언트에게 메세지 전송
+     * 
+     * @param message
+     */
+    public void sendAll(Object data) {
+    	if(data != null) {
+    		
+    		String message = null;
+    		ObjectMapper mapper = new ObjectMapper();
+    		try {
+    			String ScenarioInstanceState = (String) ((Map<String, Object>) data).get("key");
+    			Map<String, Object> dataObjectMap = (Map<String, Object>) ((Map<String, Object>) data).get("data");
+    			ScenarioInstance ScenarioInstance = (ScenarioInstance) dataObjectMap.get("scenarioQueueState");
+
+    			Map<String, Object> scenarioInstanceMap = new HashMap<String, Object>(); 
+    			scenarioInstanceMap.put("domainId", ScenarioInstance.getDomainId());
+    			scenarioInstanceMap.put("instanceName", ScenarioInstance.getInstanceName());
+    			scenarioInstanceMap.put("message", ScenarioInstance.getMessage());
+    			scenarioInstanceMap.put("scenarioName", ScenarioInstance.getScenarioName());
+    			scenarioInstanceMap.put("schedule", ScenarioInstance.getSchedule());
+    			scenarioInstanceMap.put("timezone", ScenarioInstance.getTimezone());
+    			scenarioInstanceMap.put("context", ScenarioInstance.getContext());
+    			scenarioInstanceMap.put("cronjob", ScenarioInstance.getCronjob());
+    			scenarioInstanceMap.put("disposer", ScenarioInstance.getDisposer());
+    			scenarioInstanceMap.put("lastStep", ScenarioInstance.getLastStep());
+    			scenarioInstanceMap.put("nextStep", ScenarioInstance.getNextStep());
+    			scenarioInstanceMap.put("rounds", ScenarioInstance.getRounds());
+    			scenarioInstanceMap.put("steps", ScenarioInstance.getSteps());
+    			scenarioInstanceMap.put("subScenarioInstances", ScenarioInstance.getSubScenarioInstance());
+    			message = scenarioInstanceMap.toString() + "," + ScenarioInstanceState;
+//    			message = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+    		this.sendAll(message);
+    	}
+    }
+
+    /**
+     * 모든 클라이언트에게 메세지 전송
+     * 
+     * @param message
+     */
+    public void sendAll(String message) {
+    	if(clientsSessionMap.isEmpty()) {
+    		return;
+    	}
+        Iterator<String> keyIter = clientsSessionMap.keySet().iterator();
+        int count = 0;
+        while (keyIter.hasNext()) {
+        	String key = keyIter.next();
+        	Session session = clientsSessionMap.get(key);
+            if (!session.isOpen()) {
+                this.logger.error("Closed session : [" + session.getId() + "]");
+            } else {
+                try {
+					session.getBasicRemote().sendText(message);
+				} catch (IOException e) {
+					this.logger.error("Failed to send message", e);
+				}
+            }
+        }
+        this.logger.info("Sending " + message + " to [" + clientsSessionMap.size() + "] clients");
+    }
 //    
 //    /**
 //     * 지정한 유저만 제외하고 모든 클라이언트에게 메세지 전송

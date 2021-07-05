@@ -2,6 +2,8 @@ package com.server.fmb.engine.task;
 
 import java.sql.Connection;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
@@ -25,15 +27,26 @@ public class DatabaseQuery implements ITaskHandler {
 
 	@Override
 	public HandlerResult runAwait(Steps step, Context context) throws Exception {
-		// TODO Auto-generated method stub
-		// TODO
-		String connectionName = null;//step.getConnection();
-		String query = step.getParams();
+
+		HandlerResult hResult = new HandlerResult();
+
+		String connectionName = step.getConnection();
 		
-		IConnectionInstance dbConnection = connectionManager.getConnectionInstancByName(context.domainId, connectionName);
+		JSONObject paramsJson = (JSONObject)(new JSONParser()).parse(step.getParams());
+		String query = (String)paramsJson.get("query");
 		
-		HandlerResult result = new HandlerResult();
-		result.data = dbConnection.queryAwait(query, null); 
-		return result;
+		IConnectionInstance dbconnection = connectionManager.getConnectionInstancByName(context.domainId, connectionName);
+		
+//		  const vm = new VM({
+//			    sandbox: {
+//			      data,
+//			      variables
+//			    }
+//			  })
+//
+//			  query = vm.run('`' + query + '`')
+
+		hResult.data = dbconnection.queryAwait(query, null); 
+		return hResult;
 	}
 }

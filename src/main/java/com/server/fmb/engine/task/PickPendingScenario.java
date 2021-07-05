@@ -3,14 +3,17 @@ package com.server.fmb.engine.task;
 import java.util.Date;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
 import com.server.fmb.engine.Context;
 import com.server.fmb.engine.ITaskHandler;
+import com.server.fmb.engine.PendingObject;
 import com.server.fmb.engine.PendingQueue;
-import com.server.fmb.engine.PendingQueue.PendingObject;
 import com.server.fmb.engine.ScenarioEngine;
+import com.server.fmb.engine.ITaskHandler.HandlerResult;
 import com.server.fmb.entity.Scenarios;
 import com.server.fmb.entity.Steps;
 import com.server.fmb.service.IScenarioService;
@@ -32,8 +35,14 @@ public class PickPendingScenario implements ITaskHandler {
 	@Override
 	public HandlerResult runAwait(Steps step, Context context) throws Exception {
 		
-		String tag = ""; // step.params.tag
-		int waitFor = -1;//step.params.waitFor;
+		HandlerResult hResult = new HandlerResult();
+		
+		JSONObject paramsJson = (JSONObject)(new JSONParser()).parse(step.getParams());
+		String params_tag = (String)paramsJson.get("tag");
+		String params_waitFor = (String)paramsJson.get("waitFor");
+
+		String tag = params_tag;
+		int waitFor = params_waitFor == null ? -1 : Integer.parseInt(params_waitFor);
 		long till = new Date().getTime() + waitFor;
 		
 		PendingQueue pendingQueue = scenarioEngine.getPendingQueue(context.domainId);
@@ -65,16 +74,16 @@ public class PickPendingScenario implements ITaskHandler {
 			variables = ((Map)stuff).get("variables");
 		} 
 		
+		// TODO id가 scenario와 같은 Scenario로 가져오는 기능 추가 필
 		Scenarios subscenario = null; //scenarioService.getScenarioById(scenario); id = scenario, join steps, domain
 		
-		Context subContext = context.instance.loadSubscenarioAwait(step, subscenario, context);
-		subContext.data = null;
-		subContext.variables = variables;
-		
-		
-		HandlerResult result = new HandlerResult();
-		result.data = subContext.data;
-		return result;
+		Context contextCloned = context.clone();
+		contextCloned.data = null;
+		contextCloned.variables = variables;
+		Context subContext = context.instance.loadSubscenarioAwait(step, subscenario, contextCloned);
+				
+		hResult.data = subContext.data;
+		return hResult;
 	}
 
 }

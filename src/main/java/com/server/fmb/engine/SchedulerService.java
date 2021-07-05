@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SchedulerService {
-    private TaskScheduler  scheduler;
+    private TaskScheduler scheduler;
 
     public SchedulerService(TaskScheduler scheduler) {
         this.scheduler = scheduler;
@@ -19,7 +19,7 @@ public class SchedulerService {
     @Async
     public ScheduledFuture<?> start(ScenarioInstance scenarioInstance, String cron) {
         ScheduledFuture<?> future = this.scheduler.schedule(() -> {
-                    System.out.println("run at " + LocalDateTime.now());
+                    System.out.println("run at " + LocalDateTime.now() + " // " + scenarioInstance.getInstanceName());
                     scenarioInstance.run();
                 },
                 new CronTrigger(cron));
@@ -27,9 +27,10 @@ public class SchedulerService {
     }
 //
 //    public void changeCron(String cron) {
-//        future.cancel(true);
-//        this.future = null;
-//        this.cron = cron;
+//    if (future != null) future.cancel(true);
+//    this.future = null;
+//    this.cron = cron;
+//    this.start();
 //    }
 
 }

@@ -10,7 +10,7 @@ import com.server.fmb.engine.ITaskHandler;
 import com.server.fmb.engine.ITaskHandler.HandlerResult;
 import com.server.fmb.entity.Steps;
 
-public class SwitchRangeGoto implements ITaskHandler {
+public class SwitchRangeSet implements ITaskHandler {
 
 	@Async
 	@Override
@@ -45,7 +45,8 @@ public class SwitchRangeGoto implements ITaskHandler {
 				break;
 			}
 		}
-		hResult.next = (String)params_cases.get(range);
+		hResult.data = params_cases.get(range);
+		
 		return hResult;
 	}
 

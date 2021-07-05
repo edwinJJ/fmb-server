@@ -19,9 +19,9 @@ public class End implements ITaskHandler {
 	@Override
 	public HandlerResult runAwait(Steps step, Context context) throws Exception {
 		// TODO Auto-generated method stub
-		HandlerResult result = new HandlerResult();
-		result.state = SCENARIO_STATE.STOPPED;
-		return result;
+		HandlerResult hResult = new HandlerResult();
+		hResult.state = SCENARIO_STATE.STOPPED;
+		return hResult;
 	}
 
 }

@@ -52,7 +52,7 @@ public class Scenarios {
 	@Column
 	private String domainId;
 //	private UUID domainId;
-
+	
 	public String getId() {
 		return id;
 	}
@@ -176,6 +176,7 @@ public class Scenarios {
 //	public void setDomainId(UUID domainId) {
 //		this.domainId = domainId;
 //	}
+
 	
 	
 }

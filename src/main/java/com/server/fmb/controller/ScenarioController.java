@@ -84,9 +84,9 @@ public class ScenarioController {
 			success = true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultSet().getResultSet(success, false, "updateConnections", e.toString());
+			return new ResultSet().getResultSet(success, false, "updateScenarios", e.toString());
 		}
-		return new ResultSet().getResultSet(success, true, "updateConnections", null);
+		return new ResultSet().getResultSet(success, true, "updateScenarios", null);
 	}
 	
 	// delete Scenario 
@@ -97,9 +97,9 @@ public class ScenarioController {
 			scenarioService.deleteScenarioById(ids);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResultSet().getResultSet(null, false, "Scenario", e.toString());
+			return new ResultSet().getResultSet(null, false, "deleteScenario", e.toString());
 		}
-		return new ResultSet().getResultSet(null, true, "Scenario", null);
+		return new ResultSet().getResultSet(null, true, "deleteScenario", null);
 	}
 	
 	// start scenario list

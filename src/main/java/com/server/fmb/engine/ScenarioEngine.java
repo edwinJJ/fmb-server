@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -31,7 +32,10 @@ import com.server.fmb.engine.task.SwitchSet;
 import com.server.fmb.engine.task.Throw;
 import com.server.fmb.engine.task.Variables;
 import com.server.fmb.entity.Scenarios;
+import com.server.fmb.entity.Steps;
 import com.server.fmb.service.IScenarioService;
+import com.server.fmb.service.IStepService;
+import com.server.fmb.util.ValueUtil;
 
 @Order(2)
 @Service
@@ -39,9 +43,20 @@ public class ScenarioEngine implements CommandLineRunner {
 
 	@Autowired
 	private IScenarioService scenarioService;
+	
+	@Autowired
+	SchedulerService schedulerService;
+	
+	@Autowired
+	IStepService stepService;
+	
+//	private ScheduledFuture<?> cronjob;
+	private String schedule = "*/2 * * * * *";
 
 	private static Map<String, Map<String, ScenarioInstance>> scenarioInstances = new HashMap<String, Map<String, ScenarioInstance>>();
 	private static Map<String, PendingQueue> pendingQueues = new HashMap<String, PendingQueue>();
+//	private List<ScheduledFuture<?>> cronJobList = new ArrayList<ScheduledFuture<?>>();
+	private Map<String, Map<String, ScheduledFuture<?>>> cronJobMap = new HashMap<String, Map<String, ScheduledFuture<?>>>();
 
 	public ScenarioEngine() {
 		TaskRegistry.registerTaskHandler("book-up-scenario", new BookUpScenario());
@@ -99,7 +114,7 @@ public class ScenarioEngine implements CommandLineRunner {
 	}
 
 	@Async
-	public ScenarioInstance load(String instanceName, Scenarios scenarioConfig, Context context) {
+	public ScenarioInstance load(String instanceName, Scenarios scenarioConfig, Context context) throws Exception {
 		Map<String, ScenarioInstance> scenarioInstancesMap = scenarioInstances.get(scenarioConfig.getDomainId());
 		if (scenarioInstancesMap == null) {
 			scenarioInstancesMap = new HashMap<String, ScenarioInstance>();
@@ -119,8 +134,19 @@ public class ScenarioEngine implements CommandLineRunner {
 			new Exception();
 		}
 		
-		ScenarioInstance instance = new ScenarioInstance(instanceName, scenarioConfig, context);
-		instance.start();
+		List<Steps> stepList = stepService.getStepsByScenarioId(scenarioConfig.getId());
+		Steps[] stepsArray = stepList.toArray(new Steps[stepList.size()]);
+		
+		ScenarioInstance instance = new ScenarioInstance(instanceName, scenarioConfig, context, stepsArray);
+		
+		Map<String, ScheduledFuture<?>> cronJob = cronJobMap.get(scenarioConfig.getDomainId());
+		if (ValueUtil.isEmpty(cronJob)) {
+			cronJob = new HashMap<String, ScheduledFuture<?>>();
+		}
+		ScheduledFuture<?> cronJobTemp = schedulerService.start(instance, this.schedule);
+		instance.setCronjob(cronJobTemp);
+		cronJob.put(instanceName, cronJobTemp);
+		cronJobMap.put(scenarioConfig.getDomainId(), cronJob);
 		
 		scenarioInstancesMap.put(instanceName, instance);
 		scenarioInstances.put(scenarioConfig.getDomainId(), scenarioInstancesMap);
@@ -130,20 +156,21 @@ public class ScenarioEngine implements CommandLineRunner {
 	
 	@Async
 	public void unload(String domainId, String instanceName) {
-		Map<String, ScenarioInstance> scenarioInstances = ScenarioEngine.scenarioInstances.get(domainId);
-		if (scenarioInstances == null) {
-			return;
-		}
-		
-		ScenarioInstance instance = scenarioInstances.get(instanceName);
-		if (instance == null) {
-			return;
-		}
-		
-		scenarioInstances.remove(instanceName);
-		ScenarioEngine.scenarioInstances.put(domainId, scenarioInstances);
-		instance.stop();
-		instance.unload();
+		cronJobMap.get(domainId).get(instanceName).cancel(true);
+//		Map<String, ScenarioInstance> scenarioInstances = ScenarioEngine.scenarioInstances.get(domainId);
+//		if (scenarioInstances == null) {
+//			return;
+//		}
+//		
+//		ScenarioInstance instance = scenarioInstances.get(instanceName);
+//		if (instance == null) {
+//			return;
+//		}
+//		
+//		scenarioInstances.remove(instanceName);
+//		ScenarioEngine.scenarioInstances.put(domainId, scenarioInstances);
+//		instance.stop();
+//		instance.unload();
 	}
 	
 	@Async

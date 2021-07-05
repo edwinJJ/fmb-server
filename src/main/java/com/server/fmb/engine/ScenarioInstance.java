@@ -7,13 +7,18 @@ import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.function.Function;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Async;
 
+import com.server.fmb.constant.Constant;
 import com.server.fmb.engine.ITaskHandler.HandlerResult;
 import com.server.fmb.engine.Types.SCENARIO_STATE;
 import com.server.fmb.entity.Scenarios;
 import com.server.fmb.entity.Steps;
+import com.server.fmb.service.IStepService;
 
 import net.bytebuddy.asm.Advice.This;
 
@@ -41,16 +46,16 @@ public class ScenarioInstance {
 	private ScheduledFuture<?> cronjob;
 	private Object disposer;
 	
-	public ScenarioInstance(String instanceName, Scenarios scenario, Context context) {
+	public ScenarioInstance(String instanceName, Scenarios scenario, Context context, Steps[] objects) {
 		this.instanceName = instanceName;
 		this.scenarioName = scenario.getName();
 		this.schedule = scenario.getSchedule();
 		this.timezone = scenario.getTimezone();
 		
-		// TODO
-		this.steps = null; //scenario.getSteps(); order by sequence;
+		if (objects != null) this.steps = objects;
+		
 		this.domainId = scenario.getDomainId();
-		this.disposer = null; // context.disposer;
+		if (context != null) this.disposer = context.disposer;
 		this.context = new Context();
 		this.context.domainId = domainId;
 		
@@ -81,27 +86,31 @@ public class ScenarioInstance {
 		this.stopSubScenariosAwait();
 	}
 	public void stopSubScenariosAwait() {
-		ScenarioInstance subScenarioInstance = this.subScenarioInstances.remove(0);
-		while(subScenarioInstance != null) {
-			subScenarioInstance.disposeAwait();
-			subScenarioInstance = this.subScenarioInstances.remove(0);
-		}		
+//		ScenarioInstance subScenarioInstance = this.subScenarioInstances.remove(0);
+//		while(subScenarioInstance != null) {
+//			subScenarioInstance.disposeAwait();
+//			subScenarioInstance = this.subScenarioInstances.remove(0);
+//		}		
 	}
 	
 	@Async
 	public void run() {
-		this.runAwait();
+		runAwait();
 	}
-	 void runAwait() {		
+	
+	void runAwait() {
+		System.out.println("runAwait " + getInstanceName());
 		SCENARIO_STATE state = this.getState();
 		if (state == SCENARIO_STATE.STARTED || this.steps.length == 0) {
 			return;
 		}
-		
+
 		this.setState(SCENARIO_STATE.STARTED);
 		Context context = this.context;
 		
 		try {
+			System.out.println(this.getState());
+			System.out.println(SCENARIO_STATE.STARTED);
 			while(this.getState() == SCENARIO_STATE.STARTED) {
 				if (this.nextStep == -1) {
 					this.setNextStep(0);
@@ -168,6 +177,11 @@ public class ScenarioInstance {
 	}
 	public Context loadSubscenarioAwait(Steps step, Scenarios scenarioConfig, Context context) throws Exception {
 		
+		HandlerResult hResult = new HandlerResult();
+		
+		JSONObject paramsJson = (JSONObject)(new JSONParser()).parse(step.getParams());
+		boolean params_preventErrorPropagation = (boolean)paramsJson.get("preventErrorPropagation");
+
 		if (context.data instanceof Map) {
 			((Map)context.data).put(step.getName(), null);			
 		}
@@ -182,13 +196,11 @@ public class ScenarioInstance {
 			scenarioConfig.setDomainId(context.domainId);
 		}
 		
-		ScenarioInstance subScenarioInstance = new ScenarioInstance(this.instanceName+step.getName(), scenarioConfig, subContext);
+		ScenarioInstance subScenarioInstance = new ScenarioInstance(this.instanceName+step.getName(), scenarioConfig, subContext, null);
 		this.addSubScenarioInstance(subScenarioInstance);
 		subScenarioInstance.runAwait();
 		
-		// TODO
-	    // if (!preventErrorPropagation && subScenarioInstance.getState() == SCENARIO_STATE.HALTED) {
-		if (subScenarioInstance.getState() == SCENARIO_STATE.HALTED) {
+		if (!params_preventErrorPropagation && subScenarioInstance.getState() == SCENARIO_STATE.HALTED) {
 			throw new Exception("Sub-scenario[" + this.instanceName+step.getName() + "] is halted.");
 		}
 			
@@ -197,21 +209,19 @@ public class ScenarioInstance {
 	
 	
 	public void publishData(String tag, Object data) {
-		// TODO
-//	    pubsub.publish('data', {
-//	        data: {
-//	          domain: this.context.domain,
-//	          tag,
-//	          data
-//	        }
-//	      })		
+		Map dataMap = new HashMap<String, Object>();
+		dataMap.put("domainId", this.context.domainId);
+		dataMap.put("tag", tag);
+		dataMap.put("data", data);
+		Map message = new HashMap<String, Object>();
+		message.put("data", dataMap);
+		EngineUtil.publish("data", message);
 	}
 	
 	public void publishState(String message) {
-		// TODO
-//		pubsub.publish('scenario-instance-state', {
-//			scenarioInstanceState: this
-//		})		
+		Map dataMap = new HashMap<String, Object>();
+		dataMap.put("scenarioQueueState", this);
+		EngineUtil.publish("scenario-instance-state", dataMap);
 	}
 	
 	public Map getProgress() {
@@ -310,8 +320,7 @@ public class ScenarioInstance {
 		return this.processAwait(step, context);
 	}
 	HandlerResult processAwait(Steps step, Context context) throws Exception {
-		// TODO
-		//step.setParams(JSON.parse(step.getParams()));
+		
 		ITaskHandler handler = TaskRegistry.getTaskHandler(step.getTask());
 		if (handler == null) {
 			throw new Exception("No task handler for step " + step.getName() + step.getId());
@@ -360,6 +369,74 @@ public class ScenarioInstance {
 
 	public void setContext(Context context) {
 		this.context = context;
+	}
+
+	public Steps[] getSteps() {
+		return steps;
+	}
+
+	public void setSteps(Steps[] steps) {
+		this.steps = steps;
+	}
+
+	public int getRounds() {
+		return rounds;
+	}
+
+	public void setRounds(int rounds) {
+		this.rounds = rounds;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public int getLastStep() {
+		return lastStep;
+	}
+
+	public void setLastStep(int lastStep) {
+		this.lastStep = lastStep;
+	}
+
+	public String getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(String schedule) {
+		this.schedule = schedule;
+	}
+
+	public String getTimezone() {
+		return timezone;
+	}
+
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
+	}
+
+	public ScheduledFuture<?> getCronjob() {
+		return cronjob;
+	}
+
+	public void setCronjob(ScheduledFuture<?> cronjob) {
+		this.cronjob = cronjob;
+	}
+
+	public Object getDisposer() {
+		return disposer;
+	}
+
+	public void setDisposer(Object disposer) {
+		this.disposer = disposer;
+	}
+
+	public int getNextStep() {
+		return nextStep;
 	}
 	
 	
