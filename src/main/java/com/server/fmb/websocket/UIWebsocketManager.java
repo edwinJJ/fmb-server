@@ -165,30 +165,37 @@ public class UIWebsocketManager {
      */
     public void sendAll(Object data) {
     	if(data != null) {
-    		
     		String message = null;
     		ObjectMapper mapper = new ObjectMapper();
     		try {
-    			String ScenarioInstanceState = (String) ((Map<String, Object>) data).get("key");
-    			Map<String, Object> dataObjectMap = (Map<String, Object>) ((Map<String, Object>) data).get("data");
-    			ScenarioInstance ScenarioInstance = (ScenarioInstance) dataObjectMap.get("scenarioQueueState");
+    			String key = (String) ((Map<String, Object>) data).get("key");
+    			if (key.equals("scenario-instance-state")) {
+        			Map<String, Object> dataObjectMap = (Map<String, Object>) ((Map<String, Object>) data).get("data");
+        			ScenarioInstance ScenarioInstance = (ScenarioInstance) dataObjectMap.get("scenarioQueueState");
 
-    			Map<String, Object> scenarioInstanceMap = new HashMap<String, Object>(); 
-    			scenarioInstanceMap.put("domainId", ScenarioInstance.getDomainId());
-    			scenarioInstanceMap.put("instanceName", ScenarioInstance.getInstanceName());
-    			scenarioInstanceMap.put("message", ScenarioInstance.getMessage());
-    			scenarioInstanceMap.put("scenarioName", ScenarioInstance.getScenarioName());
-    			scenarioInstanceMap.put("schedule", ScenarioInstance.getSchedule());
-    			scenarioInstanceMap.put("timezone", ScenarioInstance.getTimezone());
-    			scenarioInstanceMap.put("context", ScenarioInstance.getContext());
-    			scenarioInstanceMap.put("cronjob", ScenarioInstance.getCronjob());
-    			scenarioInstanceMap.put("disposer", ScenarioInstance.getDisposer());
-    			scenarioInstanceMap.put("lastStep", ScenarioInstance.getLastStep());
-    			scenarioInstanceMap.put("nextStep", ScenarioInstance.getNextStep());
-    			scenarioInstanceMap.put("rounds", ScenarioInstance.getRounds());
-    			scenarioInstanceMap.put("steps", ScenarioInstance.getSteps());
-    			scenarioInstanceMap.put("subScenarioInstances", ScenarioInstance.getSubScenarioInstance());
-    			message = scenarioInstanceMap.toString() + "," + ScenarioInstanceState;
+        			Map<String, Object> scenarioInstanceMap = new HashMap<String, Object>(); 
+        			scenarioInstanceMap.put("domainId", ScenarioInstance.getDomainId());
+        			scenarioInstanceMap.put("instanceName", ScenarioInstance.getInstanceName());
+        			scenarioInstanceMap.put("message", ScenarioInstance.getMessage());
+        			scenarioInstanceMap.put("scenarioName", ScenarioInstance.getScenarioName());
+        			scenarioInstanceMap.put("schedule", ScenarioInstance.getSchedule());
+        			scenarioInstanceMap.put("timezone", ScenarioInstance.getTimezone());
+        			scenarioInstanceMap.put("context", ScenarioInstance.getContext());
+        			scenarioInstanceMap.put("cronjob", ScenarioInstance.getCronjob());
+        			scenarioInstanceMap.put("disposer", ScenarioInstance.getDisposer());
+        			scenarioInstanceMap.put("lastStep", ScenarioInstance.getLastStep());
+        			scenarioInstanceMap.put("nextStep", ScenarioInstance.getNextStep());
+        			scenarioInstanceMap.put("rounds", ScenarioInstance.getRounds());
+        			scenarioInstanceMap.put("steps", ScenarioInstance.getSteps());
+        			scenarioInstanceMap.put("subScenarioInstances", ScenarioInstance.getSubScenarioInstance());
+        			message = scenarioInstanceMap.toString() + "," + key;
+    			} else if (key.equals("data")) {
+        			Map<String, Object> dataObjectMap = (Map<String, Object>) ((Map<String, Object>) data).get("data");
+        			String domainId = (String) dataObjectMap.get("domainId");
+        			String tag = (String) dataObjectMap.get("tag");
+        			Object dataObject = (Object) dataObjectMap.get("data");
+        			message = domainId + ", " + tag + "," + dataObject + "," + key;
+    			}
 //    			message = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
     		} catch (Exception e) {
     			e.printStackTrace();
