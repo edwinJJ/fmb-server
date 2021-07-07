@@ -50,17 +50,19 @@ public class ScenarioEngine implements CommandLineRunner {
 	@Autowired
 	IStepService stepService;
 	
-//	private ScheduledFuture<?> cronjob;
+	@Autowired
+	DatabaseQuery databaseQueryService;
+	
 	private String schedule = "*/2 * * * * *";
 
 	private static Map<String, Map<String, ScenarioInstance>> scenarioInstances = new HashMap<String, Map<String, ScenarioInstance>>();
 	private static Map<String, PendingQueue> pendingQueues = new HashMap<String, PendingQueue>();
-//	private List<ScheduledFuture<?>> cronJobList = new ArrayList<ScheduledFuture<?>>();
 	private Map<String, Map<String, ScheduledFuture<?>>> cronJobMap = new HashMap<String, Map<String, ScheduledFuture<?>>>();
 
-	public ScenarioEngine() {
+	@Override
+	public void run(String... args) throws Exception {
 		TaskRegistry.registerTaskHandler("book-up-scenario", new BookUpScenario());
-		TaskRegistry.registerTaskHandler("database-query", new DatabaseQuery());
+		TaskRegistry.registerTaskHandler("database-query", databaseQueryService);
 		TaskRegistry.registerTaskHandler("empty-check", new EmptyCheck());
 		TaskRegistry.registerTaskHandler("end", new End());
 		TaskRegistry.registerTaskHandler("floating-point", new FloatingPoint());
@@ -77,10 +79,6 @@ public class ScenarioEngine implements CommandLineRunner {
 		TaskRegistry.registerTaskHandler("switch-set", new SwitchSet());
 		TaskRegistry.registerTaskHandler("throw", new Throw());
 		TaskRegistry.registerTaskHandler("variables", new Variables());
-	}
-	
-	@Override
-	public void run(String... args) throws Exception {
 		loadAll();
 	}
 	

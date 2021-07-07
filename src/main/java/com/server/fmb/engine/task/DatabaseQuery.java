@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import com.server.fmb.engine.ConnectionManager;
 import com.server.fmb.engine.Context;
@@ -13,6 +14,7 @@ import com.server.fmb.engine.IConnectionInstance;
 import com.server.fmb.engine.ITaskHandler;
 import com.server.fmb.entity.Steps;
 
+@Service
 public class DatabaseQuery implements ITaskHandler {
 
 	@Autowired
