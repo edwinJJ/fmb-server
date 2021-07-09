@@ -79,7 +79,7 @@ public class ScenarioEngine implements CommandLineRunner {
 		TaskRegistry.registerTaskHandler("switch-set", new SwitchSet());
 		TaskRegistry.registerTaskHandler("throw", new Throw());
 		TaskRegistry.registerTaskHandler("variables", new Variables());
-		loadAll();
+//		loadAll();
 	}
 	
 	public PendingQueue getPendingQueue(String domainId) {

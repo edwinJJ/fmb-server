@@ -15,7 +15,7 @@ public class EngineUtil {
 		if (accessor == null || accessor.equals("")) {
 			return null;
 		}
-		String[] accessors = accessor.trim().replaceAll("\\[(\\w+)\\]", ".$1").replaceAll("^\\.", "").split(".");
+		String[] accessors = accessor.trim().replaceAll("\\[(\\w+)\\]", ".$1").replaceAll("^\\.", "").split("\\.");
 		if (accessors.length == 0) {
 			return null;
 		}

@@ -109,8 +109,6 @@ public class ScenarioInstance {
 		Context context = this.context;
 		
 		try {
-			System.out.println(this.getState());
-			System.out.println(SCENARIO_STATE.STARTED);
 			while(this.getState() == SCENARIO_STATE.STARTED) {
 				if (this.nextStep == -1) {
 					this.setNextStep(0);
@@ -124,16 +122,21 @@ public class ScenarioInstance {
 				String next;
 				SCENARIO_STATE stepState = null;
 				Object data;
-				
+
+				System.out.println("step : " + step.getName());
 				
 				if (step.getSkip() != 1) {
 					HandlerResult result = this.processAwait(step, context);
 					next = result.next;
 					stepState = result.state;
 					data = result.data;
-					if (context.data instanceof Map) {
-						((Map)context.data).put(step.getName(), data);
+//					if (context.data instanceof Map) {
+//						((Map)context.data).put(step.getName(), data);
+//					}
+					if (context.data == null) {
+						context.data = new HashMap<String, Object>();
 					}
+					((Map)context.data).put(step.getName(), data);
 				} else {
 					next = null;
 					stepState = null;
@@ -213,6 +216,7 @@ public class ScenarioInstance {
 		dataMap.put("domainId", this.context.domainId);
 		dataMap.put("tag", tag);
 		dataMap.put("data", data);
+		dataMap.put("type", "data");
 		Map message = new HashMap<String, Object>();
 		message.put("data", dataMap);
 		EngineUtil.publish("data", message);

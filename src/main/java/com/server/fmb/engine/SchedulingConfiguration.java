@@ -4,6 +4,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 @Configuration
@@ -11,6 +12,7 @@ public class SchedulingConfiguration {
 
 	public final static int TASK_SCHEDULE_POOL_SIZE = 100;
 	
+	@Primary
 	@Bean
 	public ThreadPoolTaskScheduler schedulerExecutor() {
 		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();

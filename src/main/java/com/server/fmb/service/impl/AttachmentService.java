@@ -281,7 +281,7 @@ public class AttachmentService implements IAttachmentService {
     	            if (progress > lastProgress) {
     	            	message.put("copingProgress", progress);
 //    	            	ws.sendMessage(AuthUtil.getCurrentUserId(), FormatUtil.toJsonString(message));
-    	            	ws.sendMessage("userId", FormatUtil.toJsonString(message));
+    	            	ws.sendMessage(null, "userId", FormatUtil.toJsonString(message), null);
     	            	lastProgress = progress;
     	            }
     	        }    			
