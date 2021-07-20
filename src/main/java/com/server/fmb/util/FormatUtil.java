@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.json.XML;
+//import org.json.XML;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -250,23 +250,23 @@ public class FormatUtil {
         return map;
     }
     
-    public static String xmlStringToJsonString(String xmlString) {
-    	try {
-    		return XML.toJSONObject(xmlString).toString(0);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	return null;
-    }
-    public static String jsonStringToXmlString(String jsonString) {
-    	try {
-    		org.json.JSONObject json = new org.json.JSONObject(jsonString);
-    		return XML.toString(json);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	return null;
-    }
+//    public static String xmlStringToJsonString(String xmlString) {
+//    	try {
+//    		return XML.toJSONObject(xmlString).toString(0);
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    	return null;
+//    }
+//    public static String jsonStringToXmlString(String jsonString) {
+//    	try {
+//    		org.json.JSONObject json = new org.json.JSONObject(jsonString);
+//    		return XML.toString(json);
+//    	} catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    	return null;
+//    }
     
     public static Map<String,Object> convertJSONstringToMap(String json) throws Exception {
         ObjectMapper mapper = new ObjectMapper();

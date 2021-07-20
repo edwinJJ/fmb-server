@@ -36,6 +36,7 @@ import com.server.fmb.entity.Boards;
 import com.server.fmb.entity.Favorites;
 import com.server.fmb.service.IBoardService;
 import com.server.fmb.service.impl.ResultSet;
+import com.server.fmb.util.ValueUtil;
 
 @RestController
 public class BoardController {
@@ -49,17 +50,20 @@ public class BoardController {
 		List<Boards> boards = new ArrayList<>();
 		try {
 			ArrayList filters = (ArrayList)requestBody.get(Constant.FILTERS);
-			if (filters.size() > 0) {
+			if (ValueUtil.isNotEmpty(filters) && filters.size() > 0) {
 				Map<String, String> filtersMap = (Map<String, String>)filters.get(0);
 				if (filtersMap.get(Constant.NAME).equals(Constant.GROUP_ID)) {
 					boards = boardService.getBoardsByGroupId(filtersMap.get(Constant.VALUE));
 				}
 			} else {
 				Map<String, Integer> pagination = (Map<String, Integer>) requestBody.get(Constant.PAGINATION);
-				
-				int start = (Integer) pagination.get(Constant.PAGE);
-				if (start == 1) start = 0;
-				boards = boardService.getBoards(start, (Integer)pagination.get(Constant.LIMIT));
+				if (ValueUtil.isEmpty(pagination)) {
+					boards = boardService.getBoards(0, 0);
+				} else {
+					int start = (Integer) pagination.get(Constant.PAGE);
+					if (start == 1) start = 0;
+					boards = boardService.getBoards(start, (Integer)pagination.get(Constant.LIMIT));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

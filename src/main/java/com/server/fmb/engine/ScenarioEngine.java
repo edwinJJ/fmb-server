@@ -79,7 +79,7 @@ public class ScenarioEngine implements CommandLineRunner {
 		TaskRegistry.registerTaskHandler("switch-set", new SwitchSet());
 		TaskRegistry.registerTaskHandler("throw", new Throw());
 		TaskRegistry.registerTaskHandler("variables", new Variables());
-//		loadAll();
+		loadAll();
 	}
 	
 	public PendingQueue getPendingQueue(String domainId) {
@@ -141,7 +141,7 @@ public class ScenarioEngine implements CommandLineRunner {
 		if (ValueUtil.isEmpty(cronJob)) {
 			cronJob = new HashMap<String, ScheduledFuture<?>>();
 		}
-		ScheduledFuture<?> cronJobTemp = schedulerService.start(instance, this.schedule);
+		ScheduledFuture<?> cronJobTemp = schedulerService.start(instance, scenarioConfig.getSchedule());
 		instance.setCronjob(cronJobTemp);
 		cronJob.put(instanceName, cronJobTemp);
 		cronJobMap.put(scenarioConfig.getDomainId(), cronJob);
@@ -155,20 +155,21 @@ public class ScenarioEngine implements CommandLineRunner {
 	@Async
 	public void unload(String domainId, String instanceName) {
 		cronJobMap.get(domainId).get(instanceName).cancel(true);
-//		Map<String, ScenarioInstance> scenarioInstances = ScenarioEngine.scenarioInstances.get(domainId);
-//		if (scenarioInstances == null) {
-//			return;
-//		}
-//		
-//		ScenarioInstance instance = scenarioInstances.get(instanceName);
-//		if (instance == null) {
-//			return;
-//		}
-//		
-//		scenarioInstances.remove(instanceName);
-//		ScenarioEngine.scenarioInstances.put(domainId, scenarioInstances);
-//		instance.stop();
-//		instance.unload();
+		
+		Map<String, ScenarioInstance> scenarioInstances = ScenarioEngine.scenarioInstances.get(domainId);
+		if (scenarioInstances == null) {
+			return;
+		}
+		
+		ScenarioInstance instance = scenarioInstances.get(instanceName);
+		if (instance == null) {
+			return;
+		}
+		
+		scenarioInstances.remove(instanceName);
+		ScenarioEngine.scenarioInstances.put(domainId, scenarioInstances);
+		instance.stop();
+		instance.unload();
 	}
 	
 	@Async

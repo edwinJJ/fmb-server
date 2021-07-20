@@ -19,6 +19,7 @@ import com.server.fmb.engine.Types.SCENARIO_STATE;
 import com.server.fmb.entity.Scenarios;
 import com.server.fmb.entity.Steps;
 import com.server.fmb.service.IStepService;
+import com.server.fmb.util.ValueUtil;
 
 import net.bytebuddy.asm.Advice.This;
 
@@ -99,7 +100,7 @@ public class ScenarioInstance {
 	}
 	
 	void runAwait() {
-		System.out.println("runAwait " + getInstanceName());
+//		System.out.println("runAwait " + getInstanceName());
 		SCENARIO_STATE state = this.getState();
 		if (state == SCENARIO_STATE.STARTED || this.steps.length == 0) {
 			return;
@@ -123,7 +124,7 @@ public class ScenarioInstance {
 				SCENARIO_STATE stepState = null;
 				Object data;
 
-				System.out.println("step : " + step.getName());
+//				System.out.println("step : " + step.getName());
 				
 				if (step.getSkip() != 1) {
 					HandlerResult result = this.processAwait(step, context);
@@ -142,7 +143,7 @@ public class ScenarioInstance {
 					stepState = null;
 				}
 				
-				this.publishState(domainId);
+//				this.publishState(domainId);
 				
 				if (next != null) {
 					int nextStepIndex = -1;
@@ -212,6 +213,7 @@ public class ScenarioInstance {
 	
 	
 	public void publishData(String tag, Object data) {
+		if (ValueUtil.isEmpty(data)) return;
 		Map dataMap = new HashMap<String, Object>();
 		dataMap.put("domainId", this.context.domainId);
 		dataMap.put("tag", tag);
@@ -270,7 +272,7 @@ public class ScenarioInstance {
 			this.dispose();
 		}
 		
-		this.publishState(log);
+//		this.publishState(log);
 	}
 	
 	void start() {

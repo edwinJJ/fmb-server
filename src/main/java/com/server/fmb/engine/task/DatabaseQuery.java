@@ -13,6 +13,7 @@ import com.server.fmb.engine.Context;
 import com.server.fmb.engine.IConnectionInstance;
 import com.server.fmb.engine.ITaskHandler;
 import com.server.fmb.entity.Steps;
+import com.server.fmb.util.ValueUtil;
 
 @Service
 public class DatabaseQuery implements ITaskHandler {
@@ -48,7 +49,9 @@ public class DatabaseQuery implements ITaskHandler {
 //
 //			  query = vm.run('`' + query + '`')
 
-		hResult.data = dbconnection.queryAwait(query, null); 
+		if (ValueUtil.isNotEmpty(dbconnection)) {
+			hResult.data = dbconnection.queryAwait(query, null);
+		}
 		return hResult;
 	}
 }

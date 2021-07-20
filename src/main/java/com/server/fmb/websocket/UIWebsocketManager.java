@@ -15,10 +15,8 @@
 package com.server.fmb.websocket;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.websocket.OnClose;
@@ -29,6 +27,8 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +69,7 @@ public class UIWebsocketManager {
      * @param map<clientKey, Session>
      */
     private static Map<String, Session> clientsSessionMap = new HashMap<String, Session>();
+    private static Map<String, String> clientsTagMap = new HashMap<String, String>();
     
     /**
      * 클라이언트가 접속을 하게되면 호출되는 메소드
@@ -103,6 +104,14 @@ public class UIWebsocketManager {
     public void onMessage(Session session, String message) {
         try {
             this.logger.info("Received message [" + message + "] from session [" + session.getId() + "]!");
+            JSONObject jsonObj = (JSONObject) new JSONParser().parse(message);
+            if(((String)jsonObj.get("type")).equals("start")) {
+	            JSONObject payload = (JSONObject) jsonObj.get("payload");
+	            String queryString = (String) payload.get("query");
+	            String tagname = queryString.substring(1, queryString.length()-1);
+	            String keyName = (String)jsonObj.get("key");
+	            clientsTagMap.put(keyName, tagname);
+            }
             if (message != null) {
 //            	WebsocketInEvent inEvent = WebsocketEventFactory.createWebsocketInEvent(message);
 //        		this.registerSession(session, inEvent);
@@ -151,6 +160,8 @@ public class UIWebsocketManager {
 	    	this.unregisterSession(sessionId);
 	        this.logger.info("Closed session : [" + clientKey + "]");
 	        if (ValueUtil.isNotEmpty(clientKey)) {
+	        	clientsSessionMap.remove(clientKey);
+	        	clientsTagMap.remove(clientKey);
 	        }
     	} catch (Exception e) {
     		e.printStackTrace();
@@ -178,7 +189,7 @@ public class UIWebsocketManager {
      */
     public void sendMessage(Session session, String clientKey, String message, Object messageObject) {
     	try {
-    		this.logger.info("Send Message session [\" + session.getId() + \"]");
+//    		this.logger.info("Send Message session [\" + session.getId() + \"]");
 	    	if ((ValueUtil.isEmpty(session) && ValueUtil.isEmpty(clientKey)) || 
 	    		(ValueUtil.isEmpty(message) && ValueUtil.isEmpty(messageObject)) || 
 	    		ValueUtil.isEmpty(clientsSessionMap)) {
@@ -218,7 +229,7 @@ public class UIWebsocketManager {
     		ObjectMapper mapper = new ObjectMapper();
     		try {
     			String key = (String) ((Map<String, Object>) data).get("key");
-    			this.logger.info("Ready to Send Message key [" + key + "]");
+//    			this.logger.info("Ready to Send Message key [" + key + "]");
     			if (key.equals("scenario-instance-state")) {
         			Map<String, Object> dataObjectMap = (Map<String, Object>) ((Map<String, Object>) data).get("data");
         			ScenarioInstance ScenarioInstance = (ScenarioInstance) dataObjectMap.get("scenarioQueueState");
@@ -263,7 +274,7 @@ public class UIWebsocketManager {
     public void sendAll(String message, Object messageObject) {
     	try {
 	    	if(clientsSessionMap.isEmpty()) {
-	    		this.logger.info("Client Session Not Exist");
+//	    		this.logger.info("Client Session Not Exist");
 	    		return;
 	    	}
 	        Iterator<String> keyIter = clientsSessionMap.keySet().iterator();
@@ -271,24 +282,29 @@ public class UIWebsocketManager {
 	        while (keyIter.hasNext()) {
 	        	String key = keyIter.next();
 	        	Session session = clientsSessionMap.get(key);
-	            if (!session.isOpen()) {
-	                this.logger.error("Closed session : [" + session.getId() + "]");
-	            } else {
-	                try {
-	                	this.logger.info("Send Message session [" + session.getId() + "]");
-//						session.getBasicRemote().sendText(message);
-						if (ValueUtil.isNotEmpty(message)) {
-	                		session.getBasicRemote().sendText(message);
-	                	} else {
-	                		session.getBasicRemote().sendObject(messageObject);
-	                	}
-						
-					} catch (IOException e) {
-						this.logger.error("Failed to send message", e);
-					}
-	            }
+	        	
+	        	String tag = ((Map<String, String>)messageObject).get("tag");
+	        	
+	        	if (tag.equals(clientsTagMap.get(key))) {
+		            if (!session.isOpen()) {
+		                this.logger.error("Closed session : [" + session.getId() + "]");
+		            } else {
+		                try {
+		                	this.logger.info("Send Message session [" + session.getId() + "]" + " , tag : " + tag);
+	//						session.getBasicRemote().sendText(message);
+							if (ValueUtil.isNotEmpty(message)) {
+		                		session.getBasicRemote().sendText(message);
+		                	} else {
+		                		session.getBasicRemote().sendObject(messageObject);
+		                	}
+							
+						} catch (IOException e) {
+							this.logger.error("Failed to send message", e);
+						}
+		            }
+	        	}
 	        }
-	        this.logger.info("Sending " + message + " to [" + clientsSessionMap.size() + "] clients");
+//	        this.logger.info("Sending " + message + " to [" + clientsSessionMap.size() + "] clients");
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
