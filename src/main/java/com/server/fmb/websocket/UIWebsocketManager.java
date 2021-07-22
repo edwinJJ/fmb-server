@@ -79,18 +79,15 @@ public class UIWebsocketManager {
     @OnOpen
     public void onOpen(@PathParam("clientKey") String clientKey, Session session) {
     	try {
-	    	System.out.println("client is now connected........................");
-	    	System.out.println("clientKey : " + clientKey);
-	    	System.out.println("session : " + clientsSessionMap.get(clientKey));
 	    	if (clientsSessionMap.get(clientKey) != null) {
-	    		System.out.println("already exist! sessionId : " + clientsSessionMap.get(clientKey).getId());
+	    		this.logger.info("already exist! sessionId : " + clientsSessionMap.get(clientKey).getId() + ", RequestURI : " + session.getRequestURI());
 	    	}
 	    	if (ValueUtil.isEmpty(clientsSessionMap.get(clientKey))) {
 	    		clientsSessionMap.put(clientKey, session);
-	    		System.out.println("new sessionId : " + clientsSessionMap.get(clientKey).getId());
+	    		this.logger.info("new sessionId : " + clientsSessionMap.get(clientKey).getId() + ", RequestURI : " + session.getRequestURI());
 	    	}
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		this.logger.error(e.getMessage());
     	}
     }
     
@@ -112,24 +109,7 @@ public class UIWebsocketManager {
 	            String keyName = (String)jsonObj.get("key");
 	            clientsTagMap.put(keyName, tagname);
             }
-            if (message != null) {
-//            	WebsocketInEvent inEvent = WebsocketEventFactory.createWebsocketInEvent(message);
-//        		this.registerSession(session, inEvent);
-        		//eventHandler(inEvent);
-
-//            	List<Map<String, String>> messageList = new ArrayList<Map<String, String>>();
-//            	Map<String, String> messageMap = new HashMap<String, String>();
-//            	messageMap.put("first", "hello fmb!!!");
-//            	messageMap.put("second", "bye fmb!!!");
-//            	Map<String, String> messageMap2 = new HashMap<String, String>();
-//            	messageMap2.put("third", "again hi fmb!!!");
-//            	messageMap2.put("fourth", "again bye fmb!!!");
-//            	messageList.add(messageMap);
-//            	messageList.add(messageMap2);
-//            	
-//            	sendMessage(session, null, null, messageList);
-//            	sendMessage(session, null, messageMap.toString(), null);
-            }
+            if (message != null) {}
         } catch (Exception ex) {
             this.logger.error(ex.getMessage(), ex);
         }
@@ -164,7 +144,7 @@ public class UIWebsocketManager {
 	        	clientsTagMap.remove(clientKey);
 	        }
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		this.logger.error(e.getMessage());
     	}
     }
 
@@ -176,7 +156,7 @@ public class UIWebsocketManager {
 			Session session = clientsSessionMap.get(clientKey);
 			return session != null && session.isOpen();
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		this.logger.error(e.getMessage());
     	}
     	return false;
     }
@@ -189,13 +169,11 @@ public class UIWebsocketManager {
      */
     public void sendMessage(Session session, String clientKey, String message, Object messageObject) {
     	try {
-//    		this.logger.info("Send Message session [\" + session.getId() + \"]");
 	    	if ((ValueUtil.isEmpty(session) && ValueUtil.isEmpty(clientKey)) || 
 	    		(ValueUtil.isEmpty(message) && ValueUtil.isEmpty(messageObject)) || 
 	    		ValueUtil.isEmpty(clientsSessionMap)) {
 	            return;
 	        }
-//	    	Session session = clientsSessionMap.get(clientKey);
 	    	if (ValueUtil.isEmpty(session)) session = clientsSessionMap.get(clientKey);
 	        if (session != null) {
 	            if (!session.isOpen()) {
@@ -213,7 +191,7 @@ public class UIWebsocketManager {
 	            }
 	        }
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		this.logger.error(e.getMessage());
     	}
     }
     
@@ -229,7 +207,6 @@ public class UIWebsocketManager {
     		ObjectMapper mapper = new ObjectMapper();
     		try {
     			String key = (String) ((Map<String, Object>) data).get("key");
-//    			this.logger.info("Ready to Send Message key [" + key + "]");
     			if (key.equals("scenario-instance-state")) {
         			Map<String, Object> dataObjectMap = (Map<String, Object>) ((Map<String, Object>) data).get("data");
         			ScenarioInstance ScenarioInstance = (ScenarioInstance) dataObjectMap.get("scenarioQueueState");
@@ -237,30 +214,14 @@ public class UIWebsocketManager {
         			Map<String, Object> scenarioInstanceMap = new HashMap<String, Object>(); 
         			scenarioInstanceMap.put("domainId", ScenarioInstance.getDomainId());
         			scenarioInstanceMap.put("instanceName", ScenarioInstance.getInstanceName());
-//        			scenarioInstanceMap.put("message", ScenarioInstance.getMessage());
         			scenarioInstanceMap.put("scenarioName", ScenarioInstance.getScenarioName());
-//        			scenarioInstanceMap.put("schedule", ScenarioInstance.getSchedule());
-//        			scenarioInstanceMap.put("timezone", ScenarioInstance.getTimezone());
-//        			scenarioInstanceMap.put("context", ScenarioInstance.getContext());
-//        			scenarioInstanceMap.put("cronjob", ScenarioInstance.getCronjob());
-//        			scenarioInstanceMap.put("disposer", ScenarioInstance.getDisposer());
-//        			scenarioInstanceMap.put("lastStep", ScenarioInstance.getLastStep());
-//        			scenarioInstanceMap.put("nextStep", ScenarioInstance.getNextStep());
-//        			scenarioInstanceMap.put("rounds", ScenarioInstance.getRounds());
-//        			scenarioInstanceMap.put("steps", ScenarioInstance.getSteps());
-//        			scenarioInstanceMap.put("subScenarioInstances", ScenarioInstance.getSubScenarioInstance());
         			messageObject = scenarioInstanceMap;
     			} else if (key.equals("data")) {
         			Map<String, Object> dataObjectMap = (Map<String, Object>) ((Map<String, Object>) ((Map<String, Object>) data).get("data")).get("data");
-//        			String domainId = (String) dataObjectMap.get("domainId");
-//        			String tag = (String) dataObjectMap.get("tag");
-//        			Object dataObject = (Object) dataObjectMap.get("data");
-//        			message = domainId + ", " + tag + "," + dataObject + "," + key;
         			messageObject = dataObjectMap;
     			}
-//    			message = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
     		} catch (Exception e) {
-    			e.printStackTrace();
+    			this.logger.error(e.getMessage());
     		}
     		this.sendAll(null, messageObject);
     	}
@@ -282,31 +243,26 @@ public class UIWebsocketManager {
 	        while (keyIter.hasNext()) {
 	        	String key = keyIter.next();
 	        	Session session = clientsSessionMap.get(key);
-	        	
 	        	String tag = ((Map<String, String>)messageObject).get("tag");
-	        	
 	        	if (tag.equals(clientsTagMap.get(key))) {
 		            if (!session.isOpen()) {
 		                this.logger.error("Closed session : [" + session.getId() + "]");
 		            } else {
 		                try {
 		                	this.logger.info("Send Message session [" + session.getId() + "]" + " , tag : " + tag);
-	//						session.getBasicRemote().sendText(message);
 							if (ValueUtil.isNotEmpty(message)) {
 		                		session.getBasicRemote().sendText(message);
 		                	} else {
 		                		session.getBasicRemote().sendObject(messageObject);
 		                	}
-							
 						} catch (IOException e) {
 							this.logger.error("Failed to send message", e);
 						}
 		            }
 	        	}
 	        }
-//	        this.logger.info("Sending " + message + " to [" + clientsSessionMap.size() + "] clients");
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		this.logger.error(e.getMessage());
     	}
     }
     
@@ -322,7 +278,7 @@ public class UIWebsocketManager {
 	    		this.sendAllExceptUserId(userId, message);
 	    	}
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		this.logger.error(e.getMessage());
     	}
     }
 
@@ -358,7 +314,7 @@ public class UIWebsocketManager {
 	        if (count > 0)
 	        this.logger.info("Sending " + message + " to [" + count + "] clients");
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		this.logger.error(e.getMessage());
     	}
     }
     
@@ -398,14 +354,14 @@ public class UIWebsocketManager {
 				try {
 					targetSession.close();
 				} catch (Exception e) {
-					e.printStackTrace();
+					this.logger.error(e.getMessage());
 				}
 			}
 			if (ValueUtil.isNotEmpty(targetClientKey)) {
 				clientsSessionMap.remove(targetClientKey);
 			}
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		this.logger.error(e.getMessage());
     	}
     }
 }

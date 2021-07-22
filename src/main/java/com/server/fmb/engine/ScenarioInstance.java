@@ -100,7 +100,6 @@ public class ScenarioInstance {
 	}
 	
 	void runAwait() {
-//		System.out.println("runAwait " + getInstanceName());
 		SCENARIO_STATE state = this.getState();
 		if (state == SCENARIO_STATE.STARTED || this.steps.length == 0) {
 			return;
@@ -124,16 +123,11 @@ public class ScenarioInstance {
 				SCENARIO_STATE stepState = null;
 				Object data;
 
-//				System.out.println("step : " + step.getName());
-				
 				if (step.getSkip() != 1) {
 					HandlerResult result = this.processAwait(step, context);
 					next = result.next;
 					stepState = result.state;
 					data = result.data;
-//					if (context.data instanceof Map) {
-//						((Map)context.data).put(step.getName(), data);
-//					}
 					if (context.data == null) {
 						context.data = new HashMap<String, Object>();
 					}

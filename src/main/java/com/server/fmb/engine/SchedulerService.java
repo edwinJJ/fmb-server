@@ -19,7 +19,6 @@ public class SchedulerService {
     @Async
     public ScheduledFuture<?> start(ScenarioInstance scenarioInstance, String cron) {
         ScheduledFuture<?> future = this.scheduler.schedule(() -> {
-                    System.out.println("run at " + LocalDateTime.now() + " // " + scenarioInstance.getInstanceName());
                     scenarioInstance.run();
                 },
                 new CronTrigger(cron));

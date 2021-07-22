@@ -17,10 +17,12 @@ package com.server.fmb.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.server.fmb.constant.Constant;
+import com.server.fmb.interceptor.LogInterceptor;
 import com.server.fmb.util.EnvUtil;
 
 @Configuration
@@ -36,7 +38,11 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-			.allowedOrigins("http://localhost:3000", "http://localhost:8080", "http://192.168.0.11:8080", "http://192.168.0.11:3000", "http://192.168.0.29:3000")
+			.allowedOrigins(
+					"http://localhost:8080",
+					"http://192.168.0.11:8080",
+					"http://192.168.0.11:3000",
+					"http://192.168.0.29:3000")
 			.allowedMethods("GET", "POST", "PUT", "DELETE")
 			.allowCredentials(true);
 	}
@@ -51,5 +57,11 @@ public class WebConfig implements WebMvcConfigurer {
 		registry
 			.addResourceHandler(uploadImagesUrlPath + "/**")
 			.addResourceLocations("file:" + uploadImagesPath + "/");
+	}
+	
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(new LogInterceptor())
+		.excludePathPatterns("/css/**", "/fonts/**", "/plugin/**", "/scripts/**");
 	}
 }
