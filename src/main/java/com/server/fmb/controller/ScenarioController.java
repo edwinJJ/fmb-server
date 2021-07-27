@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,7 @@ import com.server.fmb.util.ValueUtil;
 @RestController
 public class ScenarioController {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	IScenarioService scenarioService;
@@ -66,7 +69,7 @@ public class ScenarioController {
 				scenarioListMap.add(scenarioMap);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(scenarioList, false, "scenario", e.toString());
 		}
 		Map<String, Object> ScenarioResult = new HashMap<String, Object>();
@@ -83,7 +86,7 @@ public class ScenarioController {
 			scenarioService.updateScenarios(requestBody);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "updateScenarios", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "updateScenarios", null);
@@ -96,7 +99,7 @@ public class ScenarioController {
 		try {
 			scenarioService.deleteScenarioById(ids);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(null, false, "deleteScenario", e.toString());
 		}
 		return new ResultSet().getResultSet(null, true, "deleteScenario", null);
@@ -111,7 +114,7 @@ public class ScenarioController {
 			Scenarios scenario = scenarioService.getScenarioByName(scenarioName);
 			scenarioEngine.load(scenarioName, scenario, null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(null, false, "startScenario", e.toString());
 		}
 		Map<String, Object> ScenarioResult = new HashMap<String, Object>();
@@ -127,7 +130,7 @@ public class ScenarioController {
 			Scenarios scenario = scenarioService.getScenarioByName(instanceName);
 			scenarioEngine.unload(scenario.getDomainId(), instanceName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(null, false, "stopScenario", e.toString());
 		}
 		Map<String, Object> ScenarioResult = new HashMap<String, Object>();

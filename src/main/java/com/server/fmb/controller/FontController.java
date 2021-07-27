@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +41,7 @@ import com.server.fmb.util.ValueUtil;
 @RestController
 public class FontController {
 
-	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	IFontService fontService;
@@ -74,7 +76,7 @@ public class FontController {
 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(fonts, false, "fonts", e.toString());
 		}
 		
@@ -92,7 +94,7 @@ public class FontController {
 		try {
 			fontResult = fontService.setFonts(requestBody);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(fontResult, false, "fonts", e.toString());
 		}
 		return new ResultSet().getResultSet(fontResult, true, "fonts", null);
@@ -107,7 +109,7 @@ public class FontController {
 			fontService.deleteFonts(id);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "success", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "success", null);

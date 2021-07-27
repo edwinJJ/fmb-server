@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,7 @@ import com.server.fmb.service.impl.ResultSet;
 @RestController
 public class StepController {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	IStepService stepService;
@@ -55,7 +58,7 @@ public class StepController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(stepList, false, "steps", e.toString());
 		}
 		Map<String, Object> StepResult = new HashMap<String, Object>();
@@ -72,7 +75,7 @@ public class StepController {
 			stepService.updateSteps(requestBody);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "updateSteps", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "updateSteps", null);
@@ -85,7 +88,7 @@ public class StepController {
 		try {
 			stepService.deleteStepById(ids);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(null, false, "deleteSteps", e.toString());
 		}
 		return new ResultSet().getResultSet(null, true, "deleteSteps", null);

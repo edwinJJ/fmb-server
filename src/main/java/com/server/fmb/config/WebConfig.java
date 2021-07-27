@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.server.fmb.constant.Constant;
-import com.server.fmb.interceptor.LogInterceptor;
+import com.server.fmb.interceptor.BizContextHandlerInterceptor;
 import com.server.fmb.util.EnvUtil;
 
 @Configuration
@@ -33,7 +33,10 @@ public class WebConfig implements WebMvcConfigurer {
 	private String uploadImagesUrlPath;
 	
 	@Autowired
-	EnvUtil envUtil;
+	private EnvUtil envUtil;
+	
+	@Autowired
+	private BizContextHandlerInterceptor bizContextHandlerInterceptor; 
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -61,7 +64,7 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new LogInterceptor())
+		registry.addInterceptor(bizContextHandlerInterceptor)
 		.excludePathPatterns("/css/**", "/fonts/**", "/plugin/**", "/scripts/**");
 	}
 }

@@ -69,38 +69,41 @@ public class GroupController {
 	
 	// delete group 
 	@RequestMapping(value="/deleteGroup/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody boolean deleteGroup(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody Object deleteGroup(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		boolean success = false;
 		try {
 			groupService.deleteGroup(id);
 			success = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(success, false, "delete", e.toString());
 		}
-		return success;
+		return new ResultSet().getResultSet(success, true, "delete", null);
 	}
 	
 	// get group list 
 	@RequestMapping(value = "/fetchGroupList", method = RequestMethod.GET)
-	public @ResponseBody List<Groups> fetchGroupList(HttpServletRequest request) {
-		List<Groups> Groups = new ArrayList<Groups>();
+	public @ResponseBody Object fetchGroupList(HttpServletRequest request) {
+		List<Groups> groups = new ArrayList<Groups>();
 		try {
-			Groups = groupService.fetchGroupList();
+			groups = groupService.fetchGroupList();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(groups, false, "groups", e.toString());
 		}
-		return Groups;
+		return new ResultSet().getResultSet(groups, true, "groups", null);
 	}
 	
 	// get play-group list 
 	@RequestMapping(value = "/fetchPlayGroupList", method = RequestMethod.GET)
-	public @ResponseBody List<Groups> fetchPlayGroupList(HttpServletRequest request) {
-		List<Groups> Groups = new ArrayList<Groups>();
+	public @ResponseBody Object fetchPlayGroupList(HttpServletRequest request) {
+		List<Groups> groups = new ArrayList<Groups>();
 		try {
-			Groups = groupService.fetchPlayGroupList();
+			groups = groupService.fetchPlayGroupList();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResultSet().getResultSet(groups, false, "groups", e.toString());
 		}
-		return Groups;
+		return new ResultSet().getResultSet(groups, false, "groups", null);
 	}
 }

@@ -29,6 +29,7 @@ import com.server.fmb.db.IBoardQueryManager;
 import com.server.fmb.db.IFavoriteQueryManager;
 import com.server.fmb.entity.Boards;
 import com.server.fmb.entity.Favorites;
+import com.server.fmb.interceptor.BizContext;
 import com.server.fmb.service.IBoardService;
 import com.server.fmb.service.IDomainService;
 import com.server.fmb.service.IUserService;
@@ -130,7 +131,7 @@ public class BoardService implements IBoardService {
 				board.setUpdaterId(boardMap.get("updaterId"));
 //				board.setUpdaterId(UUID.fromString(boardMap.get("updaterId")));
 			} else {
-				board.setUpdaterId(userService.getAdminUser().getId());
+				board.setUpdaterId(BizContext.getUserId());
 			}
 			if (!ValueUtil.isEmpty(boardMap.get("domainId"))) {
 				board.setDomainId(boardMap.get("domainId"));

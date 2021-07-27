@@ -19,9 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +43,8 @@ import com.server.fmb.util.ValueUtil;
 
 @RestController
 public class BoardController {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	IBoardService boardService;
@@ -66,7 +71,7 @@ public class BoardController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(boards, false, "boards", e.toString());
 		}
 		Map<String, Object> boardsResult = new HashMap<String, Object>();
@@ -82,7 +87,7 @@ public class BoardController {
 		try {
 			boards = boardService.getFavorites();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(boards, false, "boards", e.toString());
 		}
 		return new ResultSet().getResultSet(boards, true, "boards", null);
@@ -95,7 +100,7 @@ public class BoardController {
 		try {
 			board = boardService.setBoard(requestBody);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(board, false, "board", e.toString());
 		}
 		return new ResultSet().getResultSet(board, true, "board", null);
@@ -109,7 +114,7 @@ public class BoardController {
 			boardService.deleteBoard(id);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "success", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "success", null);
@@ -117,12 +122,12 @@ public class BoardController {
 	
 	// get board 
 	@RequestMapping(value = "/fetchBoardById/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object fetchBoardById(@PathVariable("id") String id, HttpServletRequest request) {
+	public @ResponseBody Object fetchBoardById(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
 		Boards board = new Boards();
 		try {
 			board = boardService.fetchBoardById(id);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(board, false, "board", e.toString());
 		}
 		return new ResultSet().getResultSet(board, true, "board", null);
@@ -135,7 +140,7 @@ public class BoardController {
 		try {
 			board = boardService.setBoard(requestBody);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(board, false, "board", e.toString());
 		}
 		return new ResultSet().getResultSet(board, true, "board", null);
@@ -148,7 +153,7 @@ public class BoardController {
 		try {
 			favorite = boardService.addFavorite(requestBody);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(favorite, false, "favorite", e.toString());
 		}
 		return new ResultSet().getResultSet(favorite, true, "favorite", null);
@@ -162,7 +167,7 @@ public class BoardController {
 			boardService.removeFavorite(id);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "success", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "success", null);
@@ -175,7 +180,7 @@ public class BoardController {
 		try {
 			favoriteList = boardService.getOnlyFavorites();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(favoriteList, false, "favoriteList", e.toString());
 		}
 		return new ResultSet().getResultSet(favoriteList, true, "favoriteList", null);

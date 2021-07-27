@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +44,7 @@ import com.server.fmb.service.impl.ResultSet;
 @RestController
 public class AttachmentController {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	IAttachmentService attachmentService;
@@ -69,7 +72,7 @@ public class AttachmentController {
 
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(attachments, false, "attachments", e.toString());
 		}
 		
@@ -87,7 +90,7 @@ public class AttachmentController {
 		try {
 			attachment = attachmentService.setAttachments(requestBody);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(attachment, false, "attachment", e.toString());
 		}
 		return new ResultSet().getResultSet(attachment, true, "attachment", null);
@@ -101,7 +104,7 @@ public class AttachmentController {
 		try {
 			attachment = attachmentService.deleteAttachments(id);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(attachment, false, "attachment", e.toString());
 		}
 		return new ResultSet().getResultSet(attachment, true, "attachment", null);
@@ -113,7 +116,7 @@ public class AttachmentController {
 		try {
 			attachmentService.uploadTempFile(request, response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
     
@@ -124,7 +127,7 @@ public class AttachmentController {
     	try {
     		result = attachmentService.deleteFile(path);
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage());
     		return new ResultSet().getResultSet(result, false, "deleteFile", e.toString());
     	}
     	return new ResultSet().getResultSet(result, true, "deleteFile", null);
@@ -133,21 +136,13 @@ public class AttachmentController {
     @RequestMapping(value = "/downloadFile/{path}/{fileName}")
     @ResponseStatus(HttpStatus.OK)
     public void downloadFile(@PathVariable("path") String path, @PathVariable("fileName") String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
-//    	Object fileInfo = fileManager.createFileFromDataBase(uniqueId, fileType);
-//    	fileManager.downloadFile(request, response, fileInfo, fileType);
-    	attachmentService.downloadFile(request, response, path, fileName);
+    	try {
+    		attachmentService.downloadFile(request, response, path, fileName);
+    	} catch (Exception e) {
+    		logger.error(e.getMessage());
+    	}
     }
     
-//    @RequestMapping(value = "/rest/downloadFile", method = RequestMethod.GET)
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody void downloadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//    	try {
-//    		attachmentService.d
-//    	} catch (Exception e) {
-//    		e.printStackTrace();
-//    	}
-//    }
-
     // delete attachment 
 	@RequestMapping(value="/deleteAttachmentByRef/{ref}", method = RequestMethod.DELETE)
 	public @ResponseBody Object deleteAttachmentByRef(@PathVariable("ref") String ref, HttpServletRequest request, HttpServletResponse response) {
@@ -156,7 +151,7 @@ public class AttachmentController {
 			attachmentService.deleteAttachmentByRef(ref);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "deleteAttachmentByRef", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "deleteAttachmentByRef", null);

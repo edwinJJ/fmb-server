@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,8 @@ import com.server.fmb.util.ValueUtil;
 
 @RestController
 public class ConnectionController {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	IConnectionService connectionService;
@@ -82,7 +86,7 @@ public class ConnectionController {
 				connectionListMap.add(connectionMap);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(connectionListMap, false, "connectionList", e.toString());
 		}
 		Map<String, Object> connectionResult = new HashMap<String, Object>();
@@ -99,7 +103,7 @@ public class ConnectionController {
 			connectionService.updateConnections(requestBody);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "updateConnections", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "updateConnections", null);
@@ -114,7 +118,7 @@ public class ConnectionController {
 			connectionService.deleteConnectionByName(names);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "deleteConnections", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "deleteConnections", null);
@@ -130,7 +134,7 @@ public class ConnectionController {
 			oracleConnectorService.connect(connection);
 			state = Constant.CONNECTED;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(state, false, "connect", e.toString());
 		}
 		Map<String, Object> connectionResult = new HashMap<String, Object>();
@@ -148,7 +152,7 @@ public class ConnectionController {
 			oracleConnectorService.disconnect(connection);
 			state = Constant.DISCONNECTED;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(state, false, "disconnect", e.toString());
 		}
 		Map<String, Object> connectionResult = new HashMap<String, Object>();
