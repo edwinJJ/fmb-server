@@ -121,8 +121,8 @@ public class AttachmentService implements IAttachmentService {
 			attachment.setUpdatedAt(new Date());
 			attachment.setCreatedAt(new Date());
 			attachment.setDomainId(domainService.getDomain().getId());
-			attachment.setUpdaterId(userService.getAdminUser().getId());
-			attachment.setCreatorId(userService.getAdminUser().getId());
+			attachment.setUpdaterId(attachmentMap.get("userName"));
+			attachment.setCreatorId(attachmentMap.get("userName"));
 			return attachmentQueryManager.save(attachment);
 		}
 		

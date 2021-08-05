@@ -67,15 +67,13 @@ public class ScenarioService implements IScenarioService {
 				if (ValueUtil.isEmpty(scenarioUpdate.getDomainId())) {
 					scenarioUpdate.setDomainId(scenario.getDomainId());
 				}
-				if (ValueUtil.isEmpty(scenarioUpdate.getUpdaterId())) {
-					scenarioUpdate.setUpdaterId(scenario.getUpdaterId());
-				}
+				scenarioUpdate.setUpdaterId(scenario.getUpdaterId());
 				scenarioUpdate.setUpdatedAt(new Date());
 			} else {
 				scenarioUpdate.setId(IdUtil.getUUIDString());
 				scenarioUpdate.setDomainId(domainService.getDomain().getId());
-				scenarioUpdate.setCreatorId(userService.getAdminUser().getId());
-				scenarioUpdate.setUpdaterId(userService.getAdminUser().getId());
+				scenarioUpdate.setCreatorId(scenarioUpdate.getUpdaterId());
+				scenarioUpdate.setUpdaterId(scenarioUpdate.getUpdaterId());
 //				if (ValueUtil.isEmpty(scenarioUpdate.getActive())) scenarioUpdate.setActive(0);
 				if (ValueUtil.isEmpty(scenarioUpdate.getActive())) scenarioUpdate.setActive(false);
 				scenarioUpdate.setCreatedAt(new Date());

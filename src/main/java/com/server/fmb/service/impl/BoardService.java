@@ -128,7 +128,7 @@ public class BoardService implements IBoardService {
 //			if (!ValueUtil.isEmpty(boardMap.get("groupId"))) board.setGroupId(UUID.fromString(boardMap.get("groupId")));
 			board.setUpdatedAt(new Date());
 			if (!ValueUtil.isEmpty(boardMap.get("updaterId"))) {
-				board.setUpdaterId(boardMap.get("updaterId"));
+				board.setUpdaterId(boardMap.get("userName"));
 //				board.setUpdaterId(UUID.fromString(boardMap.get("updaterId")));
 			} else {
 				board.setUpdaterId(BizContext.getUserId());
@@ -153,7 +153,8 @@ public class BoardService implements IBoardService {
 			board.setCreatedAt(new Date());
 			board.setUpdatedAt(new Date());
 			board.setDomainId(domainService.getDomain().getId());
-			board.setCreatorId(userService.getAdminUser().getId());
+			board.setCreatorId(boardMap.get("userName"));
+			board.setUpdaterId(boardMap.get("userName"));
 			return boardQueryManager.save(board);
 		}
 	}

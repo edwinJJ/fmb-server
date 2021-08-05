@@ -55,7 +55,7 @@ public class GroupService implements IGroupService {
 			group.setName(groupMap.get("name"));
 			group.setDescription(groupMap.get("description"));
 			group.setUpdatedAt(new Date());
-			group.setUpdaterId(groupMap.get("updaterId"));
+			group.setUpdaterId(groupMap.get("userName"));
 //			group.setUpdaterId(UUID.fromString(groupMap.get("updaterId")));
 			return groupQueryManager.save(group);
 		} else {
@@ -67,8 +67,8 @@ public class GroupService implements IGroupService {
 			group.setCreatedAt(new Date());
 			group.setUpdatedAt(new Date());
 			group.setDomainId(domainService.getDomain().getId());
-			group.setCreatorId(userService.getAdminUser().getId());
-			group.setUpdaterId(userService.getAdminUser().getId());
+			group.setCreatorId(groupMap.get("userName"));
+			group.setUpdaterId(groupMap.get("userName"));
 			return groupQueryManager.save(group);
 		}
 	}

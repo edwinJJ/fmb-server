@@ -21,7 +21,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +32,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.server.fmb.entity.Boards;
 import com.server.fmb.entity.Groups;
 import com.server.fmb.service.IGroupService;
 import com.server.fmb.service.impl.ResultSet;
 
 @RestController
 public class GroupController {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	IGroupService groupService;
@@ -46,7 +52,7 @@ public class GroupController {
 		try {
 			group = groupService.setGroup(requestBody);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(group, false, "group", e.toString());
 		}
 		return new ResultSet().getResultSet(group, true, "group", null);
@@ -60,7 +66,7 @@ public class GroupController {
 			groupService.setGroup(requestBody);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "success", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "success", null);
@@ -75,7 +81,7 @@ public class GroupController {
 			groupService.deleteGroup(id);
 			success = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(success, false, "delete", e.toString());
 		}
 		return new ResultSet().getResultSet(success, true, "delete", null);
@@ -88,7 +94,7 @@ public class GroupController {
 		try {
 			groups = groupService.fetchGroupList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(groups, false, "groups", e.toString());
 		}
 		return new ResultSet().getResultSet(groups, true, "groups", null);
@@ -101,9 +107,22 @@ public class GroupController {
 		try {
 			groups = groupService.fetchPlayGroupList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(groups, false, "groups", e.toString());
 		}
-		return new ResultSet().getResultSet(groups, false, "groups", null);
+		return new ResultSet().getResultSet(groups, true, "groups", null);
+	}
+	
+	// get group 
+	@RequestMapping(value = "/fetchGroupById/{groupId}", method = RequestMethod.GET)
+	public @ResponseBody Object fetchBoardById(@PathVariable("groupId") String groupId, HttpServletRequest request) {
+		Groups group = new Groups();
+		try {
+			group = groupService.getGroupById(groupId);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResultSet().getResultSet(group, false, "group", e.toString());
+		}
+		return new ResultSet().getResultSet(group, true, "group", null);
 	}
 }

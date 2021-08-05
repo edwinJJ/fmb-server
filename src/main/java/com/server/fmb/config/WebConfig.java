@@ -65,6 +65,6 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(bizContextHandlerInterceptor)
-		.excludePathPatterns("/css/**", "/fonts/**", "/plugin/**", "/scripts/**");
+		.excludePathPatterns("/css/**", "/fonts/**", "/plugin/**", "/scripts/**", "/images/**");
 	}
 }
