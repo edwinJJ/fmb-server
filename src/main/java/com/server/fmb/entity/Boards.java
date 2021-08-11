@@ -43,6 +43,9 @@ public class Boards {
 	private String model;
 	
 	@Column
+	private String header;
+	
+	@Column
 	private String thumbnail;
 	
 	@Column
@@ -105,6 +108,14 @@ public class Boards {
 
 	public void setModel(String model) {
 		this.model = model;
+	}
+	
+	public String getHeader() {
+		return header;
+	}
+
+	public void setHeader(String header) {
+		this.header = header;
 	}
 
 	public String getThumbnail() {

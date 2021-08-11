@@ -20,10 +20,10 @@ public class BizContextHandlerInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		try {
 			logger.info("Request URI ===> " + request.getRequestURI());
-			BizContext.setUserId(HttpCookieUtil.getCookieName(HttpCookieUtil.getCookie(request, "userId")));
-			logger.info("Request userId ===> " + BizContext.getUserId());
+//			BizContext.setUserId(HttpCookieUtil.getCookieName(HttpCookieUtil.getCookie(request, "userId")));
+//			logger.info("Request userId ===> " + BizContext.getUserId());
 		} catch (NullPointerException e) {
-			logger.error("Cookie or Cookie.getName() is Null : " + e.getMessage());
+//			logger.error("Cookie or Cookie.getName() is Null : " + e.getMessage());
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}

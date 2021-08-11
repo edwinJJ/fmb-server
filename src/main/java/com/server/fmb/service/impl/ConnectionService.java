@@ -81,6 +81,8 @@ public class ConnectionService implements IConnectionService {
 				if (ValueUtil.isEmpty(connectionUpdate.getDomainId())) {
 					connectionUpdate.setDomainId(connection.getDomainId());
 				}
+				connectionUpdate.setCreatorId(connection.getUpdaterId());
+				connectionUpdate.setCreatedAt(connection.getCreatedAt());
 				connectionUpdate.setUpdaterId(connection.getUpdaterId());
 				connectionUpdate.setUpdatedAt(new Date());
 			} else {

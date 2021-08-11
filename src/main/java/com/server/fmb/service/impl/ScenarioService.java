@@ -67,6 +67,8 @@ public class ScenarioService implements IScenarioService {
 				if (ValueUtil.isEmpty(scenarioUpdate.getDomainId())) {
 					scenarioUpdate.setDomainId(scenario.getDomainId());
 				}
+				scenarioUpdate.setCreatorId(scenario.getUpdaterId());
+				scenarioUpdate.setCreatedAt(scenario.getCreatedAt());
 				scenarioUpdate.setUpdaterId(scenario.getUpdaterId());
 				scenarioUpdate.setUpdatedAt(new Date());
 			} else {

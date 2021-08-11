@@ -53,8 +53,6 @@ public class ScenarioEngine implements CommandLineRunner {
 	@Autowired
 	DatabaseQuery databaseQueryService;
 	
-	private String schedule = "*/2 * * * * *";
-
 	private static Map<String, Map<String, ScenarioInstance>> scenarioInstances = new HashMap<String, Map<String, ScenarioInstance>>();
 	private static Map<String, PendingQueue> pendingQueues = new HashMap<String, PendingQueue>();
 	private Map<String, Map<String, ScheduledFuture<?>>> cronJobMap = new HashMap<String, Map<String, ScheduledFuture<?>>>();

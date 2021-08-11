@@ -56,6 +56,7 @@ public class BoardService implements IBoardService {
 		List<Boards> boardList = boardQueryManager.getBoards(start, end);
 		for (Boards board : boardList) {
 			board.setModel(null);
+			board.setHeader(null);
 		}
 		return boardList;
 	}
@@ -82,6 +83,7 @@ public class BoardService implements IBoardService {
 		List<Boards> boardsListMap = boardQueryManager.getBoardsByRoutingIds(routingIds);
 		for (Boards board: boardsListMap) {
 			board.setModel(null);
+			board.setHeader(null);
 		}
 		return boardsListMap;
 	}
@@ -112,6 +114,7 @@ public class BoardService implements IBoardService {
 //		List<Boards> boardList = boardQueryManager.getBoardsByGroupId(UUID.fromString(groupId));
 		for (Boards board : boardList) {
 			board.setModel(null);
+			board.setHeader(null);
 		}
 		return boardList;
 	}
@@ -124,6 +127,7 @@ public class BoardService implements IBoardService {
 			board.setName(boardMap.get("name"));
 			if (!ValueUtil.isEmpty(boardMap.get("description"))) board.setDescription(boardMap.get("description"));
 			if (!ValueUtil.isEmpty(boardMap.get("model"))) board.setModel(boardMap.get("model"));
+			if (!ValueUtil.isEmpty(boardMap.get("header"))) board.setHeader(boardMap.get("header"));
 			if (!ValueUtil.isEmpty(boardMap.get("groupId"))) board.setGroupId(boardMap.get("groupId"));
 //			if (!ValueUtil.isEmpty(boardMap.get("groupId"))) board.setGroupId(UUID.fromString(boardMap.get("groupId")));
 			board.setUpdatedAt(new Date());
@@ -146,7 +150,9 @@ public class BoardService implements IBoardService {
 			board.setId(IdUtil.getUUIDString());
 //			board.setId(IdUtil.getUUID());
 			board.setName(boardMap.get("name"));
+			board.setDescription(boardMap.get("description"));
 			board.setModel(boardMap.get("model"));
+			board.setHeader(boardMap.get("header"));
 			board.setGroupId(boardMap.get("groupId"));
 //			board.setGroupId(UUID.fromString(boardMap.get("groupId")));
 			board.setThumbnail(Constant.NEW_THUMBNAIL);
