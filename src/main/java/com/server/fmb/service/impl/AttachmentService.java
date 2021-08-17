@@ -386,7 +386,8 @@ public class AttachmentService implements IAttachmentService {
 
         formFile.setFilePath(filePath);
         formFile.setId(fileId);
-        formFile.setType(extension != null ? extension.toLowerCase() : null);
+//        formFile.setType(extension != null ? extension.toLowerCase() : null);
+        formFile.setType(extension);
 
         this.writeAjaxFile(request, response, formFile);
     }
