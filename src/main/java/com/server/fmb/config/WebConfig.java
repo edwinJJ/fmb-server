@@ -38,19 +38,20 @@ public class WebConfig implements WebMvcConfigurer {
 	@Autowired
 	private BizContextHandlerInterceptor bizContextHandlerInterceptor; 
 	
+	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
+		
 		registry.addMapping("/**")
-			.allowedOrigins(
-					"http://localhost:8080",
-					"http://localhost:16050",
-					"http://192.168.0.11:8080",
-					"http://192.168.0.11:3000",
-					"http://192.168.0.29:3000",
-					"http://192.168.0.29:16050",
-					"http://49.175.158.99:16050")
 			.allowedMethods("GET", "POST", "PUT", "DELETE")
-			.allowCredentials(true);
+			.allowedOrigins("*");
+		
+//		String allowedOrigins = envUtil.getProperty(Constant.WEBCONFIG_ALLOWED_ORIGINS);
+//		String[] allowedOriginsArray = allowedOrigins.split(",");
+//		registry.addMapping("/**")
+//			.allowedOrigins("http://localhost:16060)
+//			.allowedMethods("GET", "POST", "PUT", "DELETE")
+//			.allowCredentials(true);
 	}
 	
 	@Override

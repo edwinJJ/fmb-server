@@ -34,9 +34,9 @@ public class EqpService implements IEqpService {
     	Connection dbConnection = DriverManager.getConnection(scDbUrl, scDbuser, scDbPw);
     	Statement stmt = dbConnection.createStatement();
     	String query = "";
-    	if (type.equals("stk")) {
+    	if (type.equals(Constant.STOCKER)) {
     		query += "select localename from MCS_F_MACHINE_STORAGE where id='" + id + "'";
-    	} else if (type.equals("eqp")) {
+    	} else if (type.equals(Constant.EQP)) {
     		query += "select localename from MCS_F_MACHINE where id='" + id +"'";
     	}
 		ResultSet rs = stmt.executeQuery(query);

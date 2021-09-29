@@ -49,5 +49,12 @@ public class Constant {
 	 * file id prefix temp
 	 */
     public static final String FILE_ID_PREFIX_TEMP = "temp"; 
+    
+    
+    /**
+     * eqp info
+     */
+    public static final String STOCKER = "STOCKER";
+    public static final String EQP = "EQP";
 	
 }
