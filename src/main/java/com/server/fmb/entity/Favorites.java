@@ -22,8 +22,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "FMB_FAVORITES")
 public class Favorites {
 	
 	@Id
@@ -32,28 +34,28 @@ public class Favorites {
 //	@GeneratedValue(generator = "UUID")
 //	private UUID id;
 	
-	@Column
+	@Column(name = "routing")
 	private String routing;
 	
-	@Column
+	@Column(name = "created_at")
 	private Date createdAt;
 	
-	@Column
+	@Column(name = "updated_at")
 	private Date updatedAt;
 	
-	@Column
+	@Column(name = "domain_id")
 	private String domainId;
 //	private UUID domainId;
 	
-	@Column
+	@Column(name = "user_id")
 	private String userId;
 //	private UUID userId;
 	
-	@Column
+	@Column(name = "creator_id")
 	private String creatorId;
 //	private UUID creatorId;
 	
-	@Column
+	@Column(name = "updater_id")
 	private String updaterId;
 //	private UUID updaterId;
 

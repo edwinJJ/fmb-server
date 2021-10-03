@@ -37,10 +37,6 @@ public class Constant {
 	public static final String IMAGE_SERVER_CONTEXT = "image.server.context";
 	public static final String IMAGE_SERVER_REPOSITORY = "image.server.repository";
 	public static final String FILE_REPOSITORY = "file.repository";
-	public static final String SECOND_SERVER_DRIVER = "second.db.server.driver";
-	public static final String SECOND_SERVER_URL = "second.db.server.url";
-	public static final String SECOND_SERVER_USER = "second.db.server.user";
-	public static final String SECOND_SERVER_PW = "second.db.server.pw";
 	public static final String GSC_ENABLED = "google-cloud-storage.enabled";
 	public static final String GSC_BUCKET = "google-cloud-storage.bucket";
 	

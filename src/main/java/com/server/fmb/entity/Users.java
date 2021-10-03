@@ -22,8 +22,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "FMB_USERS")
 public class Users {
 	
 	@Id
@@ -32,50 +34,50 @@ public class Users {
 //	@GeneratedValue(generator = "UUID")
 //	private UUID id;
 	
-	@Column
+	@Column(name = "name")
 	private String name;
 	
-	@Column
+	@Column(name = "description")
 	private String description;
 	
-	@Column
+	@Column(name = "email")
 	private String email;
 	
-	@Column
+	@Column(name = "password")
 	private String password;
 	
-	@Column
+	@Column(name = "user_type")
 	private String userType;
 	
-	@Column
+	@Column(name = "reference")
 	private String reference;
 	
-	@Column
+	@Column(name = "salt")
 	private String salt;
 	
-	@Column
+	@Column(name = "locale")
 	private String locale;
 	
-	@Column
+	@Column(name = "status")
 	private String status;
 	
-	@Column
+	@Column(name = "fail_count")
 	private int failCount;
 	
-	@Column
+	@Column(name = "password_updated_At")
 	private Date passwordUpdatedAt;
 	
-	@Column
+	@Column(name = "created_at")
 	private Date createdAt;
 	
-	@Column
+	@Column(name = "updated_at")
 	private Date updatedAt;
 	
-	@Column
+	@Column(name = "creator_id")
 	private String creatorId;
 //	private UUID creatorId;
 	
-	@Column
+	@Column(name = "updater_id")
 	private String updaterId;
 //	private UUID updaterId;
 

@@ -22,9 +22,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 @Entity
+@Table(name = "FMB_BOARDS")
 public class Boards {
 
 	@Id
@@ -33,40 +35,40 @@ public class Boards {
 //	@GeneratedValue(generator = "UUID")
 //	private UUID id;
 	
-	@Column
+	@Column(name = "name")
 	private String name;
 	
-	@Column
+	@Column(name = "description")
 	private String description;
 
-	@Column
+	@Column(name = "model")
 	private String model;
 	
-	@Column
+	@Column(name = "header")
 	private String header;
 	
-	@Column
+	@Column(name = "thumbnail")
 	private String thumbnail;
 	
-	@Column
+	@Column(name = "created_at")
 	private Date createdAt; 
 	
-	@Column
+	@Column(name = "updated_at")
 	private Date updatedAt;
 	
-	@Column
+	@Column(name = "domain_id")
 	private String domainId;
 //	private UUID domainId;
 	
-	@Column
+	@Column(name = "group_id")
 	private String groupId;
 //	private UUID groupId;
 	
-	@Column
+	@Column(name = "creator_id")
 	private String creatorId;
 //	private UUID creatorId;
 	
-	@Column
+	@Column(name = "updater_id")
 	private String updaterId;
 //	private UUID updaterId;
 

@@ -14,13 +14,19 @@
  */
 package com.server.fmb.db;
 
-import java.util.UUID;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.server.fmb.entity.Domains;
 
+@Repository
 public interface IDomainQueryManager extends JpaRepository<Domains, String>  {
 //public interface IDomainQueryManager extends JpaRepository<Domains, UUID>  {
 
+	@Query(value = "SELECT u.* FROM FMB_DOMAINS u ORDER BY u.name DESC", nativeQuery = true)
+	public List<Domains> getAllDomains();
+	
 }

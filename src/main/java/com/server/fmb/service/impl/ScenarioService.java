@@ -32,7 +32,7 @@ public class ScenarioService implements IScenarioService {
 	
 	@Override
 	public List<Scenarios> getScenarios() throws Exception {
-		return scenarioQueryManager.findAll();
+		return scenarioQueryManager.getAllScenarios();
 	}
 	
 	public List<Scenarios> getScenariosByActive(Integer active) throws Exception {

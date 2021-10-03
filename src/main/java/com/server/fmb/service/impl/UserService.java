@@ -29,7 +29,7 @@ public class UserService implements IUserService {
 	
 	@Override
 	public Users getAdminUser() throws Exception {
-		return iUserQueryManager.findAll().get(0);
+		return iUserQueryManager.getAllUsers().get(0);
 	}
 	
 }

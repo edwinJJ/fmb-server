@@ -14,19 +14,22 @@
  */
 package com.server.fmb.db;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.server.fmb.entity.Groups;
 
+@Repository
 public interface IGroupQueryManager extends JpaRepository<Groups, String> {
 //public interface IGroupQueryManager extends JpaRepository<Groups, UUID> {
 	
-	@Query(value = "SELECT g.* FROM play_groups g", nativeQuery = true)
+	@Query(value = "SELECT g.* FROM FMB_GROUPS g", nativeQuery = true)
+	public List<Groups> fetchGroupList();
+	
+	@Query(value = "SELECT g.* FROM FMB_PLAY_GROUPS g", nativeQuery = true)
 	public List<Groups> fetchPlayGroupList();
 	
 }

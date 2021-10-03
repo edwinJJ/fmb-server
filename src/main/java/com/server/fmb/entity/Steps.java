@@ -8,9 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 @Entity
+@Table(name = "FMB_STEPS")
 public class Steps {
 
 	
@@ -20,10 +22,10 @@ public class Steps {
 //	@GeneratedValue(generator = "UUID")
 //	private UUID id;
 	
-	@Column
+	@Column(name = "name")
 	private String name;
 	
-	@Column
+	@Column(name = "description")
 	private String description;
 	
 	@Column(name = "sequence" , nullable = false)
@@ -32,37 +34,37 @@ public class Steps {
 	@Column(name = "task" , nullable = false)
 	private String task;
 	
-	@Column
+	@Column(name = "skip")
 	private Integer skip;
 	
-	@Column
+	@Column(name = "log")
 	private Integer log;
 	
-	@Column
+	@Column(name = "connection")
 	private String connection;
 	
-	@Column
+	@Column(name = "params")
 	private String params;
 	
-	@Column
+	@Column(name = "created_at")
 	private Date createdAt; 
 	
-	@Column
+	@Column(name = "updated_at")
 	private Date updatedAt;
 	
-	@Column
+	@Column(name = "creator_id")
 	private String creatorId;
 //	private UUID creatorId;
 	
-	@Column
+	@Column(name = "scenario_id")
 	private String scenarioId;
 //	private UUID scenarioId;
 
-	@Column
+	@Column(name = "domain_id")
 	private String domainId;
 //	private UUID domainId;
 	
-	@Column
+	@Column(name = "updater_id")
 	private String updaterId;
 
 	public String getId() {

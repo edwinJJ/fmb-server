@@ -90,7 +90,7 @@ public class BoardService implements IBoardService {
 	
 	@Override
 	public List<Boards> getFavorites() throws Exception {
-		List<Favorites> favoritesList = favoritesManager.findAll();
+		List<Favorites> favoritesList = favoritesManager.getAllFavorites();
 		
 		List<String> routingIds = new ArrayList<String>();
 		for (Favorites favorites: favoritesList) {
@@ -105,7 +105,7 @@ public class BoardService implements IBoardService {
 	
 	@Override
 	public List<Favorites> getOnlyFavorites() throws Exception {
-		return favoritesManager.findAll();
+		return favoritesManager.getAllFavorites();
 	}
 	
 	@Override

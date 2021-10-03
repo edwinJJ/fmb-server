@@ -14,13 +14,19 @@
  */
 package com.server.fmb.db;
 
-import java.util.UUID;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.server.fmb.entity.Users;
 
+@Repository
 public interface IUserQueryManager extends JpaRepository<Users, String> {
 //public interface IUserQueryManager extends JpaRepository<Users, UUID> {
+	
+	@Query(value = "SELECt u.* FROM FMB_USERS u", nativeQuery = true)
+	public List<Users> getAllUsers();
 	
 }

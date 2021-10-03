@@ -81,7 +81,7 @@ public class GroupService implements IGroupService {
 	
 	@Override
 	public List<Groups> fetchGroupList() throws Exception {
-		return groupQueryManager.findAll();
+		return groupQueryManager.fetchGroupList();
 	}
 
 	@Override

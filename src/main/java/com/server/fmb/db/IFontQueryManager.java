@@ -15,23 +15,25 @@
 package com.server.fmb.db;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import com.server.fmb.entity.Attachments;
 import com.server.fmb.entity.Fonts;
 
+@Repository
 public interface IFontQueryManager extends JpaRepository<Fonts, String>{
 //public interface IFontQueryManager extends JpaRepository<Fonts, UUID>{
 
+	@Query(value = "SELECT u.* FROM FMB_FONTS u", nativeQuery = true)
+	public List<Fonts> getAllFonts();
 	
-	@Query(value = "SELECT u.* FROM fonts u ORDER BY u.name DESC OFFSET ?1 LIMIT ?2", nativeQuery = true)
+	@Query(value = "SELECT u.* FROM FMB_FONTS u ORDER BY u.name DESC OFFSET ?1 LIMIT ?2", nativeQuery = true)
 	public List<Fonts> getFonts(@Param("start") int start, @Param("end") int end);
 	
 	
-	@Query(value = "SELECT u.* FROM fonts u WHERE u.category = ?1  ORDER BY u.name DESC OFFSET ?2 LIMIT ?3", nativeQuery = true)
+	@Query(value = "SELECT u.* FROM FMB_FONTS u WHERE u.category = ?1  ORDER BY u.name DESC OFFSET ?2 LIMIT ?3", nativeQuery = true)
 	public List<Fonts> getFontsByCategory(@Param("category") String category,@Param("start") int start, @Param("end") int end);
 }

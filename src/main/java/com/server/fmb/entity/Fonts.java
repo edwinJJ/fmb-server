@@ -22,8 +22,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "FMB_FONTS")
 public class Fonts {
 
 
@@ -33,36 +35,36 @@ public class Fonts {
 //	@GeneratedValue(generator = "UUID")
 //	private UUID id;
 	
-	@Column
+	@Column(name = "name")
 	private String name;
 	
-	@Column
+	@Column(name = "provider")
 	private String provider;
 	
-	@Column
+	@Column(name = "uri")
 	private String uri;
 	
-	@Column
+	@Column(name = "path")
 	private String path;
 	
-	@Column
+	@Column(name = "active")
 	private Boolean active;
 	
-	@Column
+	@Column(name = "created_at")
 	private Date createdAt;
 	
-	@Column
+	@Column(name = "updated_at")
 	private Date updatedAt;
 	
-	@Column
+	@Column(name = "domain_id")
 	private String domainId;
 //	private UUID domainId;
 	
-	@Column
-	private String CreatorId;
+	@Column(name = "creator_id")
+	private String creatorId;
 //	private UUID CreatorId;
 	
-	@Column
+	@Column(name = "updater_id")
 	private String updaterId;
 //	private UUID updaterId;
 
@@ -153,11 +155,11 @@ public class Fonts {
 //	}
 
 	public String getCreatorId() {
-		return CreatorId;
+		return creatorId;
 	}
 
 	public void setCreatorId(String creatorId) {
-		CreatorId = creatorId;
+		this.creatorId = creatorId;
 	}
 //	public UUID getCreatorId() {
 //		return CreatorId;

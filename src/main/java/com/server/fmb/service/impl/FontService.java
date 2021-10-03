@@ -42,7 +42,7 @@ public class FontService implements IFontService{
 	
 	public List<Fonts> getFonts(int start, int end) throws Exception{
 		if(start == 0  && end ==0) {
-			return fontQueryManager.findAll();
+			return fontQueryManager.getAllFonts();
 		}
 		return fontQueryManager.getFonts(start, end);
 	}

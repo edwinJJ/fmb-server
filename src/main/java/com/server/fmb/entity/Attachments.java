@@ -15,19 +15,16 @@
 package com.server.fmb.entity;
 
 import java.util.Date;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.hibernate.annotations.Type;
+import javax.persistence.Table;
 
 
 
 @Entity
+@Table(name = "FMB_ATTACHMENTS")
 public class Attachments {
 
 	
@@ -37,46 +34,46 @@ public class Attachments {
 //	@GeneratedValue(generator = "UUID")
 //	private UUID id;
 	
-	@Column
+	@Column(name = "name")
 	private String name;
 	
-	@Column
+	@Column(name = "description")
 	private String description;
 	
-	@Column
+	@Column(name = "mimetype")
 	private String mimetype;
 	
-	@Column
+	@Column(name = "encoding")
 	private String encoding;
 	
-	@Column
+	@Column(name = "category")
 	private String category;
 
-	@Column
+	@Column(name = "ref_by")
 	private String refBy;
 	
-	@Column
+	@Column(name = "path")
 	private String path;
 	
-	@Column
+	@Column(name = "bulk")
 	private String bulk;
 //	private String size;
 	
-	@Column
+	@Column(name = "created_at")
 	private Date createdAt; 
 	
-	@Column
+	@Column(name = "updated_at")
 	private Date updatedAt;
 	
-	@Column
+	@Column(name = "creator_id")
 	private String creatorId;
 //	private UUID creatorId;
 	
-	@Column
+	@Column(name = "updater_id")
 	private String updaterId;
 //	private UUID updaterId;
 
-	@Column
+	@Column(name = "domain_id")
 	private String domainId;
 //	private UUID domainId;
 

@@ -15,7 +15,6 @@
 package com.server.fmb.db;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -23,24 +22,25 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-import com.server.fmb.entity.Boards;
 import com.server.fmb.entity.Connections;
 
+@Repository
 public interface IConnectionQueryManager extends JpaRepository<Connections, String> {
 //public interface IConnectionQueryManager extends JpaRepository<Connections, UUID> {
 
-	@Query(value = "SELECT u.* FROM connections u ORDER BY u.name DESC", nativeQuery = true)
+	@Query(value = "SELECT u.* FROM FMB_CONNECTIONS u ORDER BY u.name DESC", nativeQuery = true)
 	public List<Connections> getConnections();
 	
-	@Query(value = "SELECT u.* FROM connections u WHERE u.active=?1", nativeQuery = true)
+	@Query(value = "SELECT u.* FROM FMB_CONNECTIONS u WHERE u.active=?1", nativeQuery = true)
 	public List<Connections> getConnectionsByActive(@Param("active") Integer active);
 	
-	@Query(value = "SELECT u.* FROM connections u WHERE u.name=?1", nativeQuery = true)
+	@Query(value = "SELECT u.* FROM FMB_CONNECTIONS u WHERE u.name=?1", nativeQuery = true)
 	public Connections getConnectionByName(@Param("name") String name);
 	
 	@Transactional
 	@Modifying
-	@Query(value = "DELETE FROM connections u WHERE u.name in (?1) ", nativeQuery = true)
+	@Query(value = "DELETE FROM FMB_CONNECTIONS u WHERE u.name in (?1) ", nativeQuery = true)
 	public void deleteConnectionByName(@Param("names") List<String> names);
 }

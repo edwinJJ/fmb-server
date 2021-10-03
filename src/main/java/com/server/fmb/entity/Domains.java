@@ -22,8 +22,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "FMB_DOMAINS")
 public class Domains {
 	
 	@Id
@@ -32,40 +34,40 @@ public class Domains {
 //	@GeneratedValue(generator = "UUID")
 //	private UUID id;
 	
-	@Column
+	@Column(name = "name")
 	private String name;
 	
-	@Column
+	@Column(name = "description")
 	private String description;
 	
-	@Column
+	@Column(name = "ext_type")
 	private String extType;
 	
-	@Column
+	@Column(name = "timezone")
 	private String timezone;
 	
-	@Column
+	@Column(name = "system_flag")
 	private boolean systemFlag;
 	
-	@Column
+	@Column(name = "subdomain")
 	private String subdomain;
 	
-	@Column
+	@Column(name = "brand_name")
 	private String brandName;
 	
-	@Column
+	@Column(name = "brand_image")
 	private String brandImage;
 	
-	@Column
+	@Column(name = "content_image")
 	private String contentImage;
 	
-	@Column
+	@Column(name = "theme")
 	private String theme;
 	
-	@Column
+	@Column(name = "created_at")
 	private Date createdAt;
 	
-	@Column
+	@Column(name = "updated_at")
 	private Date updatedAt;
 
 	public String getId() {
