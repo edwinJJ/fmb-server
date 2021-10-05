@@ -50,6 +50,9 @@ public class Boards {
 	@Column(name = "thumbnail")
 	private String thumbnail;
 	
+	@Column(name = "use_mcs_auto_config")
+	private boolean useMcsAutoConfig;
+	
 	@Column(name = "created_at")
 	private Date createdAt; 
 	
@@ -71,7 +74,7 @@ public class Boards {
 	@Column(name = "updater_id")
 	private String updaterId;
 //	private UUID updaterId;
-
+	
 	
 	public String getId() {
 		return id;
@@ -126,6 +129,14 @@ public class Boards {
 
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
+	}
+	
+	public boolean getUseMcsAutoConfig() {
+		return useMcsAutoConfig;
+	}
+
+	public void setUseMcsAutoConfig(boolean useMcsAutoConfig) {
+		this.useMcsAutoConfig = useMcsAutoConfig;
 	}
 
 	public Date getCreatedAt() {
@@ -203,5 +214,6 @@ public class Boards {
 //	public void setUpdaterId(UUID updaterId) {
 //		this.updaterId = updaterId;
 //	}
+	
 	
 }

@@ -15,6 +15,9 @@ import com.server.fmb.entity.Scenarios;
 @Repository
 public interface IScenarioQueryManager  extends JpaRepository<Scenarios , String> {
 //public interface IScenarioQueryManager  extends JpaRepository<Scenarios , UUID> {
+	
+	@Query(value = "SELECT u.* FROM FMB_SCENARIOS u WHERE u.id=?1", nativeQuery = true)
+	public Scenarios getScenarioStepById(@Param("id") String id);
 
 	@Query(value = "SELECT u.* FROM FMB_SCENARIOS u", nativeQuery = true)
 	public List<Scenarios> getAllScenarios();

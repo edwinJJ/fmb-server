@@ -49,6 +49,19 @@ public class BoardController {
 	@Autowired
 	IBoardService boardService;
 	
+	// get board list with model data
+	@RequestMapping(value = "/getBoardsByUseMcsAutoConfig", method = RequestMethod.GET)
+	public @ResponseBody Object fetchBoardById(HttpServletRequest request, HttpServletResponse response) {
+		List<Boards> boards = new ArrayList<>();
+		try {
+			boards = boardService.getBoardsByUseMcsAutoConfig();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResultSet().getResultSet(boards, false, "boards", e.toString());
+		}
+		return new ResultSet().getResultSet(boards, true, "boards", null);
+	}
+	
 	// get board list (ALL / GROUP)
 	@RequestMapping(value="/fetchBoardList", method = RequestMethod.POST)
 	public @ResponseBody Object fetchBoardList(@RequestBody Map<String, Object> requestBody, HttpServletRequest request, HttpServletResponse response) {

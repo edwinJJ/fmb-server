@@ -15,6 +15,7 @@
 package com.server.fmb.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.server.fmb.entity.Connections;
 
@@ -24,4 +25,5 @@ public interface IConnectionService {
 	public Connections getConnectionByName(String name) throws Exception;
 	public void updateConnections(List<Connections> connectionList) throws Exception;
 	public void deleteConnectionByName(List<String> names) throws Exception;
+	public void setConfigConnection(List<Map<String, Object>> configConnectionList) throws Exception;
 }

@@ -30,6 +30,9 @@ import com.server.fmb.entity.Connections;
 public interface IConnectionQueryManager extends JpaRepository<Connections, String> {
 //public interface IConnectionQueryManager extends JpaRepository<Connections, UUID> {
 
+	@Query(value = "SELECT u.* FROM FMB_CONNECTIONS u WHERE u.id=?1", nativeQuery = true)
+	public Connections getConnectionById(@Param("id") String id);
+	
 	@Query(value = "SELECT u.* FROM FMB_CONNECTIONS u ORDER BY u.name DESC", nativeQuery = true)
 	public List<Connections> getConnections();
 	

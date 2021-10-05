@@ -2,6 +2,7 @@ package com.server.fmb.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,34 @@ public class StepService implements IStepService{
 	@Override
 	public void deleteStepById(List<String> ids) throws Exception {
 		stepQueryManager.deleteStepById(ids);
+	}
+
+	@Override
+	public void setConfigStep(List<Map<String, Object>> configScenarioStepList) throws Exception {
+		for (int i=0; i<configScenarioStepList.size(); i++) {
+			List<Map<String, Object>> configStepList = (List<Map<String, Object>>) configScenarioStepList.get(i).get("mcsAutoSteps");
+			for (int j=0; j<configStepList.size(); j++) {
+				Steps step =  stepQueryManager.getStepById((String) configStepList.get(j).get("id"));
+				if (ValueUtil.isEmpty(step)) {
+					step = new Steps();
+					step.setId(((String) configScenarioStepList.get(i).get("id")) + "_steps" + j);
+					step.setCreatedAt(new Date());
+				}
+				step.setName((String) configStepList.get(j).get("name"));
+				step.setDescription((String) configStepList.get(j).get("description"));
+				step.setSequence(j);
+				step.setTask((String) configStepList.get(j).get("task"));
+				step.setSkip(0);
+				if (ValueUtil.isNotEmpty(configStepList.get(j).get("connection"))) {
+					step.setConnection((String) configStepList.get(j).get("connection"));
+				}
+				step.setParams((String) configStepList.get(j).get("params"));
+				step.setScenarioId((String) configScenarioStepList.get(i).get("id"));
+				step.setDomainId(domainService.getDomain().getId());
+				step.setUpdatedAt(new Date());
+				stepQueryManager.save(step);
+			}
+		}
 	}
 	
 }

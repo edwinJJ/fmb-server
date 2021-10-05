@@ -2,16 +2,16 @@ package com.server.fmb.service.impl;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.server.fmb.db.IScenarioQueryManager;
-import com.server.fmb.entity.Connections;
 import com.server.fmb.entity.Scenarios;
 import com.server.fmb.service.IDomainService;
 import com.server.fmb.service.IScenarioService;
+import com.server.fmb.service.IStepService;
 import com.server.fmb.service.IUserService;
 import com.server.fmb.util.IdUtil;
 import com.server.fmb.util.ValueUtil;
@@ -29,6 +29,9 @@ public class ScenarioService implements IScenarioService {
 	
 	@Autowired
 	IUserService userService;
+	
+	@Autowired
+	IStepService stepService;
 	
 	@Override
 	public List<Scenarios> getScenarios() throws Exception {
@@ -89,6 +92,34 @@ public class ScenarioService implements IScenarioService {
 	public void deleteScenarioById(List<String> ids) throws Exception{
 		scenarioQueryManager.deleteScenarioById(ids);
 //		scenarioQueryManager.deleteById(UUID.fromString(id));
+	}
+
+	@Override
+	public void setConfigScenarioStep(List<Map<String, Object>> configScenarioStepList) throws Exception {
+		setConfigScenario(configScenarioStepList);
+		stepService.setConfigStep(configScenarioStepList);
+	}
+	
+	public void setConfigScenario(List<Map<String, Object>> configScenarioStepList) throws Exception {
+		for (int i=0; i<configScenarioStepList.size(); i++) {
+			Scenarios scenario =  scenarioQueryManager.getScenarioStepById((String) configScenarioStepList.get(i).get("id"));
+			if (ValueUtil.isEmpty(scenario)) {
+				scenario = new Scenarios();
+				scenario.setId((String) configScenarioStepList.get(i).get("id"));
+				scenario.setCreatedAt(new Date());
+			}
+			scenario.setName((String) configScenarioStepList.get(i).get("name"));
+			scenario.setDescription((String) configScenarioStepList.get(i).get("description"));
+			boolean active = false;
+			if ((Integer) configScenarioStepList.get(i).get("active") == 1) {
+				active = true;
+			}
+			scenario.setActive(active);
+			scenario.setSchedule((String) configScenarioStepList.get(i).get("schedule"));
+			scenario.setDomainId(domainService.getDomain().getId());
+			scenario.setUpdatedAt(new Date());
+			scenarioQueryManager.save(scenario);
+		}
 	}
 
 }

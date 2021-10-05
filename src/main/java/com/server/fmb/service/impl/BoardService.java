@@ -52,6 +52,11 @@ public class BoardService implements IBoardService {
 	IUserService userService;
 	
 	@Override
+	public List<Boards> getBoardsByUseMcsAutoConfig() throws Exception {
+		return boardQueryManager.getBoardsByUseMcsAutoConfig(true);
+	}
+	
+	@Override
 	public List<Boards> getBoards(int start, int end) throws Exception {
 		List<Boards> boardList = boardQueryManager.getBoards(start, end);
 		for (Boards board : boardList) {
@@ -118,13 +123,21 @@ public class BoardService implements IBoardService {
 		}
 		return boardList;
 	}
+	
+	@Override
+	public void setConfigBoardModel(List<Map<String, String>> boardMapList) throws Exception {
+		for (int i=0; i<boardMapList.size(); i++) {
+			Map<String, String> boardMap = boardMapList.get(i);
+			setBoard(boardMap);
+		}
+	}
 
 	@Override
 	public Boards setBoard(Map<String, String> boardMap) throws Exception {
 		Boards board = new Boards();
 		if (!ValueUtil.isEmpty(boardMap.get("id"))) {
 			board = fetchBoardById(boardMap.get("id"));
-			board.setName(boardMap.get("name"));
+			if (!ValueUtil.isEmpty(boardMap.get("name"))) board.setName(boardMap.get("name"));
 			if (!ValueUtil.isEmpty(boardMap.get("description"))) board.setDescription(boardMap.get("description"));
 			if (!ValueUtil.isEmpty(boardMap.get("model"))) board.setModel(boardMap.get("model"));
 			if (!ValueUtil.isEmpty(boardMap.get("header"))) board.setHeader(boardMap.get("header"));
@@ -139,7 +152,7 @@ public class BoardService implements IBoardService {
 				board.setDomainId(domainService.getDomain().getId());
 			}
 			if (ValueUtil.isNotEmpty(boardMap.get("thumbnail"))) board.setThumbnail(boardMap.get("thumbnail"));
-			
+			if (ValueUtil.isNotEmpty(boardMap.get("useMcsAutoConfig"))) board.setUseMcsAutoConfig(Boolean.parseBoolean(boardMap.get("useMcsAutoConfig")));
 			return boardQueryManager.save(board);
 		} else {
 			board.setId(IdUtil.getUUIDString());
@@ -151,6 +164,7 @@ public class BoardService implements IBoardService {
 			board.setGroupId(boardMap.get("groupId"));
 //			board.setGroupId(UUID.fromString(boardMap.get("groupId")));
 			board.setThumbnail(Constant.NEW_THUMBNAIL);
+			board.setUseMcsAutoConfig(Boolean.parseBoolean(boardMap.get("useMcsAutoConfig")));
 			board.setCreatedAt(new Date());
 			board.setUpdatedAt(new Date());
 			board.setDomainId(domainService.getDomain().getId());
@@ -190,5 +204,5 @@ public class BoardService implements IBoardService {
 	public void removeFavorite(String boardId) throws Exception {
 		favoritesManager.deleteByRoutingId(boardId);
 	}
-	
+
 }
