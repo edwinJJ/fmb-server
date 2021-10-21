@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,6 @@ import com.server.fmb.db.IBoardQueryManager;
 import com.server.fmb.db.IFavoriteQueryManager;
 import com.server.fmb.entity.Boards;
 import com.server.fmb.entity.Favorites;
-import com.server.fmb.interceptor.BizContext;
 import com.server.fmb.service.IBoardService;
 import com.server.fmb.service.IDomainService;
 import com.server.fmb.service.IUserService;
@@ -52,8 +50,8 @@ public class BoardService implements IBoardService {
 	IUserService userService;
 	
 	@Override
-	public List<Boards> getBoardsByUseMcsAutoConfig() throws Exception {
-		return boardQueryManager.getBoardsByUseMcsAutoConfig(true);
+	public Boards getBoardByUseMcsAutoConfigAndId(String id) throws Exception {
+		return boardQueryManager.getBoardByUseMcsAutoConfigAndId(id, true);
 	}
 	
 	@Override
@@ -125,11 +123,8 @@ public class BoardService implements IBoardService {
 	}
 	
 	@Override
-	public void setConfigBoardModel(List<Map<String, String>> boardMapList) throws Exception {
-		for (int i=0; i<boardMapList.size(); i++) {
-			Map<String, String> boardMap = boardMapList.get(i);
-			setBoard(boardMap);
-		}
+	public void setConfigBoardModel(Map<String, String> boardMap) throws Exception {
+		setBoard(boardMap);
 	}
 
 	@Override

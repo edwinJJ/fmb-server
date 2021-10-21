@@ -50,16 +50,16 @@ public class BoardController {
 	IBoardService boardService;
 	
 	// get board list with model data
-	@RequestMapping(value = "/getBoardsByUseMcsAutoConfig", method = RequestMethod.GET)
-	public @ResponseBody Object fetchBoardById(HttpServletRequest request, HttpServletResponse response) {
-		List<Boards> boards = new ArrayList<>();
+	@RequestMapping(value = "/getBoardByUseMcsAutoConfigAndId/{id}", method = RequestMethod.GET)
+	public @ResponseBody Object getBoardByUseMcsAutoConfigAndId(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+		Boards boards = new Boards();
 		try {
-			boards = boardService.getBoardsByUseMcsAutoConfig();
+			boards = boardService.getBoardByUseMcsAutoConfigAndId(id);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			return new ResultSet().getResultSet(boards, false, "boards", e.toString());
+			return new ResultSet().getResultSet(boards, false, "board", e.toString());
 		}
-		return new ResultSet().getResultSet(boards, true, "boards", null);
+		return new ResultSet().getResultSet(boards, true, "board", null);
 	}
 	
 	// get board list (ALL / GROUP)

@@ -46,7 +46,7 @@ public class ConfigController {
 		try {
 			connectionService.setConfigConnection((List<Map<String, Object>>) requestBody.get("connections"));
 			scenarioService.setConfigScenarioStep((List<Map<String, Object>>) requestBody.get("scenarios"));
-			boardService.setConfigBoardModel((List<Map<String, String>>) requestBody.get("boards"));
+			boardService.setConfigBoardModel((Map<String, String>) requestBody.get("board"));
 			success = true;
 		} catch (Exception e) {
 			logger.error(e.getMessage());

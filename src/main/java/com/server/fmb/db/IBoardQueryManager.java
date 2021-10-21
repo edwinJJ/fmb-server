@@ -28,8 +28,8 @@ import com.server.fmb.entity.Boards;
 public interface IBoardQueryManager extends JpaRepository<Boards, String> {
 //public interface IBoardQueryManager extends JpaRepository<Boards, UUID> {
 	
-	@Query(value = "SELECT u.* FROM FMB_BOARDS u WHERE u.use_mcs_auto_config = ?1", nativeQuery = true)
-	public List<Boards> getBoardsByUseMcsAutoConfig(@Param("useMcsAutoConfig") boolean useMcsAutoConfig);
+	@Query(value = "SELECT u.* FROM FMB_BOARDS u WHERE u.id = ?1 AND u.use_mcs_auto_config = ?2", nativeQuery = true)
+	public Boards getBoardByUseMcsAutoConfigAndId(@Param("id") String id, @Param("useMcsAutoConfig") boolean useMcsAutoConfig);
 
 	@Query(value = "SELECT u.* FROM FMB_BOARDS u ORDER BY u.name DESC", nativeQuery = true)
 	public List<Boards> getBoards(@Param("start") int start, @Param("end") int end);
