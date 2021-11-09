@@ -7,12 +7,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.server.fmb.constant.Constant;
 import com.server.fmb.db.IScenarioQueryManager;
 import com.server.fmb.entity.Scenarios;
 import com.server.fmb.service.IDomainService;
 import com.server.fmb.service.IScenarioService;
 import com.server.fmb.service.IStepService;
 import com.server.fmb.service.IUserService;
+import com.server.fmb.util.EnvUtil;
 import com.server.fmb.util.IdUtil;
 import com.server.fmb.util.ValueUtil;
 
@@ -33,18 +35,21 @@ public class ScenarioService implements IScenarioService {
 	@Autowired
 	IStepService stepService;
 	
+	@Autowired
+	private EnvUtil envUtil;
+	
 	@Override
 	public List<Scenarios> getScenarios() throws Exception {
-		return scenarioQueryManager.getAllScenarios();
+		return scenarioQueryManager.getAllScenarios(envUtil.getProperty(Constant.FMB_KEY));
 	}
 	
 	public List<Scenarios> getScenariosByActive(Integer active) throws Exception {
-		return scenarioQueryManager.getScenariosByActive(active);
+		return scenarioQueryManager.getScenariosByActive(active, envUtil.getProperty(Constant.FMB_KEY));
 	}
 	
 	@Override
 	public Scenarios getScenarioByName(String scenarioName) throws Exception {
-		return scenarioQueryManager.getScenariosByName(scenarioName);
+		return scenarioQueryManager.getScenariosByName(scenarioName, envUtil.getProperty(Constant.FMB_KEY));
 	}
 	
 	@Override
@@ -52,31 +57,36 @@ public class ScenarioService implements IScenarioService {
 		for (Scenarios scenarioUpdate : scenarioList) {
 			if (ValueUtil.isNotEmpty(scenarioUpdate.getId())) {
 				Scenarios scenario = scenarioQueryManager.findById(scenarioUpdate.getId()).get();
-				if (ValueUtil.isEmpty(scenarioUpdate.getName())) {
-					scenarioUpdate.setName(scenario.getName());
+				if (ValueUtil.isEmpty(scenario.getFmbKey())) scenario.setFmbKey(envUtil.getProperty(Constant.FMB_KEY));
+				if (scenario.getFmbKey().equals(envUtil.getProperty(Constant.FMB_KEY))) {
+					if (ValueUtil.isEmpty(scenarioUpdate.getName())) {
+						scenarioUpdate.setName(scenario.getName());
+					}
+					if (ValueUtil.isEmpty(scenarioUpdate.getDescription())) {
+						scenarioUpdate.setDescription(scenario.getDescription());
+					}
+					if (ValueUtil.isEmpty(scenarioUpdate.getActive())) {
+						scenarioUpdate.setActive(scenario.getActive());
+					}
+					if (ValueUtil.isEmpty(scenarioUpdate.getSchedule())) {
+						scenarioUpdate.setSchedule(scenario.getSchedule());
+					}
+					if (ValueUtil.isEmpty(scenarioUpdate.getTimezone())) {
+						scenarioUpdate.setTimezone(scenario.getTimezone());
+					}
+					if (ValueUtil.isEmpty(scenarioUpdate.getDomainId())) {
+						scenarioUpdate.setDomainId(scenario.getDomainId());
+					}
+					scenarioUpdate.setFmbKey(envUtil.getProperty(Constant.FMB_KEY));
+					scenarioUpdate.setCreatorId(scenario.getUpdaterId());
+					scenarioUpdate.setCreatedAt(scenario.getCreatedAt());
+					scenarioUpdate.setUpdaterId(scenario.getUpdaterId());
+					scenarioUpdate.setUpdatedAt(new Date());
 				}
-				if (ValueUtil.isEmpty(scenarioUpdate.getDescription())) {
-					scenarioUpdate.setDescription(scenario.getDescription());
-				}
-				if (ValueUtil.isEmpty(scenarioUpdate.getActive())) {
-					scenarioUpdate.setActive(scenario.getActive());
-				}
-				if (ValueUtil.isEmpty(scenarioUpdate.getSchedule())) {
-					scenarioUpdate.setSchedule(scenario.getSchedule());
-				}
-				if (ValueUtil.isEmpty(scenarioUpdate.getTimezone())) {
-					scenarioUpdate.setTimezone(scenario.getTimezone());
-				}
-				if (ValueUtil.isEmpty(scenarioUpdate.getDomainId())) {
-					scenarioUpdate.setDomainId(scenario.getDomainId());
-				}
-				scenarioUpdate.setCreatorId(scenario.getUpdaterId());
-				scenarioUpdate.setCreatedAt(scenario.getCreatedAt());
-				scenarioUpdate.setUpdaterId(scenario.getUpdaterId());
-				scenarioUpdate.setUpdatedAt(new Date());
 			} else {
 				scenarioUpdate.setId(IdUtil.getUUIDString());
 				scenarioUpdate.setDomainId(domainService.getDomain().getId());
+				scenarioUpdate.setFmbKey(envUtil.getProperty(Constant.FMB_KEY));
 				scenarioUpdate.setCreatorId(scenarioUpdate.getUpdaterId());
 				scenarioUpdate.setUpdaterId(scenarioUpdate.getUpdaterId());
 //				if (ValueUtil.isEmpty(scenarioUpdate.getActive())) scenarioUpdate.setActive(0);
@@ -106,8 +116,10 @@ public class ScenarioService implements IScenarioService {
 			if (ValueUtil.isEmpty(scenario)) {
 				scenario = new Scenarios();
 				scenario.setId((String) configScenarioStepList.get(i).get("id"));
+				scenario.setFmbKey(envUtil.getProperty(Constant.FMB_KEY));
 				scenario.setCreatedAt(new Date());
 			}
+			if (!scenario.getFmbKey().equals(envUtil.getProperty(Constant.FMB_KEY))) continue;
 			scenario.setName((String) configScenarioStepList.get(i).get("name"));
 			scenario.setDescription((String) configScenarioStepList.get(i).get("description"));
 			boolean active = false;

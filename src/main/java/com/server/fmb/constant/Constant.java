@@ -39,6 +39,7 @@ public class Constant {
 	public static final String FILE_REPOSITORY = "file.repository";
 	public static final String GSC_ENABLED = "google-cloud-storage.enabled";
 	public static final String GSC_BUCKET = "google-cloud-storage.bucket";
+	public static final String FMB_KEY = "fmb.key";
 	
 	
 	/**

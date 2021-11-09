@@ -31,6 +31,9 @@ public class Scenarios {
 	@Column(name = "active")
 	private Boolean active;
 	
+	@Column(name = "fmb_key")
+	private String fmbKey;
+	
 	@Column(name = "schedule")
 	private String schedule;
 	
@@ -101,6 +104,14 @@ public class Scenarios {
 //	public void setActive(Integer active) {
 //		this.active = active;
 //	}
+
+	public String getFmbKey() {
+		return fmbKey;
+	}
+
+	public void setFmbKey(String fmbKey) {
+		this.fmbKey = fmbKey;
+	}
 	
 	public String getSchedule() {
 		return schedule;
