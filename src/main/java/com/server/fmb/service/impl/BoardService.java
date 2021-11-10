@@ -14,6 +14,10 @@
  */
 package com.server.fmb.service.impl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.sql.Clob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,12 +60,9 @@ public class BoardService implements IBoardService {
 	
 	@Override
 	public List<Boards> getBoards(int start, int end) throws Exception {
-		List<Boards> boardList = boardQueryManager.getBoards(start, end);
-		for (Boards board : boardList) {
-			board.setModel(null);
-			board.setHeader(null);
-		}
-		return boardList;
+//		List<Boards> boardList = boardQueryManager.getBoards(start, end);
+		List<Map<String, Object>> boardMapList = boardQueryManager.getBoards(start, end);
+		return setMapToBoardsModel(boardMapList);
 	}
 	
 	@Override
@@ -83,12 +84,8 @@ public class BoardService implements IBoardService {
 //		}
 //		return boards;
 		
-		List<Boards> boardsListMap = boardQueryManager.getBoardsByRoutingIds(routingIds);
-		for (Boards board: boardsListMap) {
-			board.setModel(null);
-			board.setHeader(null);
-		}
-		return boardsListMap;
+		List<Map<String, Object>> boardMapList = boardQueryManager.getBoardsByRoutingIds(routingIds);
+		return setMapToBoardsModel(boardMapList);
 	}
 	
 	@Override
@@ -113,13 +110,8 @@ public class BoardService implements IBoardService {
 	
 	@Override
 	public List<Boards> getBoardsByGroupId(String groupId) throws Exception {
-		List<Boards> boardList = boardQueryManager.getBoardsByGroupId(groupId);
-//		List<Boards> boardList = boardQueryManager.getBoardsByGroupId(UUID.fromString(groupId));
-		for (Boards board : boardList) {
-			board.setModel(null);
-			board.setHeader(null);
-		}
-		return boardList;
+		List<Map<String, Object>> boardMapList = boardQueryManager.getBoardsByGroupId(groupId);
+		return setMapToBoardsModel(boardMapList);
 	}
 	
 	@Override
@@ -199,5 +191,39 @@ public class BoardService implements IBoardService {
 	public void removeFavorite(String boardId) throws Exception {
 		favoritesManager.deleteByRoutingId(boardId);
 	}
-
+	
+	private List<Boards> setMapToBoardsModel(List<Map<String, Object>> boardMapList) throws Exception {
+		List<Boards> boardList = new ArrayList<Boards>();
+		for (Map<String, Object> boardMap : boardMapList) {
+			Boards board = new Boards();
+			board.setId((String)boardMap.get("id"));
+			board.setName((String)boardMap.get("name"));
+			board.setDescription((String)boardMap.get("description"));
+			board.setThumbnail(clobToStr((Clob)boardMap.get("thumbnail")));
+			board.setCreatedAt((Date)boardMap.get("created_at"));
+			board.setUpdatedAt((Date)boardMap.get("updated_at"));
+			board.setDomainId((String)boardMap.get("domain_id"));
+			board.setGroupId((String)boardMap.get("group_id"));
+			board.setCreatorId((String)boardMap.get("creator_id"));
+			board.setUpdaterId((String)boardMap.get("updater_id"));
+			boardList.add(board);
+		}
+		return boardList;
+	}
+	
+	private String clobToStr(Clob clob) throws Exception {
+		if (clob == null) {
+			return "";
+		} else {
+			BufferedReader contentReader = new BufferedReader(clob.getCharacterStream());
+			StringBuffer out = new StringBuffer();
+			String aux;
+			while ((aux = contentReader.readLine()) != null) {
+				out.append(aux);
+			}
+			return out.toString();
+			
+		}
+	}
+	
 }

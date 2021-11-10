@@ -16,7 +16,6 @@ package com.server.fmb.service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import com.server.fmb.entity.Boards;
 import com.server.fmb.entity.Favorites;
