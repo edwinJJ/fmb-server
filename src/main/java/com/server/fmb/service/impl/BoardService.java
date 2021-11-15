@@ -200,6 +200,11 @@ public class BoardService implements IBoardService {
 			board.setName((String)boardMap.get("name"));
 			board.setDescription((String)boardMap.get("description"));
 			board.setThumbnail(clobToStr((Clob)boardMap.get("thumbnail")));
+			boolean useMcsAutoConfig = false;
+			if (Integer.parseInt(String.valueOf(boardMap.get("use_mcs_auto_config"))) == 1) {
+				useMcsAutoConfig = true;
+			}
+			board.setUseMcsAutoConfig(useMcsAutoConfig);
 			board.setCreatedAt((Date)boardMap.get("created_at"));
 			board.setUpdatedAt((Date)boardMap.get("updated_at"));
 			board.setDomainId((String)boardMap.get("domain_id"));
