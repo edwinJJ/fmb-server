@@ -26,7 +26,7 @@ public class EqpService implements IEqpService {
     	String eqpName = "";
     	if (type.equals(Constant.STOCKER)) {
     		eqpName = iMcsFMachineStorageQueryManager.getMachineStorageName(id);
-    	} else if (type.equals(Constant.EQP)) {
+    	} else if (type.equals(Constant.PROCESS)) {
     		eqpName = iMcsFMachineQueryManager.getMachineName(id);
     	}
 		return eqpName;

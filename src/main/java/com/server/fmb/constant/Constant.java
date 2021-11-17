@@ -52,6 +52,6 @@ public class Constant {
      * eqp info
      */
     public static final String STOCKER = "STOCKER";
-    public static final String EQP = "EQP";
+    public static final String PROCESS = "PROCESS";
 	
 }
