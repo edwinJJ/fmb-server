@@ -17,7 +17,7 @@ public class Types {
 
 	public interface Connector {
 		public void ready(List<Connections> connections) throws Exception;
-		public void connect(Connections connection) throws Exception;
+		public boolean connect(Connections connection) throws Exception;
 		public void disconnect(Connections connection) throws Exception;
 		public PropertySpec[] parameterSpec = null;
 		public String[] taskPrefixes = null;

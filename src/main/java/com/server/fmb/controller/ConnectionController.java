@@ -133,8 +133,7 @@ public class ConnectionController {
 		String state = Constant.DISCONNECTED;
 		try {
 			Connections connection = connectionService.getConnectionByName(name);
-			oracleConnectorService.connect(connection);
-			state = Constant.CONNECTED;
+			if (oracleConnectorService.connect(connection)) state = Constant.CONNECTED;;
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(state, false, "connect", e.toString());

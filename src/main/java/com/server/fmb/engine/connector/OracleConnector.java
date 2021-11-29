@@ -13,6 +13,8 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,8 @@ public class OracleConnector implements Connector {
 	
 	static final String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
 	static final String ORACLE_URL = "jdbc:oracle:thin:@";
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private class ConnectionInstance implements IConnectionInstance {
 
@@ -89,20 +93,23 @@ public class OracleConnector implements Connector {
 
 	@Override
 	@Async
-	public void connect(Connections connection) throws Exception {
+	public boolean connect(Connections connection) throws Exception {
 		JSONObject jsonObj = (JSONObject) new JSONParser().parse(connection.getParams());
 	    String url = connection.getEndpoint();
 	    String user = (String) jsonObj.get("user");
 	    String password = (String) jsonObj.get("password");
 	    
+	    boolean connect = false;
 	    try {
 	    	Class.forName(ORACLE_DRIVER);
 	    	Connection dbConnection = DriverManager.getConnection(ORACLE_URL + url, user, password);
 	    	ConnectionInstance connectionInstance = new ConnectionInstance(dbConnection, connection.getName());
 			connectionManager.addConnectionInstance(connection, connectionInstance);
+			connect = true;
 	    } catch (Exception e) {
-	    	e.printStackTrace();
+	    	logger.error(e.getMessage());
 	    }
+	    return connect;
 	}
 
 	@Override
