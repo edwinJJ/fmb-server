@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -334,7 +333,8 @@ public class AttachmentService implements IAttachmentService {
 
         String fileRootDivision = fileConfiguration.getRootDivision();
 
-        String fileId = IdUtil.getUUIDString();
+//        String fileId = IdUtil.getUUIDString();
+        String fileId = "";
         String fileDivision = FILE_DIVISION_TEMPS;
         File repository = this.getFileRepository(fileRootDivision, fileDivision, useMonthlyFolder(fileDivision));
         String filePath = "";
@@ -347,6 +347,7 @@ public class AttachmentService implements IAttachmentService {
             List<FileModel> docList = new ArrayList<FileModel>();
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             Map<String, MultipartFile> filesMap = multipartRequest.getFileMap();
+            fileId = multipartRequest.getParameter("fileId");
             for (String key : filesMap.keySet()) {
                 MultipartFile mf = filesMap.get(key);
                 FileModel doc = new FileModel();
