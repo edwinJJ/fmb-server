@@ -19,8 +19,8 @@ public interface IScenarioQueryManager  extends JpaRepository<Scenarios , String
 	@Query(value = "SELECT u.* FROM FMB_SCENARIOS u WHERE u.id=?1", nativeQuery = true)
 	public Scenarios getScenarioStepById(@Param("id") String id);
 
-	@Query(value = "SELECT u.* FROM FMB_SCENARIOS u WHERe u.fmb_key=?1", nativeQuery = true)
-	public List<Scenarios> getAllScenarios(@Param("fmbKey") String fmbKey);
+	@Query(value = "SELECT u.* FROM FMB_SCENARIOS u", nativeQuery = true)
+	public List<Scenarios> getAllScenarios();
 	
 	@Query(value = "SELECT u.* FROM FMB_SCENARIOS u WHERE u.active=?1 and u.fmb_key=?2", nativeQuery = true)
 	public List<Scenarios> getScenariosByActive(@Param("active") Integer active, @Param("fmbKey") String fmbKey);

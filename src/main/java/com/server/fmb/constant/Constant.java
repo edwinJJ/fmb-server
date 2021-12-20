@@ -39,7 +39,11 @@ public class Constant {
 	public static final String FILE_REPOSITORY = "file.repository";
 	public static final String GSC_ENABLED = "google-cloud-storage.enabled";
 	public static final String GSC_BUCKET = "google-cloud-storage.bucket";
-	public static final String FMB_KEY = "fmb.key";
+	public static final String FMB_SELF_KEY = "fmb.self.key";
+	public static final String FMB_MAIN_KEY = "fmb.main.key";
+	public static final String FMB_SECONDARY_KEY = "fmb.secondary.key";
+	public static final String MAIN_SERVER = "Main Server";
+	public static final String SECONDARY_SERVER = "Secondary Server";
 	
 	
 	/**
