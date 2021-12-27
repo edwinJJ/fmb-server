@@ -207,7 +207,7 @@ public class ScenarioInstance {
 	
 	
 	public void publishData(String tag, Object data) {
-		if (ValueUtil.isEmpty(data)) return;
+		if (!tag.equals("alarm-all-publisher") && ValueUtil.isEmpty(data)) return;
 		Map dataMap = new HashMap<String, Object>();
 		dataMap.put("domainId", this.context.domainId);
 		dataMap.put("tag", tag);

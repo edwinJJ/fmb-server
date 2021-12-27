@@ -14,9 +14,6 @@
  */
 package com.server.fmb.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,7 +41,6 @@ public class EqpController {
 	// get board 
 	@RequestMapping(value = "/getEqpNamesByIdType/{id}/{type}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object getMultiLanguagesByIdType(@PathVariable("id") String id, @PathVariable("type") String type, HttpServletRequest request, HttpServletResponse response) {
-//		Map<String, String> eqpNames = new HashMap<String, String>();
 		String eqpNames = "";
 		try {
 			eqpNames = eqpService.getEqpNamesByIdType(id, type);
@@ -55,4 +51,29 @@ public class EqpController {
 		return new ResultSet().getResultSet(eqpNames, true, "eqpName", null);
 	}
 	
+	@RequestMapping(value = "/getStockerPopupData/{id}/{empty}/{unknownRule}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object getStockerPopupData(@PathVariable("id") String id,
+			@PathVariable("empty") String empty,
+			@PathVariable("unknownRule") String unknownRule,HttpServletRequest request, HttpServletResponse response) {
+		Object stockerPopupData = null;
+		try {
+			stockerPopupData = eqpService.getStockerPopupData(id, empty, unknownRule);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResultSet().getResultSet(stockerPopupData, false, "stockerPopupData", e.toString());
+		}
+		return new ResultSet().getResultSet(stockerPopupData, true, "stockerPopupData", null);
+	}
+	
+	@RequestMapping(value = "/getStockerEqpPortPopupData/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object getStockerEqpPortPopupData(@PathVariable("name") String name, HttpServletRequest request, HttpServletResponse response) {
+		Object portPopupData = null;
+		try {
+			portPopupData = eqpService.getStockerEqpPortPopupData(name);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResultSet().getResultSet(portPopupData, false, "portPopupData", e.toString());
+		}
+		return new ResultSet().getResultSet(portPopupData, true, "portPopupData", null);
+	}
 }

@@ -32,4 +32,13 @@ public class EqpService implements IEqpService {
 		return eqpName;
 	}
 
+	@Override
+	public Object getStockerPopupData(String id, String empty, String unknownRule) throws Exception {
+		return iMcsFMachineStorageQueryManager.getStockerPopupData(id, empty, unknownRule);
+	}
+	
+	@Override
+	public Object getStockerEqpPortPopupData(String name) throws Exception {
+		return iMcsFMachineQueryManager.getStockerEqpPortPopupData(name);
+	}
 }
