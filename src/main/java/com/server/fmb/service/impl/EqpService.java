@@ -1,5 +1,7 @@
 package com.server.fmb.service.impl;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +35,12 @@ public class EqpService implements IEqpService {
 	}
 
 	@Override
-	public Object getStockerPopupData(String id, String empty, String unknownRule) throws Exception {
-		return iMcsFMachineStorageQueryManager.getStockerPopupData(id, empty, unknownRule);
+	public Map<String, String> getStockerPopupData(String id) throws Exception {
+		return iMcsFMachineStorageQueryManager.getStockerPopupData(id);
 	}
 	
 	@Override
-	public Object getStockerEqpPortPopupData(String name) throws Exception {
+	public Map<String, String> getStockerEqpPortPopupData(String name) throws Exception {
 		return iMcsFMachineQueryManager.getStockerEqpPortPopupData(name);
 	}
 }

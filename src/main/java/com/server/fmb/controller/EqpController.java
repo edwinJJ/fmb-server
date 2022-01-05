@@ -14,6 +14,8 @@
  */
 package com.server.fmb.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -51,13 +53,11 @@ public class EqpController {
 		return new ResultSet().getResultSet(eqpNames, true, "eqpName", null);
 	}
 	
-	@RequestMapping(value = "/getStockerPopupData/{id}/{empty}/{unknownRule}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object getStockerPopupData(@PathVariable("id") String id,
-			@PathVariable("empty") String empty,
-			@PathVariable("unknownRule") String unknownRule,HttpServletRequest request, HttpServletResponse response) {
-		Object stockerPopupData = null;
+	@RequestMapping(value = "/getStockerPopupData/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object getStockerPopupData(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+		Map<String, String> stockerPopupData = null;
 		try {
-			stockerPopupData = eqpService.getStockerPopupData(id, empty, unknownRule);
+			stockerPopupData = eqpService.getStockerPopupData(id);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResultSet().getResultSet(stockerPopupData, false, "stockerPopupData", e.toString());
@@ -67,7 +67,7 @@ public class EqpController {
 	
 	@RequestMapping(value = "/getStockerEqpPortPopupData/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object getStockerEqpPortPopupData(@PathVariable("name") String name, HttpServletRequest request, HttpServletResponse response) {
-		Object portPopupData = null;
+		Map<String, String> portPopupData = null;
 		try {
 			portPopupData = eqpService.getStockerEqpPortPopupData(name);
 		} catch (Exception e) {
